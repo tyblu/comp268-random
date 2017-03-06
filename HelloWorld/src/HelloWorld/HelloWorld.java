@@ -21,7 +21,7 @@ Based on:   Eck, David J. Introduction to programming using Java: Version 7,
 // A program to display the message "Hello World!" on standard output.
 public class HelloWorld {
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         System.out.println("Hello World!");
     }
 }   // end of class HelloWorld
