@@ -5,8 +5,8 @@
  *
  * @author:    Tyler Lucas
  * Student ID: 3305203
- * Date:       October 20, 2016
- * Version     1.0
+ * Date:       March 6, 2017
+ * Version     1.1
  * 
  * Based on:   N/A
  */
@@ -19,12 +19,14 @@
  * parameter degF    - degrees Fahrenheit
  */
 public class CelsiusToFahrenheit {
-    // get degC "Enter the temperature in Celsius: "
-    // error handling
-    // init degF
-    // calculate degF  F=C*(9/5)+32
-    // output degF "The temperature in Fahrenheit is "
-    // return??
+    public static void main(String[] args) {
+        // get degC "Enter the temperature in Celsius: "
+        // error handling
+        // init degF
+        // calculate degF  F=C*(9/5)+32
+        // output degF "The temperature in Fahrenheit is "
+        // return??
+    }
  }      
 
 
