@@ -9,6 +9,7 @@
  * Version     1.1
  * 
  * Based on:   Eck, pp 28-29
+ *             https://stackoverflow.com/questions/2496239/how-do-i-keep-a-scanner-from-throwing-exceptions-when-the-wrong-type-is-entered
  */
 
 import java.util.Scanner;
@@ -25,74 +26,44 @@ public class Interest {
         
         Scanner sc = new Scanner( System.in );
         
-        System.out.print("Starting investment value/principal: $");
-        
-        // no input type error tolerance
-//        if (sc.hasNextDouble()) {
-//            principal = sc.nextDouble();
-//            System.out.println();
-//            System.out.print("The starting principal has been set to $");
-//            System.out.println(principal);
-//        } else { System.out.println("Input error."); }
-        
-        // better input type error tolerance, searches for double
-        // from https://stackoverflow.com/questions/2496239/how-do-i-keep-a-scanner-from-throwing-exceptions-when-the-wrong-type-is-entered
+        System.out.print("\nStarting investment value/principal: $");
         while( !sc.hasNextDouble() ){ sc.next(); }
         principal = sc.nextDouble();
         sc.nextLine();  // what is this line for?
-        System.out.println();
-        System.out.print("The starting principal has been set to $");
-        System.out.println(principal);
+        System.out.println("\nThe starting principal has been set to $"
+                + principal);
         System.out.println();
         
-        System.out.print("Annual interest rate [%]: ");
-        
+        System.out.print("\nAnnual interest rate [%]: ");
         while( !sc.hasNextDouble() ){ sc.next(); }
         rate = sc.nextDouble()/100;
         sc.nextLine();  // what is this line for?
-        System.out.println();
-        System.out.print("The annual interest rate has been set to ");
-        System.out.print(rate*100);
-        System.out.println("%");
+        System.out.println("\nThe annual interest rate has been set to "
+                + rate*100 + "%");
         System.out.println();
         
-        System.out.print("Accrual time, in years: ");
-        
+        System.out.print("\nAccrual time, in years: ");
         while( !sc.hasNextDouble() ){ sc.next(); }
         t = sc.nextDouble();
         sc.nextLine();  // what is this line for?
-        System.out.println();
-        System.out.print("The accrual time has been set to ");
-        System.out.print(t);
-        System.out.println(" years");
+        System.out.println("\nThe accrual time has been set to "
+                + t + " years");
         System.out.println();
         
-        System.out.print("Number of compound periods per year: ");
-        
+        System.out.print("\nNumber of compound periods per year: ");
         while( !sc.hasNextDouble() ){ sc.next(); }
         n = sc.nextDouble();
         sc.nextLine();  // what is this line for?
-        System.out.println();
-        System.out.print("The number of compound periods per year has been set to ");
-        System.out.println(n);
+        System.out.println("\nThe number of compound periods per year has been "
+                + "set to " + n);
         System.out.println();
         
         interest = principal * ( Math.pow(1 + rate/n, n*t) - 1 );
         
-        System.out.print("The interest earned on $");
-        System.out.print(principal);
-        System.out.print(" initial principal with ");
-        System.out.print(rate*100);
-        System.out.print("% interest over ");
-        System.out.print(t);
-        System.out.print(" years with ");
-        System.out.print(n);
-        System.out.print(" compounding periods per year is $");
-        System.out.print(interest);
-        System.out.print(", for a final investment value of $");
-        System.out.print(principal+interest);
-        System.out.println(".");
-        System.out.println();
+        System.out.println("\nThe interest earned on $" + principal + " initial "
+                + "principal with " + rate*100 + "% annual interest over " + t
+                + " years with " + n + " compounding periods per year is $"
+                + interest + ", for a final investment value of $"
+                + ( principal + interest ) + ".");
     }
-    
 }
