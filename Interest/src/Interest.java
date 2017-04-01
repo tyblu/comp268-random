@@ -1,12 +1,12 @@
 /**
  *             Textbook Example Program
  * Class:      Interest.java
- * Purpose:    Compute interest earned.
+ * Purpose:    Compute interest earned and final investment value.
  *
  * @author:    Tyler Lucas
  * Student ID: 3305203
- * Date:       March 10, 2017
- * Version     1.0
+ * Date:       April 1, 2017
+ * Version     1.1
  * 
  * Based on:   Eck, pp 28-29
  */
@@ -28,8 +28,13 @@ public class Interest {
         principal = 17_000;
         rate = 0.027;
         t = 1;
-        n = 12;
+        n = 1;
         interest = principal * ( Math.pow(1 + rate/n, n*t) - 1 );
+        
+        System.out.print("The interest earned is $");
+        System.out.println(interest);
+        System.out.print("The value of the investment after one year is $");
+        System.out.println(principal+interest);
     }
     
 }
