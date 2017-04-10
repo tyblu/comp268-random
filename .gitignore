@@ -15,3 +15,7 @@
 /Interest2/build/
 /CreateProfile/nbproject/private/
 /CreateProfile/build/
+
+#word temp files
+~*.docx
+*.tmp
