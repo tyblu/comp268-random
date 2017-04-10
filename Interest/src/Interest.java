@@ -6,7 +6,7 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       April 1, 2017
- * Version     1.1
+ * Version     1.2
  * 
  * Based on:   Eck, pp 28-29
  *             https://stackoverflow.com/questions/2496239/how-do-i-keep-a-scanner-from-throwing-exceptions-when-the-wrong-type-is-entered
@@ -30,31 +30,31 @@ public class Interest {
         while( !sc.hasNextDouble() ){ sc.next(); }
         principal = sc.nextDouble();
         sc.nextLine();  // what is this line for?
-        System.out.println("\nThe starting principal has been set to $"
+        System.out.println("The starting principal has been set to $"
                 + principal);
         System.out.println();
         
-        System.out.print("\nAnnual interest rate [%]: ");
+        System.out.print("Annual interest rate [%]: ");
         while( !sc.hasNextDouble() ){ sc.next(); }
         rate = sc.nextDouble()/100;
         sc.nextLine();  // what is this line for?
-        System.out.println("\nThe annual interest rate has been set to "
+        System.out.println("The annual interest rate has been set to "
                 + rate*100 + "%");
         System.out.println();
         
-        System.out.print("\nAccrual time, in years: ");
+        System.out.print("Accrual time, in years: ");
         while( !sc.hasNextDouble() ){ sc.next(); }
         t = sc.nextDouble();
         sc.nextLine();  // what is this line for?
-        System.out.println("\nThe accrual time has been set to "
+        System.out.println("The accrual time has been set to "
                 + t + " years");
         System.out.println();
         
-        System.out.print("\nNumber of compound periods per year: ");
+        System.out.print("Number of compound periods per year: ");
         while( !sc.hasNextDouble() ){ sc.next(); }
         n = sc.nextDouble();
         sc.nextLine();  // what is this line for?
-        System.out.println("\nThe number of compound periods per year has been "
+        System.out.println("The number of compound periods per year has been "
                 + "set to " + n);
         System.out.println();
         
