@@ -1,0 +1,4 @@
+Name:              Joe Bloe
+Email:             joe@icqmail.com
+Favorite Colour:   white
+Yearly Income:     17,385.00
