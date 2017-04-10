@@ -8,7 +8,7 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       April 10, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on:   Eck, pp 43-44
  */
@@ -27,7 +27,6 @@ public class CreateProfile {
         TextIO.putln();
         
         /* Gather responses from the user. */
-        
         TextIO.put("What is your name?             ");
         name = TextIO.getln();
         TextIO.put("What is your email address?    ");
@@ -36,18 +35,24 @@ public class CreateProfile {
         salary = TextIO.getlnDouble();
         TextIO.put("What is your favourite colour? ");
         favColour = TextIO.getln();
+                
+        /* Have user select file. */
+        boolean didSelectFile;
+        didSelectFile = TextIO.writeUserSelectedFile();
+        if ( !didSelectFile ) {
+            TextIO.writeStandardOutput();
+            TextIO.putln("No file selected. Exiting...");
+            System.exit(1);
+        }
         
         /* Write the user's information to the file named profile.txt. */
-        
-        TextIO.writeFile("profile.txt");    // subsequent output goes to file
         TextIO.putln("Name:              " + name);
         TextIO.putln("Email:             " + email);
         TextIO.putln("Favorite Colour:   " + favColour);
         TextIO.putf( "Yearly Income:     %,1.2f%n", salary);
         
         /* Print a final message to standard output. */
-        
         TextIO.writeStandardOutput();
-        TextIO.putln("Thank you. Your profile has been written to profile.txt.");
+        TextIO.putln("Thank you. Your profile has been written to file.");
     }
 }
