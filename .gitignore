@@ -19,3 +19,6 @@
 #word temp files
 ~*.docx
 *.tmp
+/Interest3/nbproject/private/
+/Interest2WithScanner/nbproject/private/
+/Interest2WithScanner/build/

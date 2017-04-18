@@ -18,18 +18,18 @@ public class Interest {
 
     public static void main(String[] args) {
         
+        Scanner sc = new Scanner( System.in );
+        
         double principal = 0;   // Value of investment.
         double rate = 0;        // Annual interest rate.
         double t;           // Accrual time, in years.
         double n;           // Number of compound periods per year.
         double interest;    // Interest earned. future value = P*(1+r/n)^(n*t)
         
-        Scanner sc = new Scanner( System.in );
-        
         System.out.print("\nStarting investment value/principal: $");
         while( !sc.hasNextDouble() ){ sc.next(); }
         principal = sc.nextDouble();
-        sc.nextLine();  // what is this line for?
+        sc.nextLine();
         System.out.println("The starting principal has been set to $"
                 + principal);
         System.out.println();
@@ -37,7 +37,7 @@ public class Interest {
         System.out.print("Annual interest rate [%]: ");
         while( !sc.hasNextDouble() ){ sc.next(); }
         rate = sc.nextDouble()/100;
-        sc.nextLine();  // what is this line for?
+        sc.nextLine();
         System.out.println("The annual interest rate has been set to "
                 + rate*100 + "%");
         System.out.println();
@@ -45,7 +45,7 @@ public class Interest {
         System.out.print("Accrual time, in years: ");
         while( !sc.hasNextDouble() ){ sc.next(); }
         t = sc.nextDouble();
-        sc.nextLine();  // what is this line for?
+        sc.nextLine();
         System.out.println("The accrual time has been set to "
                 + t + " years");
         System.out.println();
@@ -53,7 +53,7 @@ public class Interest {
         System.out.print("Number of compound periods per year: ");
         while( !sc.hasNextDouble() ){ sc.next(); }
         n = sc.nextDouble();
-        sc.nextLine();  // what is this line for?
+        sc.nextLine();
         System.out.println("The number of compound periods per year has been "
                 + "set to " + n);
         System.out.println();
