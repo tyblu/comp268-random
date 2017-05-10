@@ -16,7 +16,7 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 10, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on:   Eck, pp 77-80
  * 
@@ -30,28 +30,42 @@ public class ThreeN1 {
         
         int N;
         
-        System.out.print( "Starting point for sequence: " );
+        System.out.print( "Starting integer for sequence: " );
         N = TextIO.getlnInt();
         
         while ( N <= 0 ) {
-            System.out.print( "Positive integers only. Please try again: " );
+            System.out.print( "\tPositive integers only. Please try again: " );
             N = TextIO.getlnInt();
         }
         
+        System.out.println( "\tThe sequence is as follows:");
+        
         int counter = 0;
+        String strSequence = Integer.toString( N );
+        
         while ( N != 1 ) {
+            
+            // Comma between numbers.
+            strSequence += ", ";
+            
+            // Line break just before 80 characters.
+            if ( strSequence.length() % 80 > 75 ) {
+                strSequence += "\n";
+            }
             
             if ( N % 2 == 0 )
                 N /= 2;
             else
                 N = 3 * N + 1;
             
-            System.out.println( N );
+            strSequence += Integer.toString( N );
             
+
             counter++;
         }
         
-        System.out.println();
-        System.out.printf( "There were %d terms in the sequence.", counter );
+        System.out.println( strSequence );
+        
+        System.out.printf( "There were %d terms in the sequence.%n", counter );
     }
 }
