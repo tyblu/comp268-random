@@ -16,7 +16,7 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 10, 2017
- * Version     1.1
+ * Version     1.2
  * 
  * Based on:   Eck, pp 77-80
  * 
@@ -47,20 +47,19 @@ public class ThreeN1 {
             
             // Comma between numbers.
             strSequence += ", ";
-            
-            // Line break just before 80 characters.
-            if ( strSequence.length() % 80 > 75 ) {
-                strSequence += "\n";
-            }
-            
+                        
             if ( N % 2 == 0 )
                 N /= 2;
             else
                 N = 3 * N + 1;
             
+            // Line break just before 80 characters.
+            if ( strSequence.length() % 80 + Integer.toString( N ).length() > 75 ) {
+                strSequence += "\n";
+            }
+            
             strSequence += Integer.toString( N );
             
-
             counter++;
         }
         
