@@ -1,18 +1,16 @@
 /**
  *             Textbook Example Program
  * Class:      ComputeAverage.java
- * Purpose:    This program reads a sequence of positive integers input by the
- *             user, and it will print out the average of those integers. The
- *             user is prompted to enter one integer at time. The user must
- *             enter a 0 to mark the end of the data. (The zero is not counted
- *             as part of the data to be averaged.) The program does not check
- *             whether the user’s input is positive, so it will actually add up
- *             both positive and negative input values.
+ * Purpose:    This program reads a sequence of integers, including zero and
+ *             negative integers, and prints out the average of those integers.
+ *             The user is prompted to enter one integer at time, separated by
+ *             the [Enter] key (carriage return). The user must enter two
+ *             carriage returns in a row to mark the end of the data.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 11, 2017
- * Version     1.0 (Nearly identical to textbook example.)
+ * Version     1.1
  * 
  * Based on:   Eck, pp 83-84
  * 
@@ -26,30 +24,43 @@ public class ComputeAverage {
         
         int inputNumber;
         int sum;
-        int count;
+        int count, countSequentialCarriageReturns;
         double average;
         
         /* Initializ the summation and counting variables. */
         
         sum = 0;
         count = 0;
+        countSequentialCarriageReturns = 0;
         
         /* Read and process the user's input. */
         
-        System.out.print( "Enter your first integer: ");
-        inputNumber = TextIO.getlnInt();
+        System.out.println( "Enter integers (including 0 and negative"
+                + " integers) separated by a carriage return [enter key], and"
+                + " end with two carriage returns." );
         
-        while ( inputNumber != 0 ) {
-            sum += inputNumber;
-            count++;
+        while ( countSequentialCarriageReturns < 2 ) {
             
-            System.out.print( "Enter your next integer, or 0 to end: " );
-            inputNumber = TextIO.getlnInt();
+            // Count sequential carriage returns, clear buffer each iteration.
+            while ( TextIO.eoln() && ++countSequentialCarriageReturns < 2) {
+                TextIO.getln();
+            }
+            
+            if ( countSequentialCarriageReturns < 2 ) {
+                countSequentialCarriageReturns = 0;         // Reset.
+                
+                inputNumber = TextIO.getInt();
+            
+                sum += inputNumber;
+                count++;
+            }
         }
         
         /* Display the result. */
         
-        if ( count == 0 ) { System.out.println( "You didn't enter any data." ); }
+        if ( count == 0 ) {
+            System.out.println( "You didn't enter any data." );
+        }
         else {
             average = ( (double)sum ) / count;
             
