@@ -8,7 +8,7 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 11, 2017
- * Version     1.1 (Nearly identical to textbook implementation.)
+ * Version     1.1
  * 
  * Based on:   Eck, pp 92-93
  * 
