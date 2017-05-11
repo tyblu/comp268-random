@@ -1,0 +1,3 @@
+TextIOhardlinker [2017-05-11 14:39:48]: Log file created for C:\Users\tyblu\Documents\repos\comp268-random\TextIOhardlinker.cmd 
+TextIOhardlinker [2017-05-11 14:40:03]: Creating hard link of TextIO.java at Unit 3 Examples\NothingInCommon\src\TextIO.java 
+TextIOhardlinker [2017-05-11 14:40:07]: Hard link created successfully 
