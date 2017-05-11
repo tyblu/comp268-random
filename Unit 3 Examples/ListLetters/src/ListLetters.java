@@ -8,7 +8,7 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 11, 2017
- * Version     1.0 (Nearly identical to textbook implementation.)
+ * Version     1.1
  * 
  * Based on:   Eck, pp 95-96
  * 
@@ -21,8 +21,7 @@ public class ListLetters {
     public static void main(String[] args) {
         
         String strInput;
-        int countDifferentLetters;
-        char letter;
+        int countDifferentLetters = 0;
         
         System.out.println( "Please type in a line of text." );
         strInput = TextIO.getln();
@@ -32,16 +31,12 @@ public class ListLetters {
         System.out.println();
         System.out.write('\t');
         
-        countDifferentLetters = 0;
+        char letter;
         for ( letter = 'A'; letter <= 'Z'; letter++ ) {
-            int i;
-            for ( i=0; i<strInput.length(); i++ ) {
-                if ( letter == strInput.charAt(i) ) {
-                    System.out.print( letter );
-                    System.out.print(' ');
-                    countDifferentLetters++;
-                    break;  // Out of for(i) loop on 1st match.
-                }
+            if ( strInput.indexOf( letter ) > -1 ) {
+                System.out.print( letter );
+                System.out.print(' ');
+                countDifferentLetters++;
             }
         }
         
