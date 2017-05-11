@@ -16,7 +16,7 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 10, 2017
- * Version     1.2
+ * Version     1.3
  * 
  * Based on:   Eck, pp 77-80
  * 
@@ -41,24 +41,36 @@ public class ThreeN1 {
         System.out.println( "\tThe sequence is as follows:");
         
         int counter = 0;
-        String strSequence = Integer.toString( N );
+        String strCurrentInteger = Integer.toString( N );
+        String strSequence = strCurrentInteger;
         
         while ( N != 1 ) {
             
-            // Comma between numbers.
-            strSequence += ", ";
-                        
             if ( N % 2 == 0 )
                 N /= 2;
             else
                 N = 3 * N + 1;
             
+            strCurrentInteger = Integer.toString( N );
+            
+            // Comma between numbers.
+            strSequence += ", ";
+            
             // Line break just before 80 characters.
-            if ( strSequence.length() % 80 + Integer.toString( N ).length() > 75 ) {
-                strSequence += "\n";
+            // Check if there has been a line break yet, first.
+            if ( strSequence.indexOf("\n") > 0 ) {  // Has there been a \n?
+                if ( strSequence.substring( strSequence.lastIndexOf("\n") ).length() 
+                        + strCurrentInteger.length() + 1 > 80 ) { // Will be over 80 char?
+                    strSequence += "\n";
+                }
+            }
+            else {  // First line only. Check length directly. Include "," char (1).
+                if ( strSequence.length() + strCurrentInteger.length() + 1 > 80 ) {
+                    strSequence += "\n";
+                }
             }
             
-            strSequence += Integer.toString( N );
+            strSequence += strCurrentInteger;
             
             counter++;
         }
