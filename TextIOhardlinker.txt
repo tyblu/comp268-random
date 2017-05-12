@@ -7,3 +7,5 @@ TextIOhardlinker [2017-05-11 15:47:54]: Creating hard link of TextIO.java at Uni
 TextIOhardlinker [2017-05-11 15:47:58]: Hard link created successfully 
 TextIOhardlinker [2017-05-11 22:35:53]: Creating hard link of TextIO.java at Unit 3 Examples\CountDivisors\src\TextIO.java 
 TextIOhardlinker [2017-05-11 22:35:57]: Hard link created successfully 
+TextIOhardlinker [2017-05-12 14:43:36]: Creating hard link of TextIO.java at Unit 3 Examples\LengthConverter\src\TextIO.java 
+TextIOhardlinker [2017-05-12 14:43:39]: Hard link created successfully 
