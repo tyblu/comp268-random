@@ -2,13 +2,13 @@
  *             Textbook Example Program
  * Class:      Length Converter.java
  * Purpose:    This program will convert measurements expressed in inches,
- *             feet, yards, or miles into each of the possible units of measure.
- *             The measurement is input by the user, followed by the unit of
- *             measure. The measurement is input by the user, followed by the
- *             unit of measure. For example: "17 feet", "1 inch", or "2.73 mi".
- *             Abbreviations "in", "ft", "yd", and "mi" are accepted. The
- *             program will continue to read and convert measurements until the
- *             user enters an input of 0.
+ *             feet, yards, miles, meters, or kilometers into each of the possible units
+ *             of measure. The measurement is input by the user, followed by the
+ *             unit of measure. The measurement is input by the user, followed
+ *             by the unit of measure. For example: "17 feet", "1 inch", or 
+ *             "2.73 mi". Abbreviations "in", "ft", "yd", and "mi" are accepted.
+ *             The program will continue to read and convert measurements until
+ *             the user enters an input of 0.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
@@ -24,7 +24,104 @@
 public class LengthConverter {
 
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        double measurement;
+        String units;
+        
+        double inches, feet, yards, miles, meters, kilometers;
+        
+        System.out.print(
+                "Enter measurements in inches, feet, yards, miles, meters, or kilometers.\n"
+                + "You can use abbreviations: in, ft, yd, mi, km. Plurality is also allowed.\n"
+                + "For example:\t1 inch\n"
+                + "\t\t48 inches\n"
+                + "\t\t6 in\n"
+                + "\t\t17 feet\n"
+                + "\t\t23 ft\n"
+                + "\t\t0.4 miles\n"
+                + "\t\t2.73 mi\n"
+                + "\t\t3.1 kilometers\n"
+                + "\t\t1 kilometre\n"
+                + "\t\t2 km\n"
+                + "I will convert your input into the other units of measure.\n"
+        );
+        
+        while (true) {
+            
+            /* Get the user's input, and convert units to lower case. */
+            
+            System.out.print( "Enter your measurement, or 0 to end:\t" );
+            measurement = TextIO.getDouble();
+            
+            if ( measurement == 0 ) { break; }
+            
+            units = TextIO.getlnWord();
+            units = units.toLowerCase();
+            
+            /* Convert the input measurement. */
+            
+            if ( units.equals(          "inch"          ) 
+                    || units.equals(    "inches"        )
+                    || units.equals(    "in"            ) ) {
+                inches = measurement;
+            }
+            else if ( units.equals(     "foot"          )
+                    || units.equals(    "feet"          )
+                    || units.equals(    "ft"            ) ) {
+                inches = measurement * 12;
+            }
+            else if ( units.equals(     "yard"          )
+                    || units.equals(    "yards"         )
+                    || units.equals(    "yd"            ) ) {
+                inches = measurement * 36;
+            }
+            else if ( units.equals(     "mile"          )
+                    || units.equals(    "miles"         )
+                    || units.equals(    "mi"            ) ) {
+                inches = measurement * 12 * 5280;
+            }
+            else if ( units.equals(     "metre"         )
+                    || units.equals(    "meter"         )
+                    || units.equals(    "metres"        )
+                    || units.equals(    "meters"        )
+                    || units.equals(    "m"             ) ) {
+                inches = measurement * 39.3701;
+            }
+            else if ( units.equals(     "kilometre"     )
+                    || units.equals(    "kilometer"     )
+                    || units.equals(    "kilometres"    )
+                    || units.equals(    "kilometers"    )
+                    || units.equals(    "km"            ) ) {
+                inches = measurement * 1000 * 39.3701;
+            }
+            else {
+                System.out.printf( "Sorry, but I don't understand \"%s\".%n", units );
+                
+                continue;   // back to start of while loop
+            }
+            
+            /* Convert measurement in inches to everything else. */
+            
+            feet = inches / 12;
+            yards = inches / 36;
+            miles = inches / ( 12 * 5280 );
+            meters = inches / 39.3701;
+            kilometers = inches / ( 1000 * 39.3701 );
+            
+            /* Output measurement in terms of each unit of measure. */
+            
+            System.out.println();
+            System.out.println( "That's equivalent to:" );
+            System.out.printf( "%12.5g inches%n", inches );
+            System.out.printf( "%12.5g feet%n", feet );
+            System.out.printf( "%12.5g yards%n", yards );
+            System.out.printf( "%12.5g meters%n", meters );
+            System.out.printf( "%12.5g miles%n", miles );
+            System.out.printf( "%12.5g kilometers%n", kilometers );
+            System.out.println();
+        }
+        
+        System.out.println();
+        System.out.println( "Okay! Bye for now." );
     }
-    
 }

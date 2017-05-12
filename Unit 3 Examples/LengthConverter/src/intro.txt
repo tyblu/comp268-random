@@ -1,0 +1,13 @@
+Enter measurements in inches, feet, yards, miles, meters, or kilometers.
+You can use abbreviations: in, ft, yd, mi, m, km. Plurality is also allowed.
+For example:	1 inch
+				48 inches
+				6 in
+				17 feet
+				23 ft
+				0.4 miles
+				2.73 mi
+				3.1 kilometers
+				1 kilometre
+				2 km
+I will convert your input into the other units of measure.
