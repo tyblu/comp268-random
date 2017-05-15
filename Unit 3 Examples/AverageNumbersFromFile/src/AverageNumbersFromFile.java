@@ -3,7 +3,7 @@
  * Class:       ComputeAverage2.java
  * Purpose:     This program reads numbers from a file. It computes the sum and
  *              the average of the numbers that it reads. The file should
- *              contain nothing but umbers of type double; if this is not the
+ *              contain nothing but numbers of type double; if this is not the
  *              case, the output will be the sum and average of however many
  *              numbers were successfully read from the file. The name of the
  *              file will be input by the user.
