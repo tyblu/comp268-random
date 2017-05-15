@@ -1,6 +1,6 @@
 /**
  *             Textbook Example Program
- * Class:      Length Converter.java
+ * Class:      LengthConverter.java
  * Purpose:    This program will convert measurements expressed in inches,
  *             feet, yards, miles, meters, or kilometers into each of the possible units
  *             of measure. The measurement is input by the user, followed by the
