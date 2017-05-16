@@ -8,7 +8,7 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 15, 2017
- * Version     1.2
+ * Version     1.3
  * 
  * Based on:   Eck, pp 119-120
  * 
@@ -29,9 +29,10 @@ public class ReverseInputNumbers {
         List<Integer> numbers = new ArrayList<>();
         
         Scanner stdin = new Scanner( System.in );
-        stdin.useDelimiter( "(, *)*" );
+        stdin.useDelimiter( ",|\\n" );
         
         System.out.println( "Enter a list of comma-separated integers." );
+        System.out.println( "Press [Enter] twice to finish." );
         System.out.print( "> " );
         
         while ( stdin.hasNextInt() ) {
