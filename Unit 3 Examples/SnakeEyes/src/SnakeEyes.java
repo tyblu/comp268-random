@@ -11,21 +11,59 @@
  *              Theoretical probability of snake eyes is 1/36 (~2.8%), meaning
  *              this program will output an average of 36 rolls.
  * 
+ *              v1.1 Outputs to log file for analysis/verification.
+ * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 16, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on:    N/A
  * 
- * References:  N/A
+ * References:  https://stackoverflow.com/questions/15754523/how-to-write-text-file-java
  * 
  */
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class SnakeEyes {
     
     private static final boolean ENABLE_WHILE = false;   // while loop
     private static final boolean ENABLE_DOWHILE = true;  // do...while loop
+    
+    private static void printToFile( int roll, int dice[] ) {
+        BufferedWriter writer = null;
+        try {
+            // temp file
+            String fileName = new SimpleDateFormat( "yyyyMMddHH").format(Calendar.getInstance().getTime());
+            fileName = "SnakeEyesLog" + fileName + ".txt";
+            File dataFile = new File(fileName);
+            
+            writer = new BufferedWriter(new FileWriter( dataFile, true ));
+            
+            String outputString = "";
+            outputString += roll;
+            outputString += '\t';
+            outputString += dice[0];
+            outputString += '\t';
+            outputString += dice[1];
+            
+            writer.write( outputString );
+            writer.write( '\n' );
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (Exception e) {
+            }
+        }
+    }
 
     public static void main(String[] args) {
         
@@ -55,6 +93,8 @@ public class SnakeEyes {
                         roll, 
                         diceResults[0], 
                         diceResults[1] );
+                
+                printToFile( roll, diceResults );
             }
         }
         
@@ -72,6 +112,8 @@ public class SnakeEyes {
                         roll, 
                         diceResults[0], 
                         diceResults[1] );
+                
+                printToFile( roll, diceResults );
                 
             } while ( !( diceResults[0] == 1 && diceResults[1] == 1 ) );
         }
