@@ -8,43 +8,48 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 15, 2017
- * Version     1.0 (Nearly identical to textbook implementation.)
+ * Version     1.2
  * 
  * Based on:   Eck, pp 119-120
  * 
- * References:
+ * References: https://stackoverflow.com/a/15352657/165266
  * 
  */
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
 
 public class ReverseInputNumbers {
 
     public static void main(String[] args) {
         
-        int[] numbers;
-        int count;
-        int num;
+        List<Integer> numbers = new ArrayList<>();
         
-        numbers = new int[100];
-        count = 0;
+        Scanner stdin = new Scanner( System.in );
+        stdin.useDelimiter( "(, *)*" );
         
-        System.out.println( "Enter up to 100 positive integers; enter 0 to end." );
+        System.out.println( "Enter a list of comma-separated integers." );
+        System.out.print( "> " );
         
-        while ( true ) {
-            System.out.print( "? " );
-            num = TextIO.getlnInt();
-            
-            if ( num > 0 ) {
-                numbers[count++] = num;
-            }
-            else
-                break;
+        while ( stdin.hasNextInt() ) {
+            numbers.add( stdin.nextInt() );
         }
         
         System.out.println();
         System.out.println( "Your numbers in reverse order are:");
         
-        for ( int i = count - 1; i>=0; i-- ) {
-            System.out.println( numbers[i] );
+        Collections.reverse( numbers );
+        
+        Iterator<Integer> iter = numbers.iterator();
+        
+        while ( iter.hasNext() ) {
+            System.out.printf( "%d", iter.next() );
+            if ( iter.hasNext() ) { System.out.print( ", " ); }
         }
+        
+        System.out.println();
     }
 }
