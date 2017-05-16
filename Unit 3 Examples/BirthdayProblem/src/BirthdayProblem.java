@@ -3,7 +3,7 @@
  * Class:       BirthdayProblem.java
  * Purpose:     Simulate choosing people at random and checking the day of the
  *              year they were born on. If the birthday is the same as one that
- *              as seen previously, top, and output the number of people who
+ *              as seen previously, stop, and output the number of people who
  *              were checked.
  * 
  * @author:    Tyler Lucas
