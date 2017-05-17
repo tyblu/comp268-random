@@ -17,3 +17,5 @@ TextIOhardlinker [2017-05-15 14:12:51]: Creating hard link of TextIO.java at Uni
 TextIOhardlinker [2017-05-15 14:12:54]: Hard link created successfully 
 TextIOhardlinker [2017-05-15 14:43:20]: Creating hard link of TextIO.java at Unit 3 Examples\ReverseInputNumbers\src\TextIO.java 
 TextIOhardlinker [2017-05-15 14:43:23]: Hard link created successfully 
+TextIOhardlinker [2017-05-17 10:44:25]: Creating hard link of TextIO.java at Unit 3 Examples\ParseSalesData\src\TextIO.java 
+TextIOhardlinker [2017-05-17 10:44:29]: Hard link created successfully 
