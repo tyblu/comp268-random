@@ -3,14 +3,17 @@
  * Class:       FindMaxDivisors.java
  * Purpose:     Finds number from 1 to some maximum search range that has the
  *              highest number of divisors, and its divisors. If any, other
- *              numbers with the same number of divisors are determined, but
- *              the specific divisors are determined (remembered) for only the
- *              lowest number.
+ *              numbers in the search range with the same number of divisors
+ *              are also determined.
+ * 
+ *      v1.1:   Lists other numbers, if any, and their divisors, within the
+ *              search range that have the same number of divisors as the
+ *              highest.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 16, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on:    CountDivisors (Eck pp 92-93, and my own implementation)
  * 
@@ -20,7 +23,7 @@
 
 public class FindMaxDivisors {
     
-    private static final int NUMBERMAX = 10000;
+    private static final int NUMBERMAX = 100;
 
     public static void main(String[] args) {
         
@@ -66,9 +69,9 @@ public class FindMaxDivisors {
                 
                 if ( currentDivisorCount == maxDivisorCount ) {
                     if ( strOtherNumbersWithMostDivisors.length() > 2 ) {
-                        strOtherNumbersWithMostDivisors += ", ";
+                        strOtherNumbersWithMostDivisors += "\n";
                     }
-                    strOtherNumbersWithMostDivisors += Integer.toString( numberWithMostDivisors );
+                    strOtherNumbersWithMostDivisors += strDivisorsOfMax + ", 1";
                 }
                 else
                     strOtherNumbersWithMostDivisors = "";    // Reset.
@@ -89,9 +92,11 @@ public class FindMaxDivisors {
                 strDivisorsOfMax );
         
         if ( strOtherNumbersWithMostDivisors.length() > 2 ) {
-            System.out.printf( "%nThese numbers were in the same range and had "
-                    + "the same large number of divisors (though not the same "
-                    + "ones): %s%n",
+            System.out.printf( "%nThese numbers are in the same range and "
+                    + "also have %d divisors:"
+                    + "%n( listed as <number>, <list of number\'s divisors> )"
+                    + "%n%s%n",
+                    maxDivisorCount+1,
                     strOtherNumbersWithMostDivisors );
         }
         
