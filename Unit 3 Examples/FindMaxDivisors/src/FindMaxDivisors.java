@@ -1,17 +1,11 @@
 /**
  *              Textbook Exercise Program
  * Class:       FindMaxDivisors.java
- * Purpose:     Simulates rolling a pair of dice. Stops if both dice roll a ‘1’
- *              and outputs the number of rolls it took.
- * 
- *              Implemented as directed, using either a while loop or a 
- *              do… while loop, chosen in code by flipping the flags 
- *              ENABLE_WHILE and ENABLE_DOWHILE.
- * 
- *              Theoretical probability of snake eyes is 1/36 (~2.8%), meaning
- *              this program will output an average of 36 rolls.
- * 
- *              v1.1 Outputs to log file for analysis/verification.
+ * Purpose:     Finds number from 1 to some maximum search range that has the
+ *              highest number of divisors, and its divisors. If any, other
+ *              numbers with the same number of divisors are determined, but
+ *              the specific divisors are determined (remembered) for only the
+ *              lowest number.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
@@ -40,7 +34,7 @@ public class FindMaxDivisors {
         String strOtherNumbersWithMostDivisors;
         
         // Initialize max-divisor data.
-        numberWithMostDivisors = -1;
+        numberWithMostDivisors = -1;    // Initialized to -1 for error detection.
         maxDivisorCount = 1;
         strDivisorsOfMax = "";
         strOtherNumbersWithMostDivisors = "";
