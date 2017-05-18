@@ -6,11 +6,12 @@
  *      v1.1    Incorporated improvements from ThreeN1.java.
  *      v1.2    Added IllegalArgumentException to print3NSequence as per Eck p154.
  *              Check for this in main commented out to test.
+ *      v1.3    Added function nextN as per Eck pp156-157.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 18, 2017
- * Version     1.2
+ * Version     1.3
  * 
  * Based on:   Eck pp 146-147
  *             ThreeN1.java (Eck pp 77-80, and my own changes)
@@ -73,10 +74,7 @@ public class MathSequences {
         
         while ( N > 1 ) {
             
-            if ( N % 2 == 1 )
-                N = 3 * N + 1;
-            else
-                N = N / 2;
+            N = nextN(N);
             
             strCurrentInteger = Integer.toString(N);
             
@@ -105,5 +103,12 @@ public class MathSequences {
         System.out.println(strSequence);
         System.out.println();
         System.out.println("There were " + count + " terms in the sequence.");
+    }
+    
+    static int nextN( int currentN ) {
+        if (currentN % 2 == 1)
+            return 3 * currentN + 1;
+        else
+            return currentN / 2;
     }
 }
