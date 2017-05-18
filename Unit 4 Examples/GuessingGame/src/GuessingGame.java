@@ -8,10 +8,12 @@
  *              the user wins the game. After each game, the user has the option
  *              of continuing with another game.
  * 
+ *      v1.1    Added member variables suggested in Eck p143-145.
+ * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 17, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on:   Eck pp 140-143
  * 
@@ -20,12 +22,18 @@
  */
 
 public class GuessingGame {
+    
+    private static int gamesPlayed;
+    private static int gamesWon;
 
     public static void main(String[] args) {
         System.out.println("Let\'s play a game. I'll pick a number between");
         System.out.println("1 and 100, and you try to guess it.");
         
         boolean playAgain;
+        
+        gamesPlayed = 0;
+        gamesWon = 0;
         
         do{
             playGame();
@@ -35,10 +43,14 @@ public class GuessingGame {
             playAgain = TextIO.getlnBoolean();
         } while(playAgain);
         
+        System.out.println("You played " + gamesPlayed + " games,");
+        System.out.println(" and you won " + gamesWon + " of these games.");
         System.out.println("Thanks for playing.  Goodbye.");
     }
     
     static void playGame() {
+        gamesPlayed++;
+        
         int numberComputer;
         int numberUserGuess;
         int guessCount;
@@ -56,6 +68,9 @@ public class GuessingGame {
             if (numberUserGuess == numberComputer) {
                 System.out.println("You got it in " + guessCount + " guesses!");
                 System.out.println("My number was " + numberComputer + ".");
+                
+                gamesWon++;
+                
                 break;
             }
             
