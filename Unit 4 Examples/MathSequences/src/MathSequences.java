@@ -4,11 +4,13 @@
  * Purpose:     Gets user input to test subroutine print3NSequence().
  * 
  *      v1.1    Incorporated improvements from ThreeN1.java.
+ *      v1.2    Added IllegalArgumentException to print3NSequence as per Eck p154.
+ *              Check for this in main commented out to test.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 18, 2017
- * Version     1.1
+ * Version     1.2
  * 
  * Based on:   Eck pp 146-147
  *             ThreeN1.java (Eck pp 77-80, and my own changes)
@@ -33,12 +35,12 @@ public class MathSequences {
             
             K = TextIO.getlnInt();
             
-            while ( K < 0 ) {
-                System.out.println("\tPositive integers only. Please try again.");
-                System.out.print("> ");
-                
-                K = TextIO.getlnInt();
-            }
+//            while ( K < 0 ) {
+//                System.out.println("\tPositive integers only. Please try again.");
+//                System.out.print("> ");
+//                
+//                K = TextIO.getlnInt();
+//            }
 
             if ( K != 0 )
                 print3NSequence(K);
@@ -52,6 +54,9 @@ public class MathSequences {
      * be a positive integer.
      */
     static void print3NSequence( int startingValue ) {
+        
+        if ( startingValue <= 0 )
+            throw new IllegalArgumentException("Starting value must be positive.");
         
         int N;
         int count;
