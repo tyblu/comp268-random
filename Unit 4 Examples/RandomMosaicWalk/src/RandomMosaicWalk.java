@@ -6,10 +6,12 @@
  *              changing the colour of each square that it visits. The program 
  *              runs until the user closes the window.
  * 
+ *      v1.1    With named constants, as per Eck pp178-180.
+ * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 19, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on:   Eck pp 168-175
  * 
@@ -18,6 +20,10 @@
  */
 
 public class RandomMosaicWalk {
+    
+    final static int ROWS = 20;
+    final static int COLUMNS = 30;
+    final static int SQUARE_SIZE = 15;
 
     static int currentRow;
     static int currentColumn;
@@ -30,11 +36,11 @@ public class RandomMosaicWalk {
      */
     public static void main(String[] args) {
         
-        Mosaic.open(16,20,25,25);
+        Mosaic.open(ROWS, COLUMNS, SQUARE_SIZE, SQUARE_SIZE);
         fillWithRandomColors();
         
-        currentRow = 8;
-        currentColumn = 10;
+        currentRow = ROWS / 2;
+        currentColumn = COLUMNS / 2;
         
         while (Mosaic.isOpen()) {
             changeToRandomColor(currentRow, currentColumn);
@@ -49,8 +55,8 @@ public class RandomMosaicWalk {
      * Postcondition:   Each square has been set to a random colour.
      */
     static void fillWithRandomColors() {
-        for ( int row=0; row<16; row++ ){
-            for ( int col=0; col<20; col++ ) {
+        for ( int row=0; row<ROWS; row++ ){
+            for ( int col=0; col<COLUMNS; col++ ) {
                 changeToRandomColor(row,col);
             }
         }
@@ -92,7 +98,7 @@ public class RandomMosaicWalk {
         switch (directionNum) {
             case 0: // move up
                 currentRow--;
-                if (currentRow<0) { currentRow = 15; }
+                if (currentRow<0) { currentRow = ROWS - 1; }
                 break;
             case 1: // move right
                 currentColumn++;
@@ -104,7 +110,7 @@ public class RandomMosaicWalk {
                 break;
             case 3: // move left
                 currentColumn--;
-                if (currentColumn < 0) { currentColumn = 19; }
+                if (currentColumn < 0) { currentColumn = COLUMNS - 1; }
                 break;
         }
     }
