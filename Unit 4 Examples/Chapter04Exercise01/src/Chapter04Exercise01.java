@@ -9,7 +9,7 @@
  * Date:       May 19, 2017
  * Version     1.0
  * 
- * Based on:   Eck pp 168-175
+ * Based on:   Eck p183
  * 
  * References:
  * 
