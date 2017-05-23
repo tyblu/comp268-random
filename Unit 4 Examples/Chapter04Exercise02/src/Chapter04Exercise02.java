@@ -4,12 +4,13 @@
  * Purpose:     Test overloaded method that converts character sequences 
  *              representing hexadecimal values into those (decimal) values.
  *              Tests converting hex data file (hexdata.txt -> hexoutput.txt),
- *              array of Strings, and user input.
+ *              converting number sequence to hex and back again,
+ *              and converting user input.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 19, 2017
- * Version     1.1
+ * Version     1.2
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
@@ -45,9 +46,11 @@ public class Chapter04Exercise02 {
         }
         
         if (!SKIP_FIBONACCI_CONVERSION) {
-            // Convert Fibonacci numbers 1-46 to hex, then back, printing each step
+            // Convert Fibonacci numbers to hex, then back, printing each step
             System.out.println();
             System.out.println("Fibonacci Sequence Conversion");
+            System.out.printf(" %2s : %13s -> 0x%8s -> %13s%n",
+                    "n","[input num.]","[hex]","[output num.]");
             for ( int i=0; i<=46; i++ ) {
                 int fibonacciInt = fibonacci(i);
                 String fibonacciHex = String.format("%8s",
@@ -65,7 +68,9 @@ public class Chapter04Exercise02 {
             System.out.println("User Input Conversion");
             System.out.print(" Hexadecimal input: 0x");
             int decValue = parseHex(TextIO.getlnString());
-            System.out.printf("Decimal conversion:   %,d%n", decValue);
+            System.out.print("Decimal conversion:   ");
+            if (decValue > -1) { System.out.printf("%,d%n", decValue); }
+            else { System.out.println("[invalid hex data]"); }
         }
     }
     
@@ -120,11 +125,10 @@ public class Chapter04Exercise02 {
      */
     static void parseHex( String fin, String fout ) throws FileNotFoundException {
         // Open hex data file.
-        
         try {
             TextIO.readFile(fin);
         } catch (IllegalArgumentException e) {
-            throw new FileNotFoundException("\""+fin+"\" not found: " + e);
+            throw new FileNotFoundException("File \""+fin+"\" not found: " + e);
         }
 
         // Create new hex data file.
@@ -165,7 +169,7 @@ public class Chapter04Exercise02 {
             int hexValue = parseHex(hexString);
 
             if (!SUPPRESS_FILE_CONVERSION_OUTPUT) {
-                // Write to file and print translation steps
+                // Print translation steps
                 System.out.printf(
                         "Line %03d: %10s read as %8s and converted to (written as) ",
                         lineNumber, strLine, hexString);
@@ -182,121 +186,45 @@ public class Chapter04Exercise02 {
         }
 
         // Print stats about hex translation
-//        System.out.println();
         System.out.println(validHexLinesCount + " of " + lineNumber
                 + " values (lines) translated from hexadecimal to decimal "
                 + "integers. (" + (lineNumber-validHexLinesCount)
                 + " values were invalid.)");
     }
-
-    /**
-     * Translates input characters representing hexadecimal numbers into the
-     * integer values of those numbers.
-     * 
-     * @param s     Array of String objects.
-     * @return      Array of integers, the same size as the input array, each 
-     *              the decimal (integer) value of the hexadecimal value.
-     *              Return array element values set to -1 for those input array
-     *              elements that do not represent a valid hexadecimal value.
-     */
-    static int[] parseHex( String[] s ) {
-        int[] hexValues = new int[s.length];
-        
-        for ( int i=0; i<s.length; i++ ) {
-            hexValues[i] = parseHex(s[i]);
-        }
-        
-        return hexValues;
-    }
     
     /**
      * Translates input characters representing hexadecimal numbers into the
      * integer values of those numbers.
      * 
-     * @param sb    Array of StringBuilder objects.
-     * @return      Array of integers, the same size as the input array, each 
-     *              the decimal (integer) value of the hexadecimal value.
-     *              Return array element values set to -1 for those input array
-     *              elements that do not represent a valid hexadecimal value.
-     */
-    static int[] parseHex( StringBuilder[] sb ) {
-        int[] hexValues = new int[sb.length];
-        
-        for ( int i=0; i<sb.length; i++ ) {
-            hexValues[i] = parseHex(sb[i]);
-        }
-        
-        return hexValues;
-    }
-    
-    /**
-     * Translates input characters representing hexadecimal numbers into the
-     * integer values of those numbers.
-     * 
-     * @param c     Array of char.
-     * @return      Array of integers, the same size as the input array, each 
-     *              the decimal (integer) value of the hexadecimal value.
-     *              Return array element values set to -1 for those input array
-     *              elements that do not represent a valid hexadecimal value.
-     */
-    static int[] parseHex( char[] c ) {
-        int[] hexValues = new int[c.length];
-        
-        for ( int i=0; i<c.length; i++ ) {
-            hexValues[i] = parseHex(c[i]);
-        }
-        
-        return hexValues;
-    }
-    
-    /**
-     * Translates input characters representing hexadecimal numbers into the
-     * integer values of those numbers.
-     * 
-     * @param s     String object.
+     * @param s     String object. Should represent a valid hexadecimal integer
+     *              value, containing only characters that represent valid
+     *              hexadecimal symbols [0-9a-fA-F]. Maximum 0x7FFFFFFF.
      * @return      Decimal (integer) value of hexadecimal value. Returns -1 if
-     *              input does not represent a valid hexadecimal value.
+     *              input does not represent a valid hexadecimal value, is
+     *              empty, is mal-formed, is negative, or is over 0x7FFFFFFF.
      */
     static int parseHex( String s ) {
-        int hexValue = 0, hexValueOld = 0;
-        int hexit = 0x1;     // like a digit
+        
+        if ( s.equals("") ) { return -1; }
+        
+        int hexValue = 0;
+
         try {
+            int hexit = 0x1;     // like a digit
             for ( int i=s.length()-1; i>=0; i-- ) {
 //                hexValue += hexit * hexValue( s.charAt(i) );
-                hexValue = addIntegersWithOverflowCheck(
+                hexValue = Math.addExact(
                         hexValue,
-                        hexit * hexValue(s.charAt(i))
+                        Math.multiplyExact( hexit, hexValue(s.charAt(i)) )
                 );
-                hexit *= 0x10L;
+                /* Do not check the following on the last loop, as it
+                 * needlessly throws an ArithmeticException when converting
+                 * any hexadecimal numbers 8 symbols long
+                 * (0x00000000 to 0x7FFFFFFF). */
+                if (i>0) { hexit = Math.multiplyExact(hexit, 0x10); }
             }
-        } catch (ParseException | ArithmeticException e) {
-            return -1;
-        }
-        return hexValue;
-    }
-    
-    /**
-     * Translates input characters representing hexadecimal numbers into the
-     * decimal (integer) values of those numbers.
-     * 
-     * @param sb    StringBuilder object.
-     * @return      Decimal (integer) value of hexadecimal value.
-     *              Returns -1 if input does not represent a valid hexadecimal
-     *              value.
-     */
-    static int parseHex( StringBuilder sb ) {
-        int hexValue = 0;
-        int hexit = 0x1;  // like a digit
-        try {
-            for ( int i=sb.length()-1; i>=0; i-- ) {
-//                hexValue += hexit * hexValue( sb.charAt(i) );
-                hexValue = addIntegersWithOverflowCheck(
-                        hexValue,
-                        hexit * hexValue(sb.charAt(i))
-                );
-                hexit *= 0x10L;
-            }
-        } catch (ParseException | ArithmeticException e) {
+            
+        } catch (ParseException | ArithmeticException e){
             return -1;
         }
         
@@ -340,26 +268,11 @@ public class Chapter04Exercise02 {
     }
     
     /**
-     * Adds two integers (int) and checks to see if the operation overflows.
+     * Prints exception String and quits all processes, to close untracked/additional
+     * GUI processes such as when TextIO throws an exception trying to use a 
+     * file. Created as per documentation in TextIO.
      * 
-     * @param a     int to add.
-     * @param b     int to add.
-     * @return      int a+b, if no exception.
-     * @throws      ArithmeticException if a+b overflows (is greater than)
-     *              {@code Integer.MAX_VALUE}.
-     */
-    static int addIntegersWithOverflowCheck( int a, int b ) throws ArithmeticException {
-        long result = (long)a + b;
-        if (result > Integer.MAX_VALUE) {
-            throw new ArithmeticException("int overflow doing " + a + "+" + b);
-        }
-        else return (int)result;
-    }
-    
-    /**
-     * Quits on error using a file. {@code Uses System.exit(1)} to shut down GUI
-     * processes that may have been opened in addition to the main process, as
-     * per documentation in {@link java.TextIO}.
+     * @param e An exception String to print out before {@code System.exit(1)}.
      */
     static void readErrorQuit(Exception e) {
         System.out.println( "File error: " + e);
