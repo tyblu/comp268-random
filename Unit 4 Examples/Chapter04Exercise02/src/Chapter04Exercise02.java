@@ -1,111 +1,192 @@
 /**
  *              Textbook Example Program
  * Class:       Chapter04Exercise02.java
- * Purpose:     Converts a character sequence representing a hexadecimal value
- *              into that value.
+ * Purpose:     Test overloaded method that converts character sequences 
+ *              representing hexadecimal values into those (decimal) values.
+ *              Tests converting hex data file (hexdata.txt -> hexoutput.txt),
+ *              array of Strings, and user input.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 19, 2017
- * Version     1.0
+ * Version     1.1
  * 
- * Based on:
- * @see Intro. to Prog. Using Java v7, Eck, David J., 2014, p183: ch4, ex 2
- * 
- * References:
+ * Based on and References:
+ * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
+ *      2014, p183: ch4, ex 2
+ * @see <a href="https://en.wikipedia.org/w/index.php?title=Fibonacci_number&oldid=781470261">
+ * Fibonacci number - Wikipedia</a>
  * 
  */
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.lang.ArithmeticException;
 
 public class Chapter04Exercise02 {
     
-    private static final boolean SINGLE_CONVERSION_MODE = false;
-    private static final boolean FILE_CONVERSION_MODE = true;
+    private static final boolean SKIP_FILE_CONVERSION = false;
+    private static final boolean SKIP_FIBONACCI_CONVERSION = false;
+    private static final boolean SKIP_USER_INPUT_CONVERSION = false;
+    
+    private static final boolean SUPPRESS_FILE_CONVERSION_OUTPUT = false;
 
     public static void main(String[] args) {
-
-        if (FILE_CONVERSION_MODE) {
-            // Open hex data file.
+        
+        if (!SKIP_FILE_CONVERSION) {
+            // Read hexdata.txt, convert and write to hexoutput.txt
+            System.out.println();
+            System.out.println("Converting hexadecimal data in \"hexdata.txt\""
+                    + " to decimal and writing to \"hexoutput.txt\".");
             try {
-                if (!TextIO.readUserSelectedFile()) {
-                    throw new IllegalArgumentException();
-                }
-            } catch ( IllegalArgumentException e ) {
-                readErrorQuit(e);
+                parseHex("hexdata.txt","hexoutput.txt");
+            } catch (FileNotFoundException e) {
+                System.out.println(e);
             }
-
-            // Create new hex data file.
-            try {
-                if (!TextIO.writeUserSelectedFile()) {
-                    throw new IllegalArgumentException(); }
-            } catch ( IllegalArgumentException e ) {
-                readErrorQuit(e);
-            }
-
-            System.out.println("Translating and writing hexadecimal data...");
-            System.out.println();
-
-            // Loop over input file lines
-            int lineNumber = 0, validHexLinesCount = 0;
-            String strLine;
-            while (true) {
-                try{
-                    // Get line
-                    strLine = TextIO.getln();
-
-                    lineNumber++;
-
-                    // Print line
-                    System.out.println(" Input line " + lineNumber + ": " + strLine);
-                } catch ( IllegalArgumentException e ) {
-                    break;  // End of file.
-                }
-
-                // Parse hex value
-                int hexValue = 0;
-                int hexFirstCharacterIndex = 0;
-                if (strLine.length() > 1) {
-                    if (strLine.substring(0,2).compareToIgnoreCase("0x") == 0) {
-    //                    System.out.print("hexIndex=2");     // debugging
-                        hexFirstCharacterIndex = 2;
-                    }
-                    else if (strLine.charAt(0) == '#') {
-        //                System.out.print("hexIndex=1");     // debugging
-                        hexFirstCharacterIndex = 1;
-                    }
-                }
-
-                hexValue += parseHex(strLine.substring(hexFirstCharacterIndex,strLine.length()));
-
-                // Print translation
-                // Write to new file
-                System.out.print("Output line " + lineNumber + ": ");
-                if (hexValue > -1) {
-                    System.out.println(hexValue);
-                    TextIO.putln(hexValue);
-                    validHexLinesCount++;
-                }
-                else {
-                    System.out.println("[invalid hex data]");
-                    TextIO.putln("[invalid hex data]");
-                }
-            }
-
-            // Print stats about hex translation
-            System.out.println();
-            System.out.println(validHexLinesCount + " of " + lineNumber
-                    + " lines translated from hexadecimal to decimal integers.");
         }
-        else if (SINGLE_CONVERSION_MODE) {
-            System.out.print(
-                    "Enter hexadecimal value: 0x");
-            String userInput = TextIO.getlnString();
-            System.out.print(
-                    "                Decimal:   " + parseHex(userInput));
+        
+        if (!SKIP_FIBONACCI_CONVERSION) {
+            // Convert Fibonacci numbers 1-46 to hex, then back, printing each step
             System.out.println();
+            System.out.println("Fibonacci Sequence Conversion");
+            for ( int i=0; i<=46; i++ ) {
+                int fibonacciInt = fibonacci(i);
+                String fibonacciHex = String.format("%8s",
+                        Integer.toHexString(fibonacciInt)).replace(' ','0');
+                int fibonacciHex2Int = parseHex(fibonacciHex);
+                System.out.printf(" %02d : %,13d -> 0x%s -> %,13d%n",
+                        i, fibonacciInt, fibonacciHex, fibonacciHex2Int);
+            }
         }
+        
+        if (!SKIP_USER_INPUT_CONVERSION) {
+            // Convert user input hex string
+            TextIO.readStandardInput();
+            System.out.println();
+            System.out.println("User Input Conversion");
+            System.out.print(" Hexadecimal input: 0x");
+            int decValue = parseHex(TextIO.getlnString());
+            System.out.printf("Decimal conversion:   %,d%n", decValue);
+        }
+    }
+    
+    /**
+     * Generates Fibonacci number for given sequence index.
+     * 
+     * @param n     Index of the Fibonacci number, starting at {@code n=0}.
+     *              Must be less than 52, as that Fibonacci number is too large 
+     *              to return as {@code int}. Must be greater than 0.
+     * @return      The Fibonacci number at index n.
+     * @throws      IllegalArgumentException if n is less than 0 or greater
+     *              than 51.
+     * @since 1.1
+     */
+    static int fibonacci ( int n ) {
+        if ( n < 0 ) {
+            throw new IllegalArgumentException(
+                    "Input is the Fibonacci sequence index, and must be "
+                    + "greater than 0.");
+        }
+        else if ( n > 51 ) {
+            throw new IllegalArgumentException(
+                    "Fibonacci numbers for indices greater than 41 cannot "
+                    + "be generated by this method.");
+        }
+        
+        final double sqrt5 = Math.sqrt(5);
+        final double goldenRatio = (1 + sqrt5)/2;    // approx 1.62
+        final double silverRatio = (1 - sqrt5)/2;    // approx -0.62
+        
+        return (int)(Math.round(
+                        ( Math.pow(goldenRatio, n) - Math.pow(silverRatio, n) )
+                                /sqrt5
+                ));
+    }
+    
+    /**
+     * Converts newline-separated hexadecimal values in text file to decimal,
+     * writing output to file.
+     * 
+     * Precondition:    Input file should contain valid hex data, but it does
+     *                  not have to (it writes {@code [invalid hex data]} for
+     *                  invalid input data/lines. Need to include postfix
+     *                  ({@code .txt} recommended).
+     * Postcondition:   Output file is created or overwritten. Need to include
+     *                  postfix ({@code .txt} recommended).
+     * 
+     * @param fin   Input filename. Absolute directory or relative to package.
+     * @param fout  Output filename. Absolute directory or relative to package.
+     * @throws FileNotFoundException if the input file causes an
+     *              IllegalArgumentException to be thrown by TextIO.readFile().
+     */
+    static void parseHex( String fin, String fout ) throws FileNotFoundException {
+        // Open hex data file.
+        
+        try {
+            TextIO.readFile(fin);
+        } catch (IllegalArgumentException e) {
+            throw new FileNotFoundException("\""+fin+"\" not found: " + e);
+        }
+
+        // Create new hex data file.
+        try {
+            TextIO.writeFile(fout);
+        } catch ( IllegalArgumentException e ) {
+            readErrorQuit(e);
+        }
+
+        // Loop over input file lines
+        int lineNumber = 0, validHexLinesCount = 0;
+        String strLine;
+        while (true) {
+            try{
+                // Get line
+                strLine = TextIO.getln();
+
+                lineNumber++;
+
+                // Print line
+//                System.out.printf("Line %03d: %s", lineNumber, strLine);
+            } catch ( IllegalArgumentException e ) {
+                break;  // End of file.
+            }
+
+            // Parse hex value
+            int hexFirstCharacterIndex = 0;
+            if (strLine.length() > 1) {
+                if (strLine.substring(0,2).compareToIgnoreCase("0x") == 0) {
+                    hexFirstCharacterIndex = 2;
+                }
+                else if (strLine.charAt(0) == '#') {
+                    hexFirstCharacterIndex = 1;
+                }
+            }
+            String hexString = strLine.substring(hexFirstCharacterIndex);
+            
+            int hexValue = parseHex(hexString);
+
+            if (!SUPPRESS_FILE_CONVERSION_OUTPUT) {
+                // Write to file and print translation steps
+                System.out.printf(
+                        "Line %03d: %10s read as %8s and converted to (written as) ",
+                        lineNumber, strLine, hexString);
+                if (hexValue > -1) { System.out.println(hexValue); }
+                else { System.out.println("[invalid hex data]"); }
+            }
+            
+            // Write to file
+            if (hexValue > -1) {
+                TextIO.putln(hexValue);
+                validHexLinesCount++;
+            }
+            else { TextIO.putln("[invalid hex data]"); }
+        }
+
+        // Print stats about hex translation
+//        System.out.println();
+        System.out.println(validHexLinesCount + " of " + lineNumber
+                + " values (lines) translated from hexadecimal to decimal "
+                + "integers. (" + (lineNumber-validHexLinesCount)
+                + " values were invalid.)");
     }
 
     /**
@@ -281,8 +362,7 @@ public class Chapter04Exercise02 {
      * per documentation in {@link java.TextIO}.
      */
     static void readErrorQuit(Exception e) {
-        System.out.println( "Can't read from the file." );
-        System.out.println( "Exception: " + e);
+        System.out.println( "File error: " + e);
         System.out.println("Quitting.");
         System.exit(1);
     }
