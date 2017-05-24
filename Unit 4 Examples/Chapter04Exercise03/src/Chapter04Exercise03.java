@@ -16,33 +16,109 @@
 
 public class Chapter04Exercise03
 {
+    // Set to true to enable script that tests methods.
+    private static final boolean TESTING_GAUNTLET_ACTIVATED = true;
+    
     public static void main(String[] args)
     {
-        // Introduction.
+        if (!TESTING_GAUNTLET_ACTIVATED)
         {
-            String strIntro = "Welcome to the magical dice rolling game!";
-            strIntro += "\nLet\'s roll a pair until the total we\'re ";
-            strIntro += "looking for comes up.";
-            strIntro += "\n";
-            strIntro += "\nWhat total are you looking for? Enter 2-12: ";
-            System.out.print(strIntro);
+                // Introduction.
+            {
+                String strIntro = "Welcome to the magical dice rolling game!";
+                strIntro += "\nLet\'s roll a pair until the total we\'re ";
+                strIntro += "looking for comes up.";
+                strIntro += "\n";
+                strIntro += "\nWhat total are you looking for? Enter 2-12: ";
+                System.out.print(strIntro);
+            }
+
+            // Get user to enter dice total to look for.
+            int userTotal = getIntInRange(2,12);
+
+            System.out.println();
+            System.out.println("Rolling...");
+
+            // Count dice rolls until total is found.
+            // try..catch not req'd, as input already sanitized by getIntInRange()
+            int rollsCounted = countDiceRollsUntil(userTotal, 2);
+
+            // Conclusion.
+            {
+                String strConc = "It took " + rollsCounted + " rolls to come up ";
+                strConc += "with a sum total value of " + userTotal + ".";
+                System.out.println(strConc);
+            }
         }
         
-        // Get user to enter dice total to look for.
-        int userTotal = getIntInRange(2,12);
-        
-        System.out.println();
-        System.out.println("Rolling...");
-        
-        // Count dice rolls until total is found.
-        // try..catch not req'd, as input already sanitized by getIntInRange()
-        int rollsCounted = countDiceRollsUntil(userTotal, 2);
-        
-        // Conclusion.
+        if (TESTING_GAUNTLET_ACTIVATED)
         {
-            String strConc = "It took " + rollsCounted + " rolls to come up ";
-            strConc += "with a sum total value of " + userTotal + ".";
-            System.out.println(strConc);
+            System.out.println("Testing all methods.");
+            System.out.println();
+            
+            // Test parameters
+            int maxLoops = 100000;   // Number of times to repeat stat. tests
+            String strVar = "variance: ";
+            String strAvg = "average: ";
+            String s = "%" + " countDiceRollsUntil(int,int) ".length() + "s"
+                    + "%" + strVar.length() + "s"
+                    + "%10s\t%10s%n";
+            
+            // Header
+            System.out.printf(s, " ", " ", "expected", "calculated");
+            
+            // static int getIntInRange(int n1, int n2)
+            // Testing requires user input. Skip for now.
+            
+            // static int getDiceRoll()
+            // See if output really is random from 1-6
+            {
+                double sum = 0;
+                for (int i=0; i<maxLoops; i++)
+                {
+                    sum += getDiceRoll();
+                }
+                double avg = sum / maxLoops; // should have automatic int->double
+                double variance = 0;
+                int diceValue;
+                for (int i=0; i<maxLoops; i++)
+                {
+                    diceValue = getDiceRoll();
+                    variance += (3.5 - diceValue) * (3.5 - diceValue);
+                }
+                
+                System.out.printf(s,
+                        " getDiceRoll() ", strAvg, 3.5, avg);
+                System.out.printf(s,
+                        " getDiceRoll() ", strVar, 0, variance);
+            }
+            
+            // static int getDiceRollSum(int m) throws IllegalArgumentException
+            {
+                double avg = 0, variance = 0;
+                for (int numDice=1; numDice<10; numDice++)
+                {
+                    for (int i=0; i<maxLoops; i++)
+                    {
+                        int sumValue = getDiceRollSum(numDice);
+                        avg += sumValue;
+                        variance += (3.5 * numDice - sumValue) * (3.5 * numDice - sumValue);
+                    }
+                }
+                avg = avg / maxLoops;
+                variance = variance / maxLoops;
+                
+                System.out.printf(s,
+                        " getDiceRollSum(int) ", strAvg, ( factorial(10-1) * 3.5 ), avg);
+                System.out.printf(s,
+                        " getDiceRollSum(int) ", strVar, 0, variance);
+            }
+            
+            // static int countDiceRollsUntil(int total, int dice)
+            // static int countDiceRollsUntil(int value) throws IllegalArgumentException
+            
+            System.out.println();
+            System.out.println("Testing complete.");
         }
     }
     
@@ -175,5 +251,25 @@ public class Chapter04Exercise03
         }
         
         return countDiceRollsUntil(value, 1);
+    }
+    
+    static long factorial(int n, int n2)
+    {
+        if ( n2 > n || n2 == 0 ) { return 0; }
+        
+        long product = 1;
+        
+        while ( n >= n2 )
+        {
+            product += n;
+            n--;
+        }
+        
+        return product;
+    }
+    
+    static long factorial(int n)
+    {
+        return factorial(n, 1);
     }
 }
