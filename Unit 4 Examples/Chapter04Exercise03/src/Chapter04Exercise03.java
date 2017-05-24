@@ -20,9 +20,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Chapter04Exercise03
@@ -193,6 +190,24 @@ public class Chapter04Exercise03
         return countDiceRollsUntil(value, 1);
     }
     
+    /**
+     * Hammers every method and writes all returned data to a text file named
+     * {@code testdatayyyyMMddHHmm.txt}, where {@code yyyyMMddHHmm} is a date-
+     * time code with minimal formatting (none, basically). Takes more than a
+     * few minutes on my high-end 2016 laptop, but less than 10. Increase
+     * {@code dataPoints} over 10000 at your peril. Note that testing
+     * {@code countDiceRollsUntil(int,int)} with more than a few dice increases
+     * test time substantially, as the probability of getting a specific total
+     * with increasing numbers of dice drops very quickly. (I am not sure how
+     * quickly, exactly.)
+     * 
+     * Preconditions:   Enable with {@code TEST_MODE_ENABLE = true;}
+     *                  Run this before a break, as it will take a while.
+     * Postconditions:  Text file testdata201705240301.txt created and filled
+     *                  with data. Date-time numeric string will be different.
+     * 
+     * @since 1.1
+     */
     static void test()
     {
         System.out.println("Debugging, Testing, and Verification Mode Enabled");
@@ -231,7 +246,7 @@ public class Chapter04Exercise03
         
         // static int getDiceRollSum(int m) throws IllegalArgumentException
         System.out.print(".");
-        /*  Input: 1,2,3,4,5,10,20,50,100+/-1,1000+/-1
+        /*  Input: 1,2,3,4,5,10
         *   Expected output: Random distribution with averages at N*3.5
         */
         int[] inputs_getDiceRollSum = new int[]{
@@ -252,7 +267,7 @@ public class Chapter04Exercise03
         
         // static int countDiceRollsUntil(int total, int dice) throws IllegalArgumentException
         System.out.print(".");
-        /*  Input: dice 1,2,3,4,5,10,20,50,100+/-1,1000+/-1, totals N*1,2,3,4,5,6
+        /*  Input: dice 1,2,3,4,5, totals N*1,2,3,4,5,6
         *   Expected output: Complicated probabilities (averages) -- use Excel.
         */
         int[] inputs_countDiceRollsUntil_dice = new int[]{
@@ -305,6 +320,13 @@ public class Chapter04Exercise03
         System.out.println("Done.");
     }
     
+    /**
+     * Writes a String to file.
+     * 
+     * @param f Type File.
+     * @param s String to write. Do not forget to include {@code '\n'} before
+     *      or after.
+     */
     static void writeToFile( File f, String s )
     {
         // Automatically closes (java.io.Closeable)
@@ -315,12 +337,27 @@ public class Chapter04Exercise03
         } catch (IOException e) {
             System.out.println("File exception: " + e);
         }
-        
-//        BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));
-//        writer.write(s);
-//        writer.close();
     }
     
+    /**
+     * Appends a newline to a String, writes it to a file, then returns a blank
+     * String. Simplifies re-use of temporary String objects. This example uses
+     * a temporary String {@code s} to help write the printable ASCII
+     * characters to file:
+     * <br>{@code int asciiCode = 33;
+     * String s = "";
+     * for (int i=0; ascii<127; i++) {
+     *   s += i + ": ";
+     *   for (int j=0; j<5; j++)
+     *     s += Character.toChars(asciiCode++) + "\t";
+     *   s = appendLineAndClear(file, s);
+     * }}
+     * 
+     * @param f Type File.
+     * @param s String to write. Do not forget to include {@code '\n'} before
+     *      or after.
+     * @return blank String "".
+     */
     static String appendLineAndClear( File f, String s )
     {
         s += "\n";
