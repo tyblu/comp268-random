@@ -6,7 +6,7 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 23, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
@@ -14,111 +14,51 @@
  * 
  */
 
+// All imports for debug/test/validation only
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+
 public class Chapter04Exercise03
 {
-    // Set to true to enable script that tests methods.
-    private static final boolean TESTING_GAUNTLET_ACTIVATED = true;
+    private static final boolean TEST_MODE_ENABLE = true;
     
     public static void main(String[] args)
     {
-        if (!TESTING_GAUNTLET_ACTIVATED)
+        // Debugging, testing, validating
+        if (TEST_MODE_ENABLE) { test(); System.exit(0); }
+        
+        // Introduction.
         {
-                // Introduction.
-            {
-                String strIntro = "Welcome to the magical dice rolling game!";
-                strIntro += "\nLet\'s roll a pair until the total we\'re ";
-                strIntro += "looking for comes up.";
-                strIntro += "\n";
-                strIntro += "\nWhat total are you looking for? Enter 2-12: ";
-                System.out.print(strIntro);
-            }
-
-            // Get user to enter dice total to look for.
-            int userTotal = getIntInRange(2,12);
-
-            System.out.println();
-            System.out.println("Rolling...");
-
-            // Count dice rolls until total is found.
-            // try..catch not req'd, as input already sanitized by getIntInRange()
-            int rollsCounted = countDiceRollsUntil(userTotal, 2);
-
-            // Conclusion.
-            {
-                String strConc = "It took " + rollsCounted + " rolls to come up ";
-                strConc += "with a sum total value of " + userTotal + ".";
-                System.out.println(strConc);
-            }
+            String strIntro = "Welcome to the magical dice rolling game!";
+            strIntro += "\nLet\'s roll a pair until the total we\'re ";
+            strIntro += "looking for comes up.";
+            strIntro += "\n";
+            strIntro += "\nWhat total are you looking for? Enter 2-12: ";
+            System.out.print(strIntro);
         }
         
-        if (TESTING_GAUNTLET_ACTIVATED)
+        // Get user to enter dice total to look for.
+        int userTotal = getIntInRange(2,12);
+        
+        System.out.println();
+        System.out.println("Rolling...");
+        
+        // Count dice rolls until total is found.
+        // try..catch not req'd, as input already sanitized by getIntInRange()
+        int rollsCounted = countDiceRollsUntil(userTotal, 2);
+        
+        // Conclusion.
         {
-            System.out.println("Testing all methods.");
-            System.out.println();
-            
-            // Test parameters
-            int maxLoops = 100000;   // Number of times to repeat stat. tests
-            String strVar = "variance: ";
-            String strAvg = "average: ";
-            String s = "%" + " countDiceRollsUntil(int,int) ".length() + "s"
-                    + "%" + strVar.length() + "s"
-                    + "%10s\t%10s%n";
-            
-            // Header
-            System.out.printf(s, " ", " ", "expected", "calculated");
-            
-            // static int getIntInRange(int n1, int n2)
-            // Testing requires user input. Skip for now.
-            
-            // static int getDiceRoll()
-            // See if output really is random from 1-6
-            {
-                double sum = 0;
-                for (int i=0; i<maxLoops; i++)
-                {
-                    sum += getDiceRoll();
-                }
-                double avg = sum / maxLoops; // should have automatic int->double
-                double variance = 0;
-                int diceValue;
-                for (int i=0; i<maxLoops; i++)
-                {
-                    diceValue = getDiceRoll();
-                    variance += (3.5 - diceValue) * (3.5 - diceValue);
-                }
-                
-                System.out.printf(s,
-                        " getDiceRoll() ", strAvg, 3.5, avg);
-                System.out.printf(s,
-                        " getDiceRoll() ", strVar, 0, variance);
-            }
-            
-            // static int getDiceRollSum(int m) throws IllegalArgumentException
-            {
-                double avg = 0, variance = 0;
-                for (int numDice=1; numDice<10; numDice++)
-                {
-                    for (int i=0; i<maxLoops; i++)
-                    {
-                        int sumValue = getDiceRollSum(numDice);
-                        avg += sumValue;
-                        variance += (3.5 * numDice - sumValue) * (3.5 * numDice - sumValue);
-                    }
-                }
-                avg = avg / maxLoops;
-                variance = variance / maxLoops;
-                
-                System.out.printf(s,
-                        " getDiceRollSum(int) ", strAvg, ( factorial(10-1) * 3.5 ), avg);
-                System.out.printf(s,
-                        " getDiceRollSum(int) ", strVar, 0, variance);
-            }
-            
-            // static int countDiceRollsUntil(int total, int dice)
-            // static int countDiceRollsUntil(int value) throws IllegalArgumentException
-            
-            System.out.println();
-            System.out.println("Testing complete.");
+            String strConc = "It took " + rollsCounted + " rolls to come up ";
+            strConc += "with a sum total value of " + userTotal + ".";
+            System.out.println(strConc);
         }
     }
     
@@ -253,23 +193,139 @@ public class Chapter04Exercise03
         return countDiceRollsUntil(value, 1);
     }
     
-    static long factorial(int n, int n2)
+    static void test()
     {
-        if ( n2 > n || n2 == 0 ) { return 0; }
+        System.out.println("Debugging, Testing, and Verification Mode Enabled");
+        System.out.println();
         
-        long product = 1;
+        // Test parameters
+        int dataPoints = 10000;
         
-        while ( n >= n2 )
+        // Create test file
+        String strDateTime = new SimpleDateFormat("yyyyMMddHHmm")
+                .format(Calendar.getInstance().getTime());
+        File dataFile = new File("testdata" + strDateTime + ".txt");
+        // Write intro
+        String strDateTimeNice = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+                .format(Calendar.getInstance().getTime());
+        String s = "Test Data for Chapter 4 Exercise 3 Solution Program "
+                + "(Class) on " +  strDateTimeNice + "\n";
+        s = appendLineAndClear(dataFile, s + "\n");
+        
+        // static int getIntInRange(int n1, int n2)
+        System.out.print(".");
+        // Requires user input. Skip for now.
+        
+        // static int getDiceRoll()
+        System.out.print(".");
+        /*  Input: none
+        *   Expected output: Gaussian random distribution from 1-6
+        */
+        int[] data_getDiceRoll = new int[dataPoints];
+        for (int i=0; i<dataPoints; i++)
         {
-            product += n;
-            n--;
+            data_getDiceRoll[i] = getDiceRoll();
+            s += data_getDiceRoll[i] + ",";
         }
+        s = appendLineAndClear(dataFile, s + "\n");
         
-        return product;
+        // static int getDiceRollSum(int m) throws IllegalArgumentException
+        System.out.print(".");
+        /*  Input: 1,2,3,4,5,10,20,50,100+/-1,1000+/-1
+        *   Expected output: Random distribution with averages at N*3.5
+        */
+        int[] inputs_getDiceRollSum = new int[]{
+            1,2,3,4,5,10};
+        int[][] data_getDiceRollSum = 
+                new int[inputs_getDiceRollSum.length][dataPoints];
+        for (int j=0; j<inputs_getDiceRollSum.length; j++)
+        {
+            for (int i=0; i<dataPoints; i++)
+            {
+                data_getDiceRollSum[j][i] = 
+                        getDiceRollSum(inputs_getDiceRollSum[j]);
+                s += data_getDiceRollSum[j][i] + ",";
+            }
+            s += "\n";
+        }
+        s = appendLineAndClear(dataFile, s + "\n");
+        
+        // static int countDiceRollsUntil(int total, int dice) throws IllegalArgumentException
+        System.out.print(".");
+        /*  Input: dice 1,2,3,4,5,10,20,50,100+/-1,1000+/-1, totals N*1,2,3,4,5,6
+        *   Expected output: Complicated probabilities (averages) -- use Excel.
+        */
+        int[] inputs_countDiceRollsUntil_dice = new int[]{
+            1,2,3,4,5};
+        int[] inputs_countDiceRollUntil_total = new int[]{1,2,3,4,5,6};
+        int[][][] data_countDiceRollsUntil_1 = 
+                new int[6][inputs_countDiceRollsUntil_dice.length][dataPoints];
+        for (int k=0; k<inputs_countDiceRollUntil_total.length; k++)
+        {
+            for (int j=0; j<inputs_countDiceRollsUntil_dice.length; j++)
+            {
+                for (int i=0; i<dataPoints; i++)
+                {
+                    int total = inputs_countDiceRollUntil_total[k] 
+                            * inputs_countDiceRollsUntil_dice[j];
+                    data_countDiceRollsUntil_1[k][j][i] =
+                            countDiceRollsUntil(total,
+                                    inputs_countDiceRollsUntil_dice[j]
+                            );
+                    s += data_countDiceRollsUntil_1[k][j][i] + ",";
+                }
+                s += "\n";
+            }
+            s += "\n";
+        }
+        s = appendLineAndClear(dataFile, s + "\n");
+        
+        // static int countDiceRollsUntil(int value) throws IllegalArgumentException
+        System.out.print(".");
+        /* Should be the same as countDiceRollsUntil(int total, int dice=1)
+        *   Input: 1,2,3,4,5,6
+        *   Expected output: Random distribution (flat) with average 6.
+        */
+//        int[] inputs_countDiceRollUntil_total = new int[]{1,2,3,4,5,6}; // already initialized
+        int[][] data_countDiceRollsUntil_2 = 
+                new int[6][dataPoints];
+        for (int k=0; k<inputs_countDiceRollUntil_total.length; k++)
+        {
+            for (int i=0; i<dataPoints; i++)
+            {
+                data_countDiceRollsUntil_2[k][i] = 
+                        countDiceRollsUntil(inputs_countDiceRollUntil_total[k]);
+                s += data_countDiceRollsUntil_2[k][i] + ",";
+            }
+            s += "\n";
+        }
+        s = appendLineAndClear(dataFile, s + "\n");
+        
+        System.out.println();
+        System.out.println("Done.");
     }
     
-    static long factorial(int n)
+    static void writeToFile( File f, String s )
     {
-        return factorial(n, 1);
+        // Automatically closes (java.io.Closeable)
+        try ( BufferedWriter writer = 
+                new BufferedWriter(new FileWriter(f, true)) )
+        {
+            writer.write(s);
+        } catch (IOException e) {
+            System.out.println("File exception: " + e);
+        }
+        
+//        BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));
+//        writer.write(s);
+//        writer.close();
     }
+    
+    static String appendLineAndClear( File f, String s )
+    {
+        s += "\n";
+        writeToFile(f,s);
+        return "";
+    }
+
 }
