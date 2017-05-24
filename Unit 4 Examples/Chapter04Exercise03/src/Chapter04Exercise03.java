@@ -14,10 +14,26 @@
  * 
  */
 
+// All imports for debug/test/validation only
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+
 public class Chapter04Exercise03
 {
+    private static final boolean TEST_MODE_ENABLE = true;
+    
     public static void main(String[] args)
     {
+        // Debugging, testing, validating
+        if (TEST_MODE_ENABLE) { test(); }
+        
         // Introduction.
         {
             String strIntro = "Welcome to the magical dice rolling game!";
@@ -176,4 +192,140 @@ public class Chapter04Exercise03
         
         return countDiceRollsUntil(value, 1);
     }
+    
+    static void test()
+    {
+        System.out.println("Debugging, Testing, and Verification Mode Enabled");
+        System.out.println();
+        
+        // Test parameters
+        int dataPoints = 10000;
+        
+        // Create test file
+        String strDateTime = new SimpleDateFormat("yyyyMMddHHmm")
+                .format(Calendar.getInstance().getTime());
+        File dataFile = new File("testdata" + strDateTime + ".txt");
+        // Write intro
+        String strDateTimeNice = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+                .format(Calendar.getInstance().getTime());
+        String s = "Test Data for Chapter 4 Exercise 3 Solution Program "
+                + "(Class) on " +  strDateTimeNice + "\n";
+        s = appendLineAndClear(dataFile, s + "\n");
+        
+        // static int getIntInRange(int n1, int n2)
+        System.out.print(".");
+        // Requires user input. Skip for now.
+        
+        // static int getDiceRoll()
+        System.out.print(".");
+        /*  Input: none
+        *   Expected output: Gaussian random distribution from 1-6
+        */
+        int[] data_getDiceRoll = new int[dataPoints];
+        for (int i=0; i<dataPoints; i++)
+        {
+            data_getDiceRoll[i] = getDiceRoll();
+            s += data_getDiceRoll[i] + ",";
+        }
+        s = appendLineAndClear(dataFile, s + "\n");
+        
+        // static int getDiceRollSum(int m) throws IllegalArgumentException
+        System.out.print(".");
+        /*  Input: 1,2,3,4,5,10,20,50,100+/-1,1000+/-1
+        *   Expected output: Random distribution with averages at N*3.5
+        */
+        int[] inputs_getDiceRollSum = new int[]{
+            1,2,3,4,5,10};
+        int[][] data_getDiceRollSum = 
+                new int[inputs_getDiceRollSum.length][dataPoints];
+        for (int j=0; j<inputs_getDiceRollSum.length; j++)
+        {
+            for (int i=0; i<dataPoints; i++)
+            {
+                data_getDiceRollSum[j][i] = 
+                        getDiceRollSum(inputs_getDiceRollSum[j]);
+                s += data_getDiceRollSum[j][i] + ",";
+            }
+            s += "\n";
+        }
+        s = appendLineAndClear(dataFile, s + "\n");
+        
+        // static int countDiceRollsUntil(int total, int dice) throws IllegalArgumentException
+        System.out.print(".");
+        /*  Input: dice 1,2,3,4,5,10,20,50,100+/-1,1000+/-1, totals N*1,2,3,4,5,6
+        *   Expected output: Complicated probabilities (averages) -- use Excel.
+        */
+        int[] inputs_countDiceRollsUntil_dice = new int[]{
+            1,2,3,4,5};
+        int[] inputs_countDiceRollUntil_total = new int[]{1,2,3,4,5,6};
+        int[][][] data_countDiceRollsUntil_1 = 
+                new int[6][inputs_countDiceRollsUntil_dice.length][dataPoints];
+        for (int k=0; k<inputs_countDiceRollUntil_total.length; k++)
+        {
+            for (int j=0; j<inputs_countDiceRollsUntil_dice.length; j++)
+            {
+                for (int i=0; i<dataPoints; i++)
+                {
+                    int total = inputs_countDiceRollUntil_total[k] 
+                            * inputs_countDiceRollsUntil_dice[j];
+                    data_countDiceRollsUntil_1[k][j][i] =
+                            countDiceRollsUntil(total,
+                                    inputs_countDiceRollsUntil_dice[j]
+                            );
+                    s += data_countDiceRollsUntil_1[k][j][i] + ",";
+                }
+                s += "\n";
+            }
+            s += "\n";
+        }
+        s = appendLineAndClear(dataFile, s + "\n");
+        
+        // static int countDiceRollsUntil(int value) throws IllegalArgumentException
+        System.out.print(".");
+        /* Should be the same as countDiceRollsUntil(int total, int dice=1)
+        *   Input: 1,2,3,4,5,6
+        *   Expected output: Random distribution (flat) with average 6.
+        */
+//        int[] inputs_countDiceRollUntil_total = new int[]{1,2,3,4,5,6}; // already initialized
+        int[][] data_countDiceRollsUntil_2 = 
+                new int[6][dataPoints];
+        for (int k=0; k<inputs_countDiceRollUntil_total.length; k++)
+        {
+            for (int i=0; i<dataPoints; i++)
+            {
+                data_countDiceRollsUntil_2[k][i] = 
+                        countDiceRollsUntil(inputs_countDiceRollUntil_total[k]);
+                s += data_countDiceRollsUntil_2[k][i] + ",";
+            }
+            s += "\n";
+        }
+        s = appendLineAndClear(dataFile, s + "\n");
+        
+        System.out.println();
+        System.out.println("Done.");
+    }
+    
+    static void writeToFile( File f, String s )
+    {
+        // Automatically closes (java.io.Closeable)
+        try ( BufferedWriter writer = 
+                new BufferedWriter(new FileWriter(f, true)) )
+        {
+            writer.write(s);
+        } catch (IOException e) {
+            System.out.println("File exception: " + e);
+        }
+        
+//        BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));
+//        writer.write(s);
+//        writer.close();
+    }
+    
+    static String appendLineAndClear( File f, String s )
+    {
+        s += "\n";
+        writeToFile(f,s);
+        return "";
+    }
+
 }
