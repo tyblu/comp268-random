@@ -6,7 +6,7 @@
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 23, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
@@ -32,7 +32,7 @@ public class Chapter04Exercise03
     public static void main(String[] args)
     {
         // Debugging, testing, validating
-        if (TEST_MODE_ENABLE) { test(); }
+        if (TEST_MODE_ENABLE) { test(); System.exit(0); }
         
         // Introduction.
         {
