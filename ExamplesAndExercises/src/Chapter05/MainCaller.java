@@ -41,8 +41,9 @@ package Chapter05;
  */
 public class MainCaller {
     
-    private static final boolean ENABLE_PAIROFDICE = true;
+    private static final boolean ENABLE_PAIROFDICE = false;
     private static final boolean ENABLE_STUDENTTEST = false;
+    private static final boolean ENABLE_HIGHLOWGAME = true;
     
     
     public static void main(String[] args)
@@ -50,6 +51,8 @@ public class MainCaller {
         if (ENABLE_PAIROFDICE) { RollTwoPairs.callRollTwoPairs(); }
         
         if (ENABLE_STUDENTTEST) { StudentTest.callStudentTest(); }
+        
+        if (ENABLE_HIGHLOWGAME) { HighLow.callHighLow(); }
     }
     
 }
