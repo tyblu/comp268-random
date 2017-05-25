@@ -24,7 +24,7 @@ import java.util.Calendar;
 
 public class Chapter04Exercise03
 {
-    private static final boolean TEST_MODE_ENABLE = true;
+    private static final boolean TEST_MODE_ENABLE = false;
     
     public static void main(String[] args)
     {
@@ -268,6 +268,7 @@ public class Chapter04Exercise03
         // static int countDiceRollsUntil(int total, int dice) throws IllegalArgumentException
         System.out.print(".");
         /*  Input: dice 1,2,3,4,5, totals N*1,2,3,4,5,6
+        *           The input totals should really be [N*1,N*1+1,...,N*6-1,N*6].
         *   Expected output: Complicated probabilities (averages) -- use Excel.
         */
         int[] inputs_countDiceRollsUntil_dice = new int[]{
