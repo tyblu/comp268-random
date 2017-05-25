@@ -24,6 +24,8 @@
 
 package Chapter05;
 
+import java.util.Random;
+
 /**
  *              Textbook Example Program, Chapter 5
  * Class:       Dice.java
@@ -32,7 +34,7 @@ package Chapter05;
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 25, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on and References:
  * @see Chapter04Exercises.Dice
@@ -43,6 +45,8 @@ public class PairOfDice
 {
     public int die1;    // Number showing on 1st die
     public int die2;    // Number showing on 2nd die
+    
+    private int rollCount = 0;
 
     // Constructors
     /**
@@ -64,14 +68,50 @@ public class PairOfDice
         die1 = val1;
         die2 = val2;
     }
+    
+    // Getters
+    /**
+     * Getter method to return the sum total of the dice values.
+     * @return int Sum total of the dice values.
+     */
+    public int getTotal()
+    {
+        return die1 + die2;
+    }
+    
+    /**
+     * Getter method to return the number of rolls this pair of dice has made.
+     * @return int the number of rolls this pair of dice has made.
+     */
+    public int getRollCount()
+    {
+        return rollCount;
+    }
 
+    // Methods
     /**
      * Roll the dice by setting each of the dice to be a random number
      * between 1 and 6, inclusive.
      */
     public void roll()
     {
-        die1 = (int)( Math.random()*6 ) + 1;
-        die2 = (int)( Math.random()*6 ) + 1;
+        Random randGen = new Random();
+        die1 = randGen.nextInt(6) + 1;
+        die2 = randGen.nextInt(6) + 1;
+        rollCount++;
+    }
+    
+    /**
+     * @return a String representation of a pair of dice, where die1 and die2
+     * are instance variables containing the number that are showing on the two
+     * dice.
+     */
+    @Override   // NetBeans said I should do this. Seems legit ;)
+    public String toString()
+    {
+        if (die1 == die2)
+            return "double " + die1;
+        else
+            return die1 + " and " + die2;
     }
 }

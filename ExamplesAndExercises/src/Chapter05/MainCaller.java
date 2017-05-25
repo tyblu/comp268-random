@@ -41,8 +41,8 @@ package Chapter05;
  */
 public class MainCaller {
     
-    private static final boolean ENABLE_PAIROFDICE = false;
-    private static final boolean ENABLE_STUDENTTEST = true;
+    private static final boolean ENABLE_PAIROFDICE = true;
+    private static final boolean ENABLE_STUDENTTEST = false;
     
     
     public static void main(String[] args)

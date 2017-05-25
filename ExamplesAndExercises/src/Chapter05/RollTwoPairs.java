@@ -52,24 +52,21 @@ public class RollTwoPairs
         PairOfDice secondDice;
         secondDice = new PairOfDice();
         
-        int countRolls;
         int total1, total2;
         
-        countRolls = 0;
         do {
             firstDice.roll();
-            total1 = firstDice.die1 + firstDice.die2;
-            System.out.println("First pair comes up " + total1);
+            System.out.println("First pair comes up " + firstDice.getTotal()
+                    + " with " + firstDice);
             
             secondDice.roll();
-            total2 = secondDice.die1 + secondDice.die2;
-            System.out.println("Second pair comes up " + total2);
-            
-            countRolls++;
+            System.out.println("Second pair comes up " + secondDice.getTotal()
+                    + " with " + secondDice);
             
             System.out.println();
-        } while (total1 != total2);
+        } while ( firstDice.getTotal() != secondDice.getTotal() );
         
-        System.out.println("It took " + countRolls + " rolls to match totals.");
+        System.out.println("It took " + (firstDice.getRollCount()-1)
+                + " rolls to match totals.");
     }
 }
