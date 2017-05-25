@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package Chapter05;
+
 
 /**
  *              Textbook Example Program, Chapter 5
- * Class:       Dice.java
+ * Class:       Student.java
  * Purpose:     
  * 
  * @author:    Tyler Lucas
@@ -35,43 +35,62 @@ package Chapter05;
  * Version     1.0
  * 
  * Based on and References:
- * @see Chapter04Exercises.Dice
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
  *      2014: Chapter 5
+ * 
  */
-public class PairOfDice
+public class Student
 {
-    public int die1;    // Number showing on 1st die
-    public int die2;    // Number showing on 2nd die
-
-    // Constructors
+    private String name;
+    public double test1, test2, test3;
+    
+    // Constructors.
     /**
-     * Creates a pair of dice with random values.
+     * Create Student object with blank name.
      */
-    public PairOfDice()
+    public Student()
     {
-        roll();
+        name = "";
     }
     
     /**
-     * Creates a pair of dice with initial values val1 and val2.
-     * 
-     * @param val1  Initial value for 1st die.
-     * @param val2  Initial value for 2nd die.
+     * Provides a name for the Student.
+     * @param theName Student name. Cannot be null.
+     * @throws IllegalArgumentException if theName is null.
      */
-    public PairOfDice(int val1, int val2)
+    public Student(String theName)
     {
-        die1 = val1;
-        die2 = val2;
+        if ( theName == null || theName.matches("") )
+            throw new IllegalArgumentException("Name can\'t be null or empty.");
+        
+        name = theName;
     }
-
+    
+    // Getters.
     /**
-     * Roll the dice by setting each of the dice to be a random number
-     * between 1 and 6, inclusive.
+     * Getter method for reading the value of name.
+     * @return String Student name (private instance variable).
      */
-    public void roll()
+    public String getName()
     {
-        die1 = (int)( Math.random()*6 ) + 1;
-        die2 = (int)( Math.random()*6 ) + 1;
+        return name;
+    }
+    
+    // Setters.
+    /**
+     * Setter method for setting the value of name.
+     */
+    public void setName(String theName)
+    {
+        name = theName;
+    }
+    
+    // Methods
+    /**
+     * Compute average test grade.
+     */
+    public double getAverage()
+    {
+        return (test1 + test2 + test3) / (double)3;
     }
 }

@@ -38,12 +38,13 @@ package Chapter05;
  * @see Chapter04Exercises.Dice
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
  *      2014, pp202-203
- * 
  */
-
 public class RollTwoPairs
 {
-    public static void main(String[] args)
+    /**
+     * Call this.
+     */
+    public static void callRollTwoPairs()
     {
         PairOfDice firstDice;
         firstDice = new PairOfDice();

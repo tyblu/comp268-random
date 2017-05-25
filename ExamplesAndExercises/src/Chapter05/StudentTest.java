@@ -26,7 +26,7 @@ package Chapter05;
 
 /**
  *              Textbook Example Program, Chapter 5
- * Class:       Dice.java
+ * Class:       StudentTest.java
  * Purpose:     
  * 
  * @author:    Tyler Lucas
@@ -35,43 +35,32 @@ package Chapter05;
  * Version     1.0
  * 
  * Based on and References:
- * @see Chapter04Exercises.Dice
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
  *      2014: Chapter 5
+ * 
  */
-public class PairOfDice
+public class StudentTest
 {
-    public int die1;    // Number showing on 1st die
-    public int die2;    // Number showing on 2nd die
-
-    // Constructors
     /**
-     * Creates a pair of dice with random values.
+     * Call me. main() replacement.
      */
-    public PairOfDice()
+    public static void callStudentTest()
     {
-        roll();
-    }
-    
-    /**
-     * Creates a pair of dice with initial values val1 and val2.
-     * 
-     * @param val1  Initial value for 1st die.
-     * @param val2  Initial value for 2nd die.
-     */
-    public PairOfDice(int val1, int val2)
-    {
-        die1 = val1;
-        die2 = val2;
-    }
-
-    /**
-     * Roll the dice by setting each of the dice to be a random number
-     * between 1 and 6, inclusive.
-     */
-    public void roll()
-    {
-        die1 = (int)( Math.random()*6 ) + 1;
-        die2 = (int)( Math.random()*6 ) + 1;
+        Student std, std1, std2, std3;
+        
+        std = new Student();
+        std1 = new Student();
+        std2 = std1;
+        std3 = null;
+        
+//        std.name = "John Smith";
+//        std1.name = "Mary Jones";
+        std.setName("John Smith");
+        std1.setName("Mary Jones");
+        
+        System.out.println("std:  " + std.getName());
+        System.out.println("std1: " + std1.getName());
+        System.out.println("std2: " + std2.getName());
+//        System.out.println("std3: " + std3.getName());
     }
 }

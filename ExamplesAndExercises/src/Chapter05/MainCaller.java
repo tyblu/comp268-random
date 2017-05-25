@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package Chapter05;
+
 
 /**
  *              Textbook Example Program, Chapter 5
- * Class:       Dice.java
- * Purpose:     
+ * Class:       MainCaller.java
+ * Purpose:     Used and abused to call and test methods and classes in Chapter 5.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
@@ -35,43 +35,21 @@ package Chapter05;
  * Version     1.0
  * 
  * Based on and References:
- * @see Chapter04Exercises.Dice
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
  *      2014: Chapter 5
+ * 
  */
-public class PairOfDice
-{
-    public int die1;    // Number showing on 1st die
-    public int die2;    // Number showing on 2nd die
-
-    // Constructors
-    /**
-     * Creates a pair of dice with random values.
-     */
-    public PairOfDice()
+public class MainCaller {
+    
+    private static final boolean ENABLE_PAIROFDICE = true;
+    private static final boolean ENABLE_STUDENTTEST = false;
+    
+    
+    public static void main(String[] args)
     {
-        roll();
+        if (ENABLE_PAIROFDICE) { RollTwoPairs.callRollTwoPairs(); }
+        
+        if (ENABLE_STUDENTTEST) { StudentTest.callStudentTest(); }
     }
     
-    /**
-     * Creates a pair of dice with initial values val1 and val2.
-     * 
-     * @param val1  Initial value for 1st die.
-     * @param val2  Initial value for 2nd die.
-     */
-    public PairOfDice(int val1, int val2)
-    {
-        die1 = val1;
-        die2 = val2;
-    }
-
-    /**
-     * Roll the dice by setting each of the dice to be a random number
-     * between 1 and 6, inclusive.
-     */
-    public void roll()
-    {
-        die1 = (int)( Math.random()*6 ) + 1;
-        die2 = (int)( Math.random()*6 ) + 1;
-    }
 }
