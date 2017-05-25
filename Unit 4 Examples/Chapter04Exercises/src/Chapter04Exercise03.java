@@ -26,38 +26,38 @@ public class Chapter04Exercise03
 {
     private static final boolean TEST_MODE_ENABLE = false;
     
-    public static void main(String[] args)
-    {
-        // Debugging, testing, validating
-        if (TEST_MODE_ENABLE) { test(); System.exit(0); }
-        
-        // Introduction.
-        {
-            String strIntro = "Welcome to the magical dice rolling game!";
-            strIntro += "\nLet\'s roll a pair until the total we\'re ";
-            strIntro += "looking for comes up.";
-            strIntro += "\n";
-            strIntro += "\nWhat total are you looking for? Enter 2-12: ";
-            System.out.print(strIntro);
-        }
-        
-        // Get user to enter dice total to look for.
-        int userTotal = getIntInRange(2,12);
-        
-        System.out.println();
-        System.out.println("Rolling...");
-        
-        // Count dice rolls until total is found.
-        // try..catch not req'd, as input already sanitized by getIntInRange()
-        int rollsCounted = countDiceRollsUntil(userTotal, 2);
-        
-        // Conclusion.
-        {
-            String strConc = "It took " + rollsCounted + " rolls to come up ";
-            strConc += "with a sum total value of " + userTotal + ".";
-            System.out.println(strConc);
-        }
-    }
+//    public static void main(String[] args)
+//    {
+//        // Debugging, testing, validating
+//        if (TEST_MODE_ENABLE) { test(); System.exit(0); }
+//        
+//        // Introduction.
+//        {
+//            String strIntro = "Welcome to the magical dice rolling game!";
+//            strIntro += "\nLet\'s roll a pair until the total we\'re ";
+//            strIntro += "looking for comes up.";
+//            strIntro += "\n";
+//            strIntro += "\nWhat total are you looking for? Enter 2-12: ";
+//            System.out.print(strIntro);
+//        }
+//        
+//        // Get user to enter dice total to look for.
+//        int userTotal = getIntInRange(2,12);
+//        
+//        System.out.println();
+//        System.out.println("Rolling...");
+//        
+//        // Count dice rolls until total is found.
+//        // try..catch not req'd, as input already sanitized by getIntInRange()
+//        int rollsCounted = countDiceRollsUntil(userTotal, 2);
+//        
+//        // Conclusion.
+//        {
+//            String strConc = "It took " + rollsCounted + " rolls to come up ";
+//            strConc += "with a sum total value of " + userTotal + ".";
+//            System.out.println(strConc);
+//        }
+//    }
     
     /**
      * Gets an integer input from standard input using TextIO in a certain
