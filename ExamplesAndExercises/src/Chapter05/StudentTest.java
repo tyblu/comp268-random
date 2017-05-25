@@ -32,7 +32,7 @@ package Chapter05;
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 25, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
@@ -48,19 +48,21 @@ public class StudentTest
     {
         Student std, std1, std2, std3;
         
-        std = new Student();
-        std1 = new Student();
+        std = new Student("John Smith");
+        std1 = new Student("Mary Jones");
         std2 = std1;
-        std3 = null;
         
 //        std.name = "John Smith";
 //        std1.name = "Mary Jones";
         std.setName("John Smith");
-        std1.setName("Mary Jones");
+        std1.setName("Harvey Jones");
         
         System.out.println("std:  " + std.getName());
         System.out.println("std1: " + std1.getName());
         System.out.println("std2: " + std2.getName());
-//        System.out.println("std3: " + std3.getName());
+        
+        System.out.println("std.ID:  " + std.getID());
+        System.out.println("std1.ID: " + std1.getID());
+        System.out.println("std2.ID: " + std2.getID());
     }
 }

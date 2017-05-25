@@ -32,7 +32,7 @@ package Chapter05;
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 25, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
@@ -41,8 +41,8 @@ package Chapter05;
  */
 public class MainCaller {
     
-    private static final boolean ENABLE_PAIROFDICE = true;
-    private static final boolean ENABLE_STUDENTTEST = false;
+    private static final boolean ENABLE_PAIROFDICE = false;
+    private static final boolean ENABLE_STUDENTTEST = true;
     
     
     public static void main(String[] args)

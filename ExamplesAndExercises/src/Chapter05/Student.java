@@ -32,7 +32,7 @@ package Chapter05;
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 25, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
@@ -44,15 +44,12 @@ public class Student
     private String name;
     public double test1, test2, test3;
     
-    // Constructors.
-    /**
-     * Create Student object with blank name.
-     */
-    public Student()
-    {
-        name = "";
-    }
+    private int ID; // Unique ID number for this student.
     
+    /* Keep track of next available unique ID number. */
+    private static int nextUniqueID = 0;
+    
+    // Constructors.
     /**
      * Provides a name for the Student.
      * @param theName Student name. Cannot be null.
@@ -64,6 +61,8 @@ public class Student
             throw new IllegalArgumentException("Name can\'t be null or empty.");
         
         name = theName;
+        nextUniqueID++;
+        ID = nextUniqueID;
     }
     
     // Getters.
@@ -76,9 +75,19 @@ public class Student
         return name;
     }
     
+    /**
+     * Getter method for reading the value of ID.
+     * @return int Student ID number.
+     */
+    public int getID()
+    {
+        return ID;
+    }
+    
     // Setters.
     /**
      * Setter method for setting the value of name.
+     * @param theName String Student name.
      */
     public void setName(String theName)
     {
