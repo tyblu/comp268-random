@@ -31,7 +31,7 @@
  * @author:    Tyler Lucas <tyblu@live.com>
  * Student ID: 3305203
  * Date:       May 24, 2017
- * Version     1.0
+ * Version     1.1
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
@@ -46,7 +46,7 @@ public class Chapter04Exercise04 {
         System.out.println(intro());
         System.out.println();
         
-        int dataPoints = 10000;                     // Number of repetitions.
+        int dataPoints = 10000; // Number of repetitions. Set < (2^31-1)/6^dice
         int maxNumDice = 5;
         int maxTotal = maxNumDice * 6;
         double[][] avgRollsToTotal = new double[maxTotal][maxNumDice];
@@ -65,12 +65,15 @@ public class Chapter04Exercise04 {
                 try {
                     for ( int i=0; i<dataPoints; i++ ) // averaging
                     {
-                        /* 6 * dice * dataPoints, the maximum return value of
+                        /*
+                        * 6^dice * dataPoints, the maximum return value of
                         * countDiceRollsUntil(int,int), will probably never 
                         * overflow int due to processing limitations on dice and
                         * statistical suitability of large numbers of 
                         * data points. It is still possible to 'Jimmy' it, 
                         * however, so I will keep this huge comment block here.
+                        * 
+                        * Set dataPoints < (2^31-1)/(6^dice), ~276k for 5 dice.
                         */
                         sumNumberRollsToTotal += 
                                 Dice.countDiceRollsUntil(total, dice);
