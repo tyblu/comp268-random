@@ -46,6 +46,9 @@ public class StatCalc {
     private int count;   // Number of numbers that have been entered.
     private double sum;  // The sum of all the items that have been entered.
     private double squareSum;  // The sum of the squares of all the items.
+    
+    private double max = Double.NaN;    // Largest number entered.
+    private double min = Double.NaN;    // Smallest number entered.
 
     /**
      * Add a number to the dataset.  The statistics will be computed for all
@@ -56,8 +59,30 @@ public class StatCalc {
         count++;
         sum += num;
         squareSum += num*num;
+        
+        if (min == Double.NaN || num < min) { min = num; }
+        if (max == Double.NaN || num > max) { max = num; }
     }
 
+    // Getters
+    /**
+     * Getter method to return the maximum number entered so far.
+     * @return the maximum number entered so far.
+     */
+    public double getMax()
+    {
+        return max;
+    }
+    
+    /**
+     * Getter method to return the minimum number entered so far.
+     * @return the minimum number entered so far.
+     */
+    public double getMin()
+    {
+        return min;
+    }
+    
     /**
      * Return the number of items that have been entered into the dataset.
      * @return the number of items that have been entered into the dataset.

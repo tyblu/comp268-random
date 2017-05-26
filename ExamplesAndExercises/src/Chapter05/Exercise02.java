@@ -23,44 +23,34 @@
  */
 package Chapter05;
 
-
 /**
- *              Textbook Example Program, Chapter 5
- * Class:       MainCaller.java
- * Purpose:     Used and abused to call and test methods and classes in Chapter 5.
+ *              Textbook Chapter 5 Exercise 2
+ * Class:       Exercise02.java
+ * Purpose:     Tests modified StatCalc class by computing statistics for a set
+ *              of non-zero numbers entered by the user.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
- * Date:       May 25, 2017
- * Version     1.1
+ * Date:       May 26, 2017
+ * Version     1.0
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
- *      2014: Chapter 5
- * 
+ *      2014: Chapter 5, Exercise 2
  */
-public class MainCaller {
+public class Exercise02 {
     
-    // Examples
-    private static final boolean ENABLE_PAIROFDICE = false;
-    private static final boolean ENABLE_STUDENTTEST = false;
-    private static final boolean ENABLE_HIGHLOWGAME = false;
-    
-    // Exercises
-    private static final boolean ENABLE_EXERCISE_1 = false;
-    private static final boolean ENABLE_EXERCISE_2 = true;
-    
-    
-    public static void main(String[] args)
+    public static void callExercise02()
     {
-        // Examples
-        if (ENABLE_PAIROFDICE) { RollTwoPairs.callRollTwoPairs(); }
-        if (ENABLE_STUDENTTEST) { StudentTest.callStudentTest(); }
-        if (ENABLE_HIGHLOWGAME) { HighLow.callHighLow(); }
+        // intro
         
-        // Exercises
-        if (ENABLE_EXERCISE_1) { Exercise01.callExercise01(); }
-        if (ENABLE_EXERCISE_2) { Exercise02.callExercise02(); }
+        StatCalc calc = new StatCalc();
+        
+        // Read numbers from user, 0 to stop
+        
+        // Print out all six stats
+        
+        // outro
     }
     
 }
