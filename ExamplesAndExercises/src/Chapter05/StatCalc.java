@@ -1,13 +1,46 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2017 Tyler Lucas <tyblu@live.com>.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package Chapter05;
 
-/** 
- * An object of class StatCalc can be used to compute several simple statistics
- * for a set of numbers.  Numbers are entered into the dataset using
- * the enter(double) method.  Methods are provided to return the following
- * statistics for the set of numbers that have been entered: The number
- * of items, the sum of the items, the average, and the standard deviation
+/**
+ * Class:       StatCalc.java
+ * Purpose:     An object of class StatCalc can be used to compute several
+ *              simple statistics for a set of numbers. Numbers are entered
+ *              into the dataset using the enter(double) method.  Methods are
+ *              provided to return the following statistics for the set of
+ *              numbers that have been entered: The number of items, the sum
+ *              of the items, the average, and the standard deviation.
+ * 
+ * @author:    Tyler Lucas
+ * Student ID: 3305203
+ * Date:       May 26, 2017
+ * Version     1.1
+ * 
+ * Based on and References:
+ * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
+ *      2014: Chapter 5, Exercise 2
  */
-
 public class StatCalc {
 
     private int count;   // Number of numbers that have been entered.
@@ -17,6 +50,7 @@ public class StatCalc {
     /**
      * Add a number to the dataset.  The statistics will be computed for all
      * the numbers that have been added to the dataset using this method.
+     * @param num Number to enter.
      */
     public void enter(double num) {
         count++;
@@ -26,6 +60,7 @@ public class StatCalc {
 
     /**
      * Return the number of items that have been entered into the dataset.
+     * @return the number of items that have been entered into the dataset.
      */
     public int getCount() {
         return count;
@@ -33,6 +68,7 @@ public class StatCalc {
 
     /**
      * Return the sum of all the numbers that have been entered.
+     * @return the sum of all the numbers that have been entered.
      */
     public double getSum() {
         return sum;
@@ -41,6 +77,7 @@ public class StatCalc {
     /**
      * Return the average of all the items that have been entered.
      * The return value is Double.NaN if no numbers have been entered.
+     * @return the average of all the items that have been entered.
      */
     public double getMean() {
         return sum / count;  
@@ -49,6 +86,7 @@ public class StatCalc {
     /**
      * Return the standard deviation of all the items that have been entered.
      * The return value is Double.NaN if no numbers have been entered.
+     * @return the standard deviation of all the items that have been entered.
      */
     public double getStandardDeviation() {  
         double mean = getMean();
