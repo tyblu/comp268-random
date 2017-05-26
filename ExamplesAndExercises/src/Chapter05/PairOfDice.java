@@ -32,11 +32,12 @@ import java.util.Random;
  * Purpose:     Facilitates using a pair of dice in games.
  * 
  *      v1.2    Changed to conform to requirements for exercise 5.1.
+ *      v1.3    Changed to conform to requirements for exercise 5.3.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 25, 2017
- * Version     1.2
+ * Version     1.3
  * 
  * Based on and References:
  * @see Chapter04Exercises.Dice
@@ -108,6 +109,16 @@ public class PairOfDice
         return rollCount;
     }
 
+    // Setters
+    /**
+     * Sets rollCount to parameter.
+     * @param rollCount Set rollCount.
+     */
+    public void setRollCount(int rollCount)
+    {
+        this.rollCount = rollCount;
+    }
+    
     // Methods
     /**
      * Roll the dice by setting each of the dice to be a random number

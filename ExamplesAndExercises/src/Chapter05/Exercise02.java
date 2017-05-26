@@ -87,7 +87,8 @@ public class Exercise02 {
     }
     
     /**
-     * Provides introductory spiel. Less than 80-char wide, no newline at end.
+     * Text to instruct user to provide input. Less than 80-char wide, no
+     * newline at end.
      * @return String of introductory text. Less than 80-char wide, no newline
      *          at the very end.
      */

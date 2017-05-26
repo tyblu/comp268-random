@@ -48,7 +48,8 @@ public class MainCaller {
     
     // Exercises
     private static final boolean ENABLE_EXERCISE_1 = false;
-    private static final boolean ENABLE_EXERCISE_2 = true;
+    private static final boolean ENABLE_EXERCISE_2 = false;
+    private static final boolean ENABLE_EXERCISE_3 = true;
     
     
     public static void main(String[] args)
@@ -61,6 +62,7 @@ public class MainCaller {
         // Exercises
         if (ENABLE_EXERCISE_1) { Exercise01.callExercise01(); }
         if (ENABLE_EXERCISE_2) { Exercise02.callExercise02(); }
+        if (ENABLE_EXERCISE_3) { Exercise03.callExercise03(); }
     }
     
 }

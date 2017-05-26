@@ -26,8 +26,8 @@ package Chapter05;
 /**
  *              Textbook Chapter 5 Exercise 3
  * Class:       Exercise03.java
- * Purpose:     Lists the average number of rolls it takes to get a given total,
- *              plus a number of related statistics.
+ * Purpose:     Lists the average number of rolls it takes for a pair of dice
+ *              to get a given total, plus a number of related statistics.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
@@ -41,60 +41,47 @@ package Chapter05;
  */
 public class Exercise03 {
     
+    private static final int DICE_SIDES = 6;
+    private static final int NUMBER_OF_DICE = 2;
+    private static final int TOTAL_MIN = NUMBER_OF_DICE * 1;
+    private static final int TOTAL_MAX = NUMBER_OF_DICE * DICE_SIDES;
+    private static final int NUMBER_OF_TOTALS = TOTAL_MAX - TOTAL_MIN;
+    
+    private static final int DATAPOINTS = 10000; // Set < (2^31-1)/6^2=59652323
+    
     public static void callExercise03()
     {
         System.out.println(intro());
         System.out.println();
         
-        int dataPoints = 10000; // Number of repetitions. Set < (2^31-1)/6^dice
-        int maxNumDice = 5;
-        int maxTotal = maxNumDice * 6;
-        double[][] avgRollsToTotal = new double[maxTotal][maxNumDice];
-        
         /* Collect data and fill table. */
         System.out.print(tableHeader());
-        int dice, total;
-        int sumNumberRollsToTotal;
-        for ( total=1; total<=maxTotal; total++ ) // rows
+        for (int total=TOTAL_MIN; total<=TOTAL_MAX; total++)
         {
-            System.out.print(tableRowBlank());
+            StatCalc totalData = new StatCalc();
+            PairOfDice dice = new PairOfDice();
             
-            for ( dice=1; dice<=maxNumDice; dice++ ) // columns
+//            System.out.println(); // blank line between table elements
+            
+            for (int i=0; i<DATAPOINTS; i++)
             {
-                sumNumberRollsToTotal = 0;
-                try {
-                    for ( int i=0; i<dataPoints; i++ ) // averaging
-                    {
-                        /*
-                        * 6^dice * dataPoints, the maximum return value of
-                        * countDiceRollsUntil(int,int), will probably never 
-                        * overflow int due to processing limitations on dice and
-                        * statistical suitability of large numbers of 
-                        * data points. It is still possible to 'Jimmy' it, 
-                        * however, so I will keep this huge comment block here.
-                        * 
-                        * Set dataPoints < (2^31-1)/(6^dice), ~276k for 5 dice.
-                        */
-                        sumNumberRollsToTotal += 
-                                Dice.countDiceRollsUntil(total, dice);
-                    }
-                } catch (IllegalArgumentException e) {  // total outside range
-                    sumNumberRollsToTotal = 0;
-                }
-                avgRollsToTotal[total-1][dice-1] =
-                        sumNumberRollsToTotal / (double)dataPoints;
+                dice.setRollCount(0);  // Reset rollCount=0.
+                
+                do {
+                    dice.roll();
+                } while(dice.getTotal() != total);
+                
+                totalData.enter(dice.getRollCount());
             }
             
-            System.out.printf(tableRowFormat(), 
+            // Print row
+            System.out.printf(tableRowFormat(),
                     total,
-                    avgRollsToTotal[total-1][0],
-                    avgRollsToTotal[total-1][1],
-                    avgRollsToTotal[total-1][2],
-                    avgRollsToTotal[total-1][3],
-                    avgRollsToTotal[total-1][4]);
+                    totalData.getMean(),
+                    (int)totalData.getMin(),
+                    (int)totalData.getMax(),
+                    totalData.getStandardDeviation());
         }
-        
-        System.out.print(tableRowLine());
     }
     
     /**
@@ -105,89 +92,59 @@ public class Exercise03 {
     private static String intro()
     {
         String s = "";
-        s += "Let\'s roll some dice an unnecessarily" + "\n";
+        
+        s += "Let\'s roll a pair of dice an unnecessarily" + "\n";
         s += "gargantuan number of times in order to" + "\n";
         s += "figure out, on average, how many rolls" + "\n";
-        s += "it takes a given number of dice to get" + "\n";
-        s += "a certain total.";
+        s += "it takes to get a certain total." + "\n";
         
         return s;
     }
 
     /**
-     * Prints table header.
+     * Prints table header. Newline terminated, so println() gives 2 blank lines.
      * 
-     * |----------------------------------------------------|
-     * |     Average Number of Rolls Taken To Get Total     |
-     * | Total |--------------------------------------------|
-     * |  on   |               Number of Dice               |
-     * | Dice  |   1    |   2    |   3    |   4    |   5    |
-     * |-------|--------|--------|--------|--------|--------|
-     * |       |        |        |        |        |        |
-     * |  001  |    5.9 |    0.0 |    0.0 |    0.0 |    0.0 |
-     * |       |        |        |        |        |        |
-     * |  002  |    6.1 |   35.5 |    0.0 |    0.0 |    0.0 |
-     * |       |        |        |        |        |        |
-     * |  XXX  | XXXX.X | XXXX.X | XXXX.X | XXXX.X | XXXX.X |
-     * |  ...  |        |        |        |        |        |
+     *   Total   Average    Minimum     Maximum
+     *    on      Number     Number      Number    Standard
+     *   Dice    of Rolls   of Rolls   of Rolls   Deviation
+     *   -----   --------   --------   --------   ---------
+     *
+     *     02       5.90         1       9528     -5829.92
+     *
+     *     03       6.10        35       XXXX     -XXXX.XX
+     *
+     *     XX    XXXX.XX      XXXX       XXXX     -XXXX.XX
+     *    ...
      * 
-     * @return 
+     * @return String of table header. Newline terminated.
      */
     private static String tableHeader()
     {
         String s = "";
         
-        s += "|----------------------------------------------------|" + "\n";
-        s += "|     Average Number of Rolls Taken To Get Total     |" + "\n";
-        s += "| Total |--------------------------------------------|" + "\n";
-        s += "|  on   |               Number of Dice               |" + "\n";
-        s += "| Dice  |   1    |   2    |   3    |   4    |   5    |" + "\n";
-        s += tableRowLine();
-//        s += tableRowBlank();
+        s += "   Total   Average    Minimum     Maximum" + "\n";
+        s += "    on      Number     Number      Number    Standard" + "\n";
+        s += "   Dice    of Rolls   of Rolls   of Rolls   Deviation" + "\n";
+        s += "   -----   --------   --------   --------   ---------" + "\n";
         
         return s;
     }
     
     /**
-     * Prints table row with gaps filled with dashes, making a line.
-     * Primarily for table header and footer.
-     * 
-     * |       |        |        |        |        |        |
-     * |  ...  |   ...  |   ...  |   ...  |   ...  |   ...  |
-     * |       |        |        |        |        |        |
-     * |  XXX  | XXXX.X | XXXX.X | XXXX.X | XXXX.X | XXXX.X |
-     * |       |        |        |        |        |        |
-     * |-------|--------|--------|--------|--------|--------|
-     * 
-     * @return 
-     */
-    private static String tableRowLine()
-    {
-        return "|-------|--------|--------|--------|--------|--------|" + "\n";
-    }
-    
-    /**
-     * Provides String, a table row to space out values. Appended with newline.
-     * @return String, \n at end.
-     */
-    private static String tableRowBlank()
-    {   
-        return "|       |        |        |        |        |        |" + "\n";
-    }
-    
-    /**
      * Provides formatting string for printf() command. Appended with newline.
      * Arguments referenced:    1   %02d    total to get
-     *                          2   %6.1f   average number of rolls with 1 die
-     *                          3   %6.1f   average number of rolls with 2 dice
-     *                          ...         ...
-     *                          6   %6.1f   average number of rolls with 5 dice
+     *                          2   %7.2f   average number of rolls for total
+     *                          3   %4d     minimum number of rolls for total
+     *                          4   %4d     maximum number of rolls for total
+     *                          5   %+8.2f  standard deviation of rolls for total
      * 
      * @return String with PrintStream (etc) formatting code, %n at end.
      */
     private static String tableRowFormat()
     {
-        //      |  XXX  | XXXX.X | XXXX.X | XXXX.X | XXXX.X | XXXX.X |
-        return "|  %03d  | %6.1f | %6.1f | %6.1f | %6.1f | %6.1f |%n";
+        //     *     XX    XXXX.XX      XXXX       XXXX     -XXXX.XX
+        return "     %02d    %7.2f      %4d       %4d     %7.2f%n";
     }
+    
+    
 }
