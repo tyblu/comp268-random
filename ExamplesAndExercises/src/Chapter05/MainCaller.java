@@ -41,18 +41,24 @@ package Chapter05;
  */
 public class MainCaller {
     
+    // Examples
     private static final boolean ENABLE_PAIROFDICE = false;
     private static final boolean ENABLE_STUDENTTEST = false;
-    private static final boolean ENABLE_HIGHLOWGAME = true;
+    private static final boolean ENABLE_HIGHLOWGAME = false;
+    
+    // Exercises
+    private static final boolean ENABLE_EXERCISE_1 = true;
     
     
     public static void main(String[] args)
     {
+        // Examples
         if (ENABLE_PAIROFDICE) { RollTwoPairs.callRollTwoPairs(); }
-        
         if (ENABLE_STUDENTTEST) { StudentTest.callStudentTest(); }
-        
         if (ENABLE_HIGHLOWGAME) { HighLow.callHighLow(); }
+        
+        // Exercises
+        if (ENABLE_EXERCISE_1) { Exercise01.callExercise01(); }
     }
     
 }

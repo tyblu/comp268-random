@@ -42,11 +42,41 @@ public class Exercise01 {
     
     public static void callExercise01()
     {
-        // intro
+        System.out.println(intro());
         
-        // roll loop
+        PairOfDice dice = new PairOfDice();
+        
+        do {
+            dice.roll();
+            
+            System.out.println();
+            System.out.print("Roll #" + dice.getRollCount());
+            System.out.print(" comes up " + dice.getTotal());
+            System.out.println(" with " + dice + ".");
+
+        } while (dice.getTotal() != 2 );
         
         // outro
+        System.out.println("It took " + (dice.getRollCount()-1) + " rolls.");
+        System.out.println("Did it work? I hope it did! See you next time.");
+    }
+    
+    /**
+     * Contains introductory text. Does not have newline at end.
+     * @return String of introductory text. 80-char wide, 4 lines, no newline at
+     *          end.
+     */
+    static String intro()
+    {
+        String s = "";
+//        String s = new String();
+        
+        s += "Hello, welcome to my overly-introduced program solution " + "\n";
+        s += "for Exercise 5.1 (Intro. to Prog. Using Java v7, by Eck)." + "\n";
+        s += "We\'re testing the class PairOfDice by counting how many " + "\n";
+        s += "rolls it takes to get snake-eyes. Let\'s get, uh... ROLLIN\'!";
+        
+        return s;
     }
     
 }
