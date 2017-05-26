@@ -1,0 +1,23 @@
+run:
+Let's roll a pair of dice an unnecessarily
+gargantuan number of times in order to
+figure out, on average, how many rolls
+it takes to get a certain total.
+
+
+   Total   Average    Minimum     Maximum
+    on      Number     Number      Number    Standard
+   Dice    of Rolls   of Rolls   of Rolls   Deviation
+   -----   --------   --------   --------   ---------
+     02      36.36         1        333       36.10
+     03      18.08         1        176       17.45
+     04      12.13         1        135       11.68
+     05       8.85         1         86        8.42
+     06       7.17         1         57        6.52
+     07       6.06         1         53        5.48
+     08       7.15         1         64        6.60
+     09       8.93         1         96        8.41
+     10      12.06         1        115       11.48
+     11      18.18         1        173       17.86
+     12      35.85         1        394       35.49
+BUILD SUCCESSFUL (total time: 0 seconds)

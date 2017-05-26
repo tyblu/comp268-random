@@ -29,3 +29,5 @@ TextIOhardlinker [2017-05-21 12:53:08]: Creating hard link of TextIO.java at Uni
 TextIOhardlinker [2017-05-21 12:53:12]: Hard link created successfully 
 TextIOhardlinker [2017-05-23 11:48:12]: Creating hard link of TextIO.java at Unit 4 Examples\Chapter04Exercise03\src\TextIO.java 
 TextIOhardlinker [2017-05-23 11:48:16]: Hard link created successfully 
+TextIOhardlinker [2017-05-25 16:38:55]: Creating hard link of TextIO.java at ExamplesAndExercises\src\TextIO.java 
+TextIOhardlinker [2017-05-25 16:39:02]: Hard link created successfully 
