@@ -1,0 +1,23 @@
+run:
+Hello, and welcome to yet another solution program for 
+exercise #2 in chapter 5 of Eck (Intro to.. yaddayadda).
+We're testing Eck's StatCalc class that I've modifed 
+to include maximum and minimum number tracking.
+Let's see if it works!
+Please enter a sequence of numbers separated by [Enter],
+and 0.0 to end the sequence:          1
+Got it! Please enter the next number: 2
+Got it! Please enter the next number: 3
+Got it! Please enter the next number: 4
+Got it! Please enter the next number: 5
+Got it! Please enter the next number: 6
+Got it! Please enter the next number: 0
+
+Count:     6
+Sum:       21.0
+Maximum:   6.0
+Minimum:   1.0
+Average:   3.5
+Std. Dev.: 1.707825127659933
+Did it work? I hope it did! See you later.
+BUILD SUCCESSFUL (total time: 11 seconds)

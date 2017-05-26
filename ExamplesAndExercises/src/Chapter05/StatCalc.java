@@ -60,8 +60,8 @@ public class StatCalc {
         sum += num;
         squareSum += num*num;
         
-        if (min == Double.NaN || num < min) { min = num; }
-        if (max == Double.NaN || num > max) { max = num; }
+        if ( Double.isNaN(min) || num < min) { min = num; }
+        if ( Double.isNaN(max) || num > max) { max = num; }
     }
 
     // Getters
@@ -116,6 +116,26 @@ public class StatCalc {
     public double getStandardDeviation() {  
         double mean = getMean();
         return Math.sqrt( squareSum/count - mean*mean );
+    }
+    
+    // Other Methods
+    /**
+     * Print out all the statistics by default. No newline at end.
+     * @return String of statistics separated by newline. No newline at end.
+     */
+    @Override
+    public String toString()
+    {
+        String s = "";
+        
+        s += "Count:     " + getCount() + "\n";
+        s += "Sum:       " + getSum() + "\n";
+        s += "Maximum:   " + getMax() + "\n";
+        s += "Minimum:   " + getMin() + "\n";
+        s += "Average:   " + getMean() + "\n";
+        s += "Std. Dev.: " + getStandardDeviation();
+        
+        return s;
     }
 
 }  // end class StatCalc

@@ -23,6 +23,8 @@
  */
 package Chapter05;
 
+import TextIO.TextIO;
+
 /**
  *              Textbook Chapter 5 Exercise 2
  * Class:       Exercise02.java
@@ -40,17 +42,73 @@ package Chapter05;
  */
 public class Exercise02 {
     
+    private static final double STOP_NUMBER = 0;
+    
     public static void callExercise02()
     {
         // intro
+        System.out.println(intro());
         
         StatCalc calc = new StatCalc();
         
-        // Read numbers from user, 0 to stop
+        // Read numbers from user, STOP_NUMBER to stop (0)
+        System.out.print(getInputText());
+        double userInput = TextIO.getlnDouble();
+        while ( userInput != STOP_NUMBER )
+        {
+            calc.enter(userInput);
+            System.out.print("Got it! Please enter the next number: ");
+            userInput = TextIO.getlnDouble();
+        }
         
         // Print out all six stats
+        System.out.println();
+        System.out.println(calc);
         
-        // outro
+        System.out.println(outro());
     }
     
+    /**
+     * Provides introductory spiel. Less than 80-char wide, no newline at end.
+     * @return String of introductory text. Less than 80-char wide, no newline
+     *          at the very end.
+     */
+    private static String intro()
+    {
+        String s = "";
+        
+        s += "Hello, and welcome to yet another solution program for " + "\n";
+        s += "exercise #2 in chapter 5 of Eck (Intro to.. yaddayadda)." + "\n";
+        s += "We\'re testing Eck\'s StatCalc class that I\'ve modifed " + "\n";
+        s += "to include maximum and minimum number tracking." + "\n";
+        s += "Let\'s see if it works!";
+        
+        return s;
+    }
+    
+    /**
+     * Provides introductory spiel. Less than 80-char wide, no newline at end.
+     * @return String of introductory text. Less than 80-char wide, no newline
+     *          at the very end.
+     */
+    private static String getInputText()
+    {
+        String s = "";
+        
+        s += "Please enter a sequence of numbers separated by [Enter]," + "\n";
+        s += "and " + STOP_NUMBER + " to end the sequence:          ";
+        
+        return s;
+    }
+    
+    /**
+     * Provides conclusion spiel. Less than 80-char wide, 1 line, no newline
+     * at the very end.
+     * @return String of conclusion text. Less than 80-char wide, 1 line, 
+     *          no newline at the very end.
+     */
+    private static String outro()
+    {
+        return "Did it work? I hope it did! See you later.";
+    }
 }
