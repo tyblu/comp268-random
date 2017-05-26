@@ -27,24 +27,26 @@ package Chapter05;
 import java.util.Random;
 
 /**
- *              Textbook Example Program, Chapter 5
- * Class:       Dice.java
- * Purpose:     
+ *              Textbook Exercise Program, Chapter 5
+ * Class:       PairOfDice.java
+ * Purpose:     Facilitates using a pair of dice in games.
+ * 
+ *      v1.2    Changed to conform to requirements for exercise 5.1.
  * 
  * @author:    Tyler Lucas
  * Student ID: 3305203
  * Date:       May 25, 2017
- * Version     1.1
+ * Version     1.2
  * 
  * Based on and References:
  * @see Chapter04Exercises.Dice
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
- *      2014: Chapter 5
+ *      2014: Chapter 5, Exercise 1
  */
 public class PairOfDice
 {
-    public int die1;    // Number showing on 1st die
-    public int die2;    // Number showing on 2nd die
+    private int die1;    // Number showing on 1st die
+    private int die2;    // Number showing on 2nd die
     
     private int rollCount = 0;
 
@@ -70,6 +72,24 @@ public class PairOfDice
     }
     
     // Getters
+    /**
+     * Getter method to return the value of die1.
+     * @return the value of die1.
+     */
+    public int getDie1()
+    {
+        return die1;
+    }
+    
+    /**
+     * Getter method to return the value of die2.
+     * @return the value of die2.
+     */
+    public int getDie2()
+    {
+        return die2;
+    }
+    
     /**
      * Getter method to return the sum total of the dice values.
      * @return int Sum total of the dice values.
