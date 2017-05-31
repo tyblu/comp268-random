@@ -97,6 +97,7 @@ public class Student
     // Methods
     /**
      * Compute average test grade.
+     * @return average test grade.
      */
     public double getAverage()
     {
