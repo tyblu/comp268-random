@@ -35,7 +35,7 @@ import javax.swing.*;
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 2, 2017
- * Version      1.0
+ * Version      1.1
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
@@ -58,13 +58,14 @@ public class HelloWorldGUI2 {
         
         JFrame window = new JFrame("GUI Test");
         window.setContentPane(content);
-        window.setSize(250,100);
+        window.setSize(4*250,4*100);
         window.setLocation(100, 100);
         window.setVisible(true);
     }
     
     public static class HelloWorldDisplay extends JPanel
     {
+        @Override
         public void paintComponent(Graphics g)
         {
             super.paintComponent(g);
@@ -74,6 +75,7 @@ public class HelloWorldGUI2 {
     
     private static class ButtonHandler implements ActionListener
     {
+        @Override
         public void actionPerformed(ActionEvent e)
         {
             System.exit(0);
