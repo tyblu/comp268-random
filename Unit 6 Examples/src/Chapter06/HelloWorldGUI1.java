@@ -42,7 +42,7 @@ import javax.swing.JOptionPane;
  */
 public class HelloWorldGUI1 {
     
-    public static void callHelloWorldGUI1()
+    public static void call()
     {
         JOptionPane.showMessageDialog( null, "Hello, World!" );
     }

@@ -25,6 +25,7 @@ package Chapter06;
 
 import java.awt.*;
 import java.util.Random;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
@@ -39,10 +40,13 @@ import javax.swing.JPanel;
  *              used. This means that a different picture will be drawn each
  *              time.
  * 
+ *      v1.1    Added call() so I could keep everything in one file, as per
+ *              Eck's suggestion (p270).
+ * 
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 2, 2017
- * Version      1.0
+ * Version      1.1
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
@@ -100,5 +104,17 @@ public class RandomStringsPanel extends JPanel
             int positionRandomY = rand.nextInt(height + 20);
             g.drawString(this.message, positionRandomX, positionRandomY);
         }
+    }
+    
+    public static void call()
+    {
+        JFrame window = new JFrame("Java!");
+        RandomStringsPanel content = new RandomStringsPanel();
+        
+        window.setContentPane(content);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setLocation(4*120,4*70);
+        window.setSize(4*350,4*250);
+        window.setVisible(true);
     }
 }

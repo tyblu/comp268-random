@@ -44,17 +44,18 @@ public class MainCaller {
     // Examples
     private static final boolean ENABLE_HELLOWORLD1 = false;
     private static final boolean ENABLE_HELLOWORLD2 = false;
-    private static final boolean ENABLE_RANDOMSTRINGS = true;
+    private static final boolean ENABLE_RANDOMSTRINGS = false;
+    private static final boolean ENABLE_RANDOMSTRINGSPANEL = true;
     
     // Exercises
     
     public static void main(String[] args)
     {
         // Examples
-        if (ENABLE_HELLOWORLD1) { HelloWorldGUI1.callHelloWorldGUI1(); }
-        if (ENABLE_HELLOWORLD2) { HelloWorldGUI2.callHelloWorldGUI2(); }
-        if (ENABLE_RANDOMSTRINGS) { RandomStrings.callRandomStrings(); }
-        
+        if (ENABLE_HELLOWORLD1) { HelloWorldGUI1.call(); }
+        if (ENABLE_HELLOWORLD2) { HelloWorldGUI2.call(); }
+        if (ENABLE_RANDOMSTRINGS) { RandomStrings.call(); }
+        if (ENABLE_RANDOMSTRINGSPANEL) { RandomStringsPanel.call(); }
         
         // Exercises
 

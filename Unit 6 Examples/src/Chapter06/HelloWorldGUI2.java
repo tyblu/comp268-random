@@ -44,7 +44,7 @@ import javax.swing.*;
  */
 public class HelloWorldGUI2 {
     
-    public static void callHelloWorldGUI2()
+    public static void call()
     {
         HelloWorldDisplay displayPanel = new HelloWorldDisplay();
         JButton okButton = new JButton("OK");

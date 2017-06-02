@@ -43,7 +43,7 @@ import javax.swing.JFrame;
  */
 public class RandomStrings {
     
-    public static void callRandomStrings()
+    public static void call()
     {
         JFrame window = new JFrame("Java!");
         RandomStringsPanel content = new RandomStringsPanel();
