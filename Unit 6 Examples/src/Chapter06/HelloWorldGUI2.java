@@ -23,11 +23,14 @@
  */
 package Chapter06;
 
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 /**
  *              Textbook Example Program, Chapter 6
- * Class:       MainCaller.java
- * Purpose:     Used to call and test methods and classes in Chapter 6.
+ * Class:       HelloWorldGUI2.java
+ * Purpose:     
  * 
  * @author:     Tyler Lucas
  * Student ID:  3305203
@@ -36,25 +39,44 @@ package Chapter06;
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
- *      2014: Chapter 6: Introduction to GUI Programming
+ *      2014: Chapter 6: Introduction to GUI Programming, pp254-255
  * 
  */
-public class MainCaller {
+public class HelloWorldGUI2 {
     
-    // Examples
-    private static final boolean ENABLE_HELLOWORLD1 = false;
-    private static final boolean ENABLE_HELLOWORLD2 = true;
-    
-    // Exercises
-    
-    public static void main(String[] args)
+    public static void callHelloWorldGUI2()
     {
-        // Examples
-        if (ENABLE_HELLOWORLD1) { HelloWorldGUI1.callHelloWorldGUI1(); }
-        if (ENABLE_HELLOWORLD2) { HelloWorldGUI2.callHelloWorldGUI2(); }
+        HelloWorldDisplay displayPanel = new HelloWorldDisplay();
+        JButton okButton = new JButton("OK");
+        ButtonHandler listener = new ButtonHandler();
+        okButton.addActionListener(listener);
         
+        JPanel content = new JPanel();
+        content.setLayout(new BorderLayout());
+        content.add(displayPanel, BorderLayout.CENTER);
+        content.add(okButton, BorderLayout.SOUTH);
         
-        // Exercises
-
+        JFrame window = new JFrame("GUI Test");
+        window.setContentPane(content);
+        window.setSize(250,100);
+        window.setLocation(100, 100);
+        window.setVisible(true);
+    }
+    
+    public static class HelloWorldDisplay extends JPanel
+    {
+        public void paintComponent(Graphics g)
+        {
+            super.paintComponent(g);
+            g.drawString("Hello, World!", 20, 30);
+        }
+    }
+    
+    private static class ButtonHandler implements ActionListener
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            System.exit(0);
+        }
     }
 }
