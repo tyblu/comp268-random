@@ -23,11 +23,12 @@
  */
 package Chapter06;
 
+import javax.swing.JFrame;
 
 /**
  *              Textbook Example Program, Chapter 6
- * Class:       MainCaller.java
- * Purpose:     Used to call and test methods and classes in Chapter 6.
+ * Class:       RandomStringsPanel.java
+ * Purpose:     Uses (tests) RandomStringsPanel.
  * 
  * @author:     Tyler Lucas
  * Student ID:  3305203
@@ -36,27 +37,21 @@ package Chapter06;
  * 
  * Based on and References:
  * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
- *      2014: Chapter 6: Introduction to GUI Programming
+ *      2014: Chapter 6: Introduction to GUI Programming, pp267-270
+ * @see RandomStringsPanel
  * 
  */
-public class MainCaller {
+public class RandomStrings {
     
-    // Examples
-    private static final boolean ENABLE_HELLOWORLD1 = false;
-    private static final boolean ENABLE_HELLOWORLD2 = false;
-    private static final boolean ENABLE_RANDOMSTRINGS = true;
-    
-    // Exercises
-    
-    public static void main(String[] args)
+    public static void callRandomStrings()
     {
-        // Examples
-        if (ENABLE_HELLOWORLD1) { HelloWorldGUI1.callHelloWorldGUI1(); }
-        if (ENABLE_HELLOWORLD2) { HelloWorldGUI2.callHelloWorldGUI2(); }
-        if (ENABLE_RANDOMSTRINGS) { RandomStrings.callRandomStrings(); }
+        JFrame window = new JFrame("Java!");
+        RandomStringsPanel content = new RandomStringsPanel();
         
-        
-        // Exercises
-
+        window.setContentPane(content);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setLocation(4*120,4*70);
+        window.setSize(4*350,4*250);
+        window.setVisible(true);
     }
 }
