@@ -45,7 +45,8 @@ public class MainCaller {
     private static final boolean ENABLE_HELLOWORLD1 = false;
     private static final boolean ENABLE_HELLOWORLD2 = false;
     private static final boolean ENABLE_RANDOMSTRINGS = false;
-    private static final boolean ENABLE_RANDOMSTRINGSPANEL = true;
+    private static final boolean ENABLE_RANDOMSTRINGSPANEL = false;
+    private static final boolean ENABLE_CLICKABLERANDOMSTRINGS = true;
     
     // Exercises
     
@@ -56,6 +57,7 @@ public class MainCaller {
         if (ENABLE_HELLOWORLD2) { HelloWorldGUI2.call(); }
         if (ENABLE_RANDOMSTRINGS) { RandomStrings.call(); }
         if (ENABLE_RANDOMSTRINGSPANEL) { RandomStringsPanel.call(); }
+        if (ENABLE_CLICKABLERANDOMSTRINGS) { ClickableRandomStrings.call(); }
         
         // Exercises
 
