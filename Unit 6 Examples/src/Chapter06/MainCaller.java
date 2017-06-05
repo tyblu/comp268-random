@@ -46,9 +46,11 @@ public class MainCaller {
     private static final boolean ENABLE_HELLOWORLD2 = false;
     private static final boolean ENABLE_RANDOMSTRINGS = false;
     private static final boolean ENABLE_RANDOMSTRINGSPANEL = false;
-    private static final boolean ENABLE_CLICKABLERANDOMSTRINGS = true;
+    private static final boolean ENABLE_CLICKABLERANDOMSTRINGS = false;
+    private static final boolean ENABLE_SIMPLESTAMPER = true;
     
     // Exercises
+    // private static...
     
     public static void main(String[] args)
     {
@@ -58,8 +60,10 @@ public class MainCaller {
         if (ENABLE_RANDOMSTRINGS) { RandomStrings.call(); }
         if (ENABLE_RANDOMSTRINGSPANEL) { RandomStringsPanel.call(); }
         if (ENABLE_CLICKABLERANDOMSTRINGS) { ClickableRandomStrings.call(); }
+        if (ENABLE_SIMPLESTAMPER) { SimpleStamper.call(); }
         
         // Exercises
+//        if (ENABLE...)
 
     }
 }
