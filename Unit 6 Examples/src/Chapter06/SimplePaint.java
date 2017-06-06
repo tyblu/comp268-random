@@ -47,7 +47,7 @@ import javax.swing.JPanel;
  * 
  * @author:     Tyler Lucas
  * Student ID:  3305203
- * Date:        June 2, 2017
+ * Date:        June 6, 2017
  * Version      1.1
  * 
  * Based on and References:

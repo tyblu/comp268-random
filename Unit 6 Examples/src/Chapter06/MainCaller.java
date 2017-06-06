@@ -53,7 +53,8 @@ public class MainCaller {
     private static final boolean ENABLE_CLICKABLERANDOMSTRINGS = false;
     private static final boolean ENABLE_SIMPLESTAMPER = false;
     private static final boolean ENABLE_SIMPLETRACKMOUSE = false;
-    private static final boolean ENABLE_SIMPLEPAINT = true;
+    private static final boolean ENABLE_SIMPLEPAINT = false;
+    private static final boolean ENABLE_CLICKABLERANDOMSTRINGS2 = true;
     
     // Exercises
     // private static...
@@ -69,6 +70,7 @@ public class MainCaller {
         if (ENABLE_SIMPLESTAMPER) { SimpleStamper.call(); }
         if (ENABLE_SIMPLETRACKMOUSE) { SimpleTrackMouse.call(); }
         if (ENABLE_SIMPLEPAINT) { SimplePaint.call(); }
+        if (ENABLE_CLICKABLERANDOMSTRINGS2) { ClickableRandomStrings2.call(); }
         
         // Exercises
 //        if (ENABLE...)
