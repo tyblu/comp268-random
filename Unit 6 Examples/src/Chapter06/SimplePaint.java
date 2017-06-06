@@ -37,21 +37,18 @@ import javax.swing.JPanel;
  * A simple panel where the user can sketch curves in a variety of colors.
  * A color palette is shown along the right edge of the panel. The user can
  * select a drawing color by clicking on a color in the palette. Under the
- * colors is a "Clear button" that the user can click to clear the sketch. The
- * user draws by clicking and dragging in a large white area that occupies most
- * of the panel. The user's drawing is not persistent. It is lost whenever the
- * panel is repainted for any reason.
+ * colors is a <em>"Clear"</em> button that the user can click to clear the
+ * sketch. The user draws by clicking and dragging in a large white area that
+ * occupies most of the panel. The user's drawing is not persistent. It is lost
+ * whenever the panel is repainted for any reason.
  * <p>The drawing that is done in this example violates the rule
  * that all drawing should be done in the {@code paintComponent()} method.
  * Although it works, it is NOT good style.
  * 
- *              <h1>Textbook Example Program, Chapter 6</h1>
- *              <h1>SimplePaint.java</h1>
- * 
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 2, 2017
- * Version      1.2
+ * Version      1.1
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
