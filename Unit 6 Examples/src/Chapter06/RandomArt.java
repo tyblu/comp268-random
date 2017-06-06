@@ -1,8 +1,12 @@
 package Chapter06;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  * A RandomArtPanel draws random pictures which might be taken to have
@@ -32,6 +36,7 @@ public class RandomArt extends JPanel {
      * redrawn every four seconds.
      */
     private class RepaintAction implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent evt) {
             repaint();  // Call the repaint() method in the panel class.
         }
@@ -53,6 +58,7 @@ public class RandomArt extends JPanel {
      * gray and then draws one of three types of random "art".  The type
      * of art to be drawn is chosen at random.
      */
+    @Override
     public void paintComponent(Graphics g) {
 
         // Note:  Since the next three lines fill the entire panel with
