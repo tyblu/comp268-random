@@ -49,8 +49,10 @@ import javax.swing.JPanel;
  * Version      1.1
  * 
  * Based on and References:
- * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
- *      2014: Chapter 6: Introduction to GUI Programming, pp267-270
+ * @see <a href="http://math.hws.edu/javanotes/">
+ *      <cite>Introduction to Programming Using Java, Seventh Edition</cite>,
+ *      by Eck, David J., 2014: Chapter 6: Introduction to GUI Programming, 
+ *      pp267-270</a>
  * 
  */
 public class RandomStringsPanel extends JPanel
@@ -79,6 +81,7 @@ public class RandomStringsPanel extends JPanel
         setBackground(Color.BLACK);
     }
     
+    @Override
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
@@ -106,6 +109,12 @@ public class RandomStringsPanel extends JPanel
         }
     }
     
+    /**
+     * Similar to a {@code main(String[] args)} routine, is called by
+     * {@link Chapter06.MainCaller}, as are all {@code call()} routines in most
+     * example and exercise classes. Requires setting the appropriate boolean
+     * variables in MainCaller in order to activate.
+     */
     public static void call()
     {
         JFrame window = new JFrame("Java!");

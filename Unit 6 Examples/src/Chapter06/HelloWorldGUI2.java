@@ -38,12 +38,20 @@ import javax.swing.*;
  * Version      1.1
  * 
  * Based on and References:
- * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
- *      2014: Chapter 6: Introduction to GUI Programming, pp254-255
+ * @see <a href="http://math.hws.edu/javanotes/">
+ *      <cite>Introduction to Programming Using Java, Seventh Edition</cite>,
+ *      by Eck, David J., 2014: Chapter 6: Introduction to GUI Programming, 
+ *      pp254-255</a>
  * 
  */
-public class HelloWorldGUI2 {
-    
+public class HelloWorldGUI2
+{
+    /**
+     * Similar to a {@code main(String[] args)} routine, is called by
+     * {@link Chapter06.MainCaller}, as are all {@code call()} routines in most
+     * example and exercise classes. Requires setting the appropriate boolean
+     * variables in MainCaller in order to activate.
+     */
     public static void call()
     {
         HelloWorldDisplay displayPanel = new HelloWorldDisplay();

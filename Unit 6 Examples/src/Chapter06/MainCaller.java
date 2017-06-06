@@ -23,11 +23,14 @@
  */
 package Chapter06;
 
-
 /**
  *              Textbook Example Program, Chapter 6
  * Class:       MainCaller.java
  * Purpose:     Used to call and test methods and classes in Chapter 6.
+ *              Set the appropriate boolean to {@code true} to run the
+ *              {@code call()} routine in the associated class. It may be
+ *              necessary to set all other boolean variables to {@code false},
+ *              as there may be conflicts.
  * 
  * @author:     Tyler Lucas
  * Student ID:  3305203
@@ -35,8 +38,9 @@ package Chapter06;
  * Version      1.0
  * 
  * Based on and References:
- * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
- *      2014: Chapter 6: Introduction to GUI Programming
+ * @see <a href="http://math.hws.edu/javanotes/">
+ *      <cite>Introduction to Programming Using Java, Seventh Edition</cite>,
+ *      by Eck, David J., 2014: Chapter 6: Introduction to GUI Programming</a>
  * 
  */
 public class MainCaller {
@@ -66,6 +70,5 @@ public class MainCaller {
         
         // Exercises
 //        if (ENABLE...)
-
     }
 }

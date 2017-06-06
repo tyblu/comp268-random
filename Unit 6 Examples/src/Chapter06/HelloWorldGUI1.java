@@ -36,12 +36,20 @@ import javax.swing.JOptionPane;
  * Version      1.0
  * 
  * Based on and References:
- * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
- *      2014: Chapter 6: Introduction to GUI Programming, p254
+ * @see <a href="http://math.hws.edu/javanotes/">
+ *      <cite>Introduction to Programming Using Java, Seventh Edition</cite>,
+ *      by Eck, David J., 2014: Chapter 6: Introduction to GUI Programming, 
+ *      p254</a>
  * 
  */
-public class HelloWorldGUI1 {
-    
+public class HelloWorldGUI1
+{
+    /**
+     * Similar to a {@code main(String[] args)} routine, is called by
+     * {@link Chapter06.MainCaller}, as are all {@code call()} routines in most
+     * example and exercise classes. Requires setting the appropriate boolean
+     * variables in MainCaller in order to activate.
+     */
     public static void call()
     {
         JOptionPane.showMessageDialog( null, "Hello, World!" );

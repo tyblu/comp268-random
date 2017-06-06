@@ -39,14 +39,22 @@ import javax.swing.JFrame;
  * Version      1.0
  * 
  * Based on and References:
- * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
- *      2014: Chapter 6: Introduction to GUI Programming, pp273-275
- * @see RandomStringsPanel
- * @see RepaintOnClick
+ * @see <a href="http://math.hws.edu/javanotes/">
+ *      <cite>Introduction to Programming Using Java, Seventh Edition</cite>,
+ *      by Eck, David J., 2014: Chapter 6: Introduction to GUI Programming, 
+ *      pp273-275</a>
+ * @see Chapter06.RandomStringsPanel
+ * @see Chapter06.RandomStrings
  * 
  */
-public class ClickableRandomStrings {
-    
+public class ClickableRandomStrings
+{
+    /**
+     * Similar to a {@code main(String[] args)} routine, is called by
+     * {@link Chapter06.MainCaller}, as are all {@code call()} routines in most
+     * example and exercise classes. Requires setting the appropriate boolean
+     * variables in MainCaller in order to activate.
+     */
     public static void call()
     {
         JFrame window = new JFrame("Click me to redraw!");
@@ -76,21 +84,28 @@ public class ClickableRandomStrings {
     * Version      1.0
     * 
     * Based on and References:
-    * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
-    *      2014: Chapter 6: Introduction to GUI Programming, pp273-275
+    * @see <a href="http://math.hws.edu/javanotes/">
+    *      <cite>Introduction to Programming Using Java, Seventh Edition</cite>,
+    *      by Eck, David J., 2014: Chapter 6: Introduction to GUI Programming, 
+    *      pp273-275</a>
     * @see RandomStringsPanel
     * 
     */
     public static class RepaintOnClick implements MouseListener
     {
+        @Override
         public void mousePressed(MouseEvent evt)
         {
             ((Component)evt.getSource()).repaint();
         }
 
+        @Override
         public void mouseClicked(MouseEvent evt) {}
+        @Override
         public void mouseReleased(MouseEvent evt) {}
+        @Override
         public void mouseEntered(MouseEvent evt) {}
+        @Override
         public void mouseExited(MouseEvent evt) {}
     }
 }

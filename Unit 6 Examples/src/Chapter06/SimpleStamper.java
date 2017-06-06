@@ -63,8 +63,10 @@ import javax.swing.JPanel;
  * Version      1.1
  * 
  * Based on and References:
- * @see Introduction to Programming Using Java Version 7, by Eck, David J., 
- *      2014: Chapter 6: Introduction to GUI Programming, pp275-278
+ * @see <a href="http://math.hws.edu/javanotes/">
+ *      <cite>Introduction to Programming Using Java, Seventh Edition</cite>,
+ *      by Eck, David J., 2014: Chapter 6: Introduction to GUI Programming, 
+ *      pp275-278</a>
  * 
  */
 public class SimpleStamper extends JPanel
@@ -74,7 +76,10 @@ public class SimpleStamper extends JPanel
     private static final int WINDOW_OFFSET_X = 4*120;
     private static final int WINDOW_OFFSET_Y = 4*70;
     /**
-     * Replaces main(), to be called from MainCaller.
+     * Similar to a {@code main(String[] args)} routine, is called by
+     * {@link Chapter06.MainCaller}, as are all {@code call()} routines in most
+     * example and exercise classes. Requires setting the appropriate boolean
+     * variables in MainCaller in order to activate.
      */
     public static void call()
     {
