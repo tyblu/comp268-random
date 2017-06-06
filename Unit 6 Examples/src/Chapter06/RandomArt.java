@@ -1,3 +1,27 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2017 Tyler Lucas <tyblu@live.com>.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package Chapter06;
 
 import java.awt.Color;
@@ -9,16 +33,38 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 /**
- * A RandomArtPanel draws random pictures which might be taken to have
- * some vague resemblance to abstract art.  A new picture is produced every
- * four seconds.  There are three types of pictures:  random lines,
- * random circles, and random 3D rects.  The figures are drawn in
- * random colors on a background that is a random shade of gray.
- * A main() routine allows this class to be run as a program
+ * A RandomArtPanel draws random pictures which might be taken to have some 
+ * vague resemblance to abstract art.  A new picture is produced every few
+ * seconds.  There are three types of pictures:  random lines, random circles, 
+ * and random 3D rectangles.  The figures are drawn in random colors on a 
+ * background that is a random shade of gray.
+ * 
+ * @author:     Tyler Lucas
+ * Student ID:  3305203
+ * Date:        June 6, 2017
+ * Version      1.0
+ * 
+ * Based on and References:
+ * @see <a href="http://math.hws.edu/javanotes/">
+ *      <cite>Introduction to Programming Using Java, Seventh Edition</cite>,
+ *      by Eck, David J., 2014: Chapter 6: Introduction to GUI Programming, 
+ *      pp284-285</a>
+ * @see Chapter06.ClickableRandomStrings
+ * @see Chapter06.RandomStringsPanel
+ * @see Chapter06.RandomStrings
+ * 
  */
-public class RandomArt extends JPanel {
-
-    public static void call() {
+public class RandomArt extends JPanel
+{
+/* -------------------------------------------------------------------------- */
+    /**
+     * Similar to a {@code main(String[] args)} routine. It is called by
+     * {@link MainCaller}, as are all {@code call()} routines in most
+     * example and exercise classes. Requires setting the appropriate boolean
+     * variables in {@link MainCaller} in order to activate.
+     */
+    public static void call()
+    {
         JFrame window = new JFrame("Random Art ??");
         RandomArt content = new RandomArt();
         window.setContentPane(content);
@@ -27,15 +73,17 @@ public class RandomArt extends JPanel {
         window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         window.setVisible(true);
     }
-
+/* -------------------------------------------------------------------------- */
+    
     /**
      * A RepaintAction object calls the repaint method of this panel each
      * time its actionPerformed() method is called.  An object of this
      * type is used as an action listener for a Timer that generates an
-     * ActionEvent every four seconds.  The result is that the panel is
-     * redrawn every four seconds.
+     * ActionEvent every few seconds.  The result is that the panel is
+     * redrawn every few seconds.
      */
-    private class RepaintAction implements ActionListener {
+    private class RepaintAction implements ActionListener
+    {
         @Override
         public void actionPerformed(ActionEvent evt) {
             repaint();  // Call the repaint() method in the panel class.
@@ -43,13 +91,14 @@ public class RandomArt extends JPanel {
     }
 
     /**
-     * The constructor creates a timer with a delay time of four seconds
-     * (4000 milliseconds), and with a RepaintAction object as its
-     * ActionListener.  It also starts the timer running.
+     * The constructor creates a timer with a delay time of a few seconds, and
+     * with a RepaintAction object as its ActionListener. It also starts the
+     * timer running.
      */
-    public RandomArt() {
+    public RandomArt()
+    {
         RepaintAction action = new RepaintAction();
-        Timer timer = new Timer(4000, action);
+        Timer timer = new Timer((int)Math.random()*2000+1000, action);
         timer.start();
     }
 
@@ -59,8 +108,8 @@ public class RandomArt extends JPanel {
      * of art to be drawn is chosen at random.
      */
     @Override
-    public void paintComponent(Graphics g) {
-
+    public void paintComponent(Graphics g)
+    {
         // Note:  Since the next three lines fill the entire panel with
         // gray, there is no need to call super.paintComponent(g), since
         // any drawing that it does will only be covered up anyway.
@@ -103,9 +152,9 @@ public class RandomArt extends JPanel {
                 g.fill3DRect(centerX - size/2, centerY - size/2, size, size, true);
             }
             break;
+        default:
+            break;
         }
-
-    } // end paintComponent()
-
-} // end class RandomArtPanel
+    }
+}
 
