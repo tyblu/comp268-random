@@ -1,22 +1,25 @@
 package Chapter06;
 
-
-import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  * A SimpleTrackMousePanel is a panel that displays information about mouse
  * events on the panel, including the type of event, the position of the mouse,
- * a list of modifier keys that were down when the event occurred, and an indication
- * of which mouse button was involved, if any.
+ * a list of modifier keys that were down when the event occurred, and an 
+ * indication of which mouse button was involved, if any.
  * 
  * Edited to increase window and font sizes, and changed main() to call() for
  * compatibility with MainCaller.
  */
-public class SimpleTrackMouse extends JPanel {
-
+public class SimpleTrackMouse extends JPanel
+{
     public static void call()
     {
         JFrame window = new JFrame("Click Me to Redraw");
@@ -27,92 +30,237 @@ public class SimpleTrackMouse extends JPanel {
         window.setSize(4*450,4*350);
         window.setVisible(true);
     }
-
-    // --------------------------------------------------------------------------------
-
-    private String eventType = null;     // If non-null, gives the type of the most recent mouse event.
-    private String modifierKeys = "";    // If non-empty, gives special keys that are held down.
-    private String button = "";          // Information about which mouse button was used.
-    private int mouseX, mouseY;          // Position of mouse (at most recent mouse event).
-
-
+    
+    /**
+     * Holds current (or last) mouse event details.
+     */
+    private CustomEvent currentEvent;
+    
     /**
      * Constructor creates a mouse listener object and sets it to listen for
      * mouse events and mouse motion events on the panel.
      */
-    public SimpleTrackMouse() { 
-            // Set background color and arrange for the panel to listen for mouse events.
+    public SimpleTrackMouse()
+    { 
+        // Set background color and arrange for the panel to listen for mouse events.
         setBackground(Color.WHITE);
         MouseHandler listener = new MouseHandler();
         addMouseListener(listener);        // Register mouse listener.
         addMouseMotionListener(listener);  // Register mouse motion listener.
     }
-
-
+    
     /**
-     * Records information about a mouse event on the panel.  This method is called
-     * by the mouse handler object whenever a mouse event occurs.
-     * @param evt the MouseEvent object for the event.
-     * @param eventType a description of the type of event, such as "mousePressed".
-     */
-    private void setInfo(MouseEvent evt, String eventType) {
-        this.eventType = eventType;
-        mouseX = evt.getX();
-        mouseY = evt.getY();
-        modifierKeys = "";
-        if (evt.isShiftDown())
-            modifierKeys += "Shift  ";
-        if (evt.isControlDown())
-            modifierKeys += "Control  ";
-        if (evt.isMetaDown())
-            modifierKeys += "Meta  ";
-        if (evt.isAltDown())
-            modifierKeys += "Alt";
-        switch ( evt.getButton() ) {
-        case MouseEvent.BUTTON1:
-            button = "Left";
-            break;
-        case MouseEvent.BUTTON2:
-            button = "Middle";
-            break;
-        case MouseEvent.BUTTON3:
-            button = "Right";
-            break;
-        default:
-            button = "";
-        }
-        repaint();
+    * Gives the type of the most recent mouse event.
+    */
+    private enum EventType
+    { 
+        NONE, PRESSED, RELEASED, CLICKED, ENTERED, EXITED, MOVED, DRAGGED;
+    
+        @Override
+        public String toString() { return super.toString().toLowerCase(); }
     }
 
+    /**
+    * Gives special keys that are held down.
+    */
+    private enum ModifierKey {
+        NONE, SHIFT, CTRL, META, ALT;
+    
+        @Override
+        public String toString() { return super.toString().toLowerCase(); }
+    }
 
+    /**
+    * Information about which mouse button was used.
+    */
+    private enum MouseButton { 
+        NONE, LEFT, MIDDLE, RIGHT;
+        
+        @Override
+        public String toString() { return super.toString().toLowerCase(); }
+    }
+    
+    /**
+     * Framework to store, set, and retrieve mouse (with some keys) event data.
+     * Large range of [overloaded] constructors means you can create it with
+     * any combination of EventType, ModifierKey, MouseButton, and Point data.
+     * Requires Point (x,y) data for every constructor except blank
+     * @code{CustomEvent()}.
+     */
+    private class CustomEvent
+    {
+        private EventType event = EventType.NONE;
+        private ModifierKey[] keys;
+        private MouseButton button = MouseButton.NONE;
+        private Point xy;
+       
+        public CustomEvent(EventType event, ModifierKey[] keys,
+                MouseButton button, Point xy)
+        {
+            this.event = event;
+            this.keys = keys;
+            this.button = button;
+            this.xy = xy;
+        }
+        
+        public CustomEvent(EventType event, ModifierKey key, 
+                MouseButton button, Point xy)
+        {
+            this(event, new ModifierKey[]{key}, button, xy);
+        }
+
+        public CustomEvent(EventType event, Point xy)
+        {
+            this(event, ModifierKey.NONE, xy);
+        }
+        
+        public CustomEvent(ModifierKey key, Point xy)
+        {
+            this(EventType.NONE, key, xy);
+        }
+        
+        public CustomEvent(MouseButton button, Point xy)
+        {
+            this(EventType.NONE, button, xy);
+        }
+        
+        public CustomEvent(EventType event, ModifierKey key, Point xy)
+        {
+            this(event, key, MouseButton.NONE, xy);
+        }
+        
+        public CustomEvent(EventType event, MouseButton button, Point xy)
+        {
+            this(event, ModifierKey.NONE, button, xy);
+        }
+        
+        public CustomEvent(ModifierKey key, MouseButton button, Point xy)
+        {
+            this(EventType.NONE, key, button, xy);
+        }
+        
+        public CustomEvent(ModifierKey[] keys, Point xy)
+        {
+            this(keys, MouseButton.NONE, xy);
+        }
+        
+        public CustomEvent(ModifierKey[] keys, MouseButton button, Point xy)
+        {
+            this(EventType.NONE, keys, button, xy);
+        }
+        
+        public CustomEvent()
+        {
+            this(EventType.NONE, new Point(0,0));
+        }
+
+        // Getters
+        public EventType getEvent()
+        {
+            return this.event;
+        }
+
+        public ModifierKey[] getKeys()
+        {
+            return this.keys;
+        }
+
+        public MouseButton getButton()
+        {
+            return this.button;
+        }
+        
+        public Point getXY()
+        {
+            return this.xy;
+        }
+        
+        // Setters
+        public void setEvent(EventType event)
+        {
+            this.event = event;
+        }
+        
+        public void setKeys(ModifierKey[] keys)
+        {
+            this.keys = keys;
+        }
+        
+        public void setKeys(ModifierKey key)
+        {
+            setKeys( new ModifierKey[]{ key } );
+        }
+        
+        public void setXY(Point xy)
+        {
+            this.xy = xy;
+        }
+        
+        public void setButton(MouseButton button)
+        {
+            this.button = button;
+        }
+        
+        // Methods
+        public void addKey(ModifierKey key)
+        {
+            if (getKeys().length < 1)
+                setKeys(key);
+            
+            setKeys( (ModifierKey[])addToArray(key, getKeys()) );
+        }
+        
+        private Object[] addToArray(Object newElement, Object[] array)
+        {
+            Object[] newArray = new Object[array.length + 1];
+            for (int i=0; i<array.length; i++)
+            {
+                newArray[i] = array[i];
+            }
+            newArray[newArray.length - 1] = newElement;
+            
+            return newArray;
+        }
+    }
+    
+
+    
     /**
      * The paintComponent() method displays information about the most recent
      * mouse event on the panel (as set by the setInfo() method).
      */
+    @Override
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);  // Fills panel with background color.
 
-        if (eventType == null) {
-                // If eventType is null, no mouse event has yet occurred 
-                // on the panel, so don't display any information.
-            return;
-        }
+        /* No mouse event yet, don't show any info. */
+        if (currentEvent.getEvent() == EventType.NONE) { return; }
 
         g.setColor(Color.RED);  // Display information about the mouse event.
         g.setFont(g.getFont().deriveFont(36.0F));
-        g.drawString("Mouse event type:  " + eventType, 4*6, 4*18);
-        if (modifierKeys.length() > 0)
-            g.drawString("Modifier keys:  " + modifierKeys, 4*6, 4*38);
-        else
-            g.drawString("Modifier keys:  None", 4*6, 4*38);
-        if (button.length() > 0)
-            g.drawString("Button used:  " + button, 4*6, 4*58);
+        
+        g.drawString("Mouse event type:  "
+                + currentEvent.getEvent(), 4*6, 4*18);
+        
+        StringBuilder sbModifierKeys = new StringBuilder("Modifier keys:  ");
+        ModifierKey[] keys = currentEvent.getKeys();
+        for (int i=0; i < keys.length; i++)
+        {
+            sbModifierKeys.append(keys[i]);
+            if (i < keys.length - 1)
+                sbModifierKeys.append(", ");
+        }
+        g.drawString(sbModifierKeys.toString(), 4*6, 4*38);
+        
+        g.drawString("Button used:  " + currentEvent.getButton(), 4*6, 4*58);
+        
         g.setColor(Color.BLACK);
+        
+        int mouseX = (int)currentEvent.getXY().getX();
+        int mouseY = (int)currentEvent.getXY().getY();
         g.drawString("(" + mouseX + "," + mouseY + ")", mouseX, mouseY);
-
-    }  
-
+    }
 
     /**
      * An object belonging to class MouseHandler listens for mouse events
@@ -123,35 +271,83 @@ public class SimpleTrackMouse extends JPanel {
      */
     private class MouseHandler implements MouseListener, MouseMotionListener {
 
+        @Override
         public void mousePressed(MouseEvent evt) {
-            setInfo(evt, "mousePressed");
+            setInfo(evt, EventType.PRESSED);
         }
 
+        @Override
         public void mouseReleased(MouseEvent evt) {
-            setInfo(evt, "mouseReleased");
+            setInfo(evt, EventType.RELEASED);
         }
 
+        @Override
         public void mouseClicked(MouseEvent evt) {
-            setInfo(evt, "mouseClicked");
+            setInfo(evt, EventType.CLICKED);
         }
 
+        @Override
         public void mouseEntered(MouseEvent evt) {
-            setInfo(evt, "mouseEntered");
+            setInfo(evt, EventType.ENTERED);
         }
 
+        @Override
         public void mouseExited(MouseEvent evt) {
-            setInfo(evt, "mouseExited");
+            setInfo(evt, EventType.EXITED);
         }
 
+        @Override
         public void mouseMoved(MouseEvent evt) {
-            setInfo(evt, "mouseMoved");
+            setInfo(evt, EventType.MOVED);
         }
 
+        @Override
         public void mouseDragged(MouseEvent evt) {
-            setInfo(evt, "mouseDragged");
+            setInfo(evt, EventType.DRAGGED);
         }
+        
+        /**
+        * Records information about a mouse event on the panel.  This method is 
+        * called by the mouse handler object whenever a mouse event occurs.
+        * @param evt the MouseEvent object for the event.
+        * @param eventType a description of the type of event, such as "mousePressed".
+        */
+       private void setInfo(MouseEvent evt, EventType evtType)
+       {
+           CustomEvent newEvent = new CustomEvent(evtType, evt.getPoint());
 
-    }  // end nested class MouseHandler
+           if (evt.isShiftDown())
+               newEvent.addKey(ModifierKey.SHIFT);
 
-}  // end of class SimpleMouseTracker
+           if (evt.isControlDown())
+               newEvent.addKey(ModifierKey.CTRL);
+
+           if (evt.isMetaDown())
+               newEvent.addKey(ModifierKey.META);
+
+           if (evt.isAltDown())
+               newEvent.addKey(ModifierKey.ALT);
+
+           switch (evt.getButton())
+           {
+               case MouseEvent.BUTTON1:
+                   newEvent.setButton(MouseButton.LEFT);
+                   break;
+               case MouseEvent.BUTTON2:
+                   newEvent.setButton(MouseButton.MIDDLE);
+                   break;
+               case MouseEvent.BUTTON3:
+                   newEvent.setButton(MouseButton.RIGHT);
+                   break;
+               default:
+                   newEvent.setButton(MouseButton.NONE);
+                   break;
+           }
+
+           currentEvent = newEvent;
+
+           repaint();
+       }
+    }
+}
 
