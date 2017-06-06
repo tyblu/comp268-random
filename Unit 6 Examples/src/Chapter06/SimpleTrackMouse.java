@@ -34,7 +34,7 @@ public class SimpleTrackMouse extends JPanel
     /**
      * Holds current (or last) mouse event details.
      */
-    private CustomEvent currentEvent;
+    private CustomEvent currentEvent = new CustomEvent();
     
     /**
      * Constructor creates a mouse listener object and sets it to listen for
@@ -207,12 +207,13 @@ public class SimpleTrackMouse extends JPanel
             if (getKeys().length < 1)
                 setKeys(key);
             
-            setKeys( (ModifierKey[])addToArray(key, getKeys()) );
+            setKeys( addToModifierKeyArray(key, getKeys()) );
         }
         
-        private Object[] addToArray(Object newElement, Object[] array)
+        private ModifierKey[] addToModifierKeyArray(
+                ModifierKey newElement, ModifierKey[] array)
         {
-            Object[] newArray = new Object[array.length + 1];
+            ModifierKey[] newArray = new ModifierKey[array.length + 1];
             for (int i=0; i<array.length; i++)
             {
                 newArray[i] = array[i];
@@ -222,8 +223,6 @@ public class SimpleTrackMouse extends JPanel
             return newArray;
         }
     }
-    
-
     
     /**
      * The paintComponent() method displays information about the most recent
