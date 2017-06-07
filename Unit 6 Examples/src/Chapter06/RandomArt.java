@@ -27,7 +27,6 @@ package Chapter06;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -43,7 +42,7 @@ import javax.swing.Timer;
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 6, 2017
- * Version      1.2
+ * Version      1.3
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -78,8 +77,8 @@ public class RandomArt extends JPanel
 
     /**
      * The constructor creates a timer with a delay time of a few seconds, and
-     * with a RepaintAction object as its ActionListener. It also starts the
-     * timer running.
+     * with an anonymous inner class object as its ActionListener, implemented
+     * with a lambda expression. It also starts the timer running.
      * 
      * Calls the {@code repaint()} method of this panel each time its
      * {@code actionPerformed()} method is called.  An object of this type is
@@ -90,11 +89,8 @@ public class RandomArt extends JPanel
     public RandomArt()
     {
         Timer timer = new Timer(
-                (new Random()).nextInt(2000)+1000, 
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent evt) { repaint(); }
-                }
+                (new Random()).nextInt(1000)+1000,
+                (ActionEvent evt) -> repaint()
         );
         timer.start();
     }
@@ -122,7 +118,7 @@ public class RandomArt extends JPanel
         int artType = rand.nextInt(3);
 
         switch (artType) {
-        case 0:
+        case 0:     // Randomly coloured and sized lines.
             for (int i = 0; i < 500; i++) {
                 int x1 = rand.nextInt(getWidth());
                 int y1 = rand.nextInt(getHeight());
@@ -134,7 +130,7 @@ public class RandomArt extends JPanel
                 g.drawLine(x1,y1,x2,y2);
             }
             break;
-        case 1:
+        case 1:     // Randomly coloured circles.
             for (int i = 0; i < 200; i++) {
                 int centerX = rand.nextInt(getWidth());
                 int centerY = rand.nextInt(getHeight());
@@ -144,7 +140,7 @@ public class RandomArt extends JPanel
                 g.drawOval(centerX - 50, centerY - 50, 100, 100);
             }
             break;
-        case 2:
+        case 2:     // Randomly coloured and sized squares.
         default:
             for (int i = 0; i < 25; i++) {
                 int centerX = rand.nextInt(getWidth());
