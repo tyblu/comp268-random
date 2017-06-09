@@ -58,7 +58,8 @@ public class MainCaller {
     private static final boolean ENABLE_RANDOMART = false;
     private static final boolean ENABLE_KEYBOARDANDFOCUSDEMO = false;
     private static final boolean ENABLE_SUBKILLER = false;
-    private static final boolean ENABLE_SIMPLECALC = true;
+    private static final boolean ENABLE_SIMPLECALC = false;
+    private static final boolean ENABLE_HIGHLOWGUI = true;
     
     // Exercises
     // private static...
@@ -79,6 +80,7 @@ public class MainCaller {
         if (ENABLE_KEYBOARDANDFOCUSDEMO) { KeyboardAndFocusDemo.call(); }
         if (ENABLE_SUBKILLER) { SubKiller.call(); }
         if (ENABLE_SIMPLECALC) { SimpleCalc.call(); }
+        if (ENABLE_HIGHLOWGUI) { HighLowGUI.call(); }
         
         // Exercises
 //        if (ENABLE...)
