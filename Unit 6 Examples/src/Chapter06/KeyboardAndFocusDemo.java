@@ -23,13 +23,14 @@
  */
 package Chapter06;
 
-import java.io.KeyListener;
-import java.io.KeyEvent;
-import java.awt.Color;
-import java.io.FocusListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Graphics;
+import java.awt.Color;
 
 /**
  *              Textbook Example Program, Chapter 6
@@ -47,7 +48,7 @@ import java.awt.Graphics;
  *      by Eck, David J., 2014: Chapter 6: Introduction to GUI Programming</a>
  * 
  */
-public class KeyboardAndFocusDemo extends JFrame
+public class KeyboardAndFocusDemo extends JPanel
 {
 /* -------------------------------------------------------------------------- */
     /**
@@ -63,15 +64,16 @@ public class KeyboardAndFocusDemo extends JFrame
         
         window.setContentPane(content);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLocation(4*120,4*70);
-        window.setSize(4*450,4*350);
+        window.setLocation(4*100,4*100);
+        window.setSize(4*400,4*400);
         window.setVisible(true);
+        
+        content.requestFocusInWindow();
     }
 /* -------------------------------------------------------------------------- */
 
     // Instance variables
-    private int squareTop;
-    private int squareLeft;
+    private int squareTop, squareLeft;
     private Color squareColor;
     
     // Constants
@@ -82,13 +84,13 @@ public class KeyboardAndFocusDemo extends JFrame
     {
         this.squareTop = ( getHeight() - SQUARE_SIZE ) / 2;
         this.squareLeft = ( getWidth() - SQUARE_SIZE ) / 2;
-        this.squareColor = Color.BLACK;
+        this.squareColor = Color.RED;
         
         setBackground(Color.WHITE);
+        
         Listener l = new Listener();
         addKeyListener(l);
-        // addFocusListener(l);   // Does this exist?
-        requestFocusInWindow();
+        addFocusListener(l);
     }
     
     // Getters
@@ -124,19 +126,44 @@ public class KeyboardAndFocusDemo extends JFrame
     }
     
     // Methods
-    @Override
-    paintComponent(Graphics g)
+    public void paintComponent(Graphics g)
     {
         super.paintComponent(g);    // clears screen, better redraw.
-        // update
+        
+        if (hasFocus())
+            g.setColor(Color.CYAN);
+        else
+            g.setColor(Color.LIGHT_GRAY);
+        
+        int width = getSize().width;    // width of panel
+        int height = getSize().height;  // height of panel
+        
+        /* Define square. */
+        g.drawRect(0, 0, width-1, height-1);
+        g.drawRect(1, 1, width-3, height-3);
+        g.drawRect(2, 2, width-5, height-5);
+        
+        /* Draw the square. */
+        g.setColor(squareColor);
+        g.fillRect(squareLeft, squareTop, SQUARE_SIZE, SQUARE_SIZE);
+        
+        /* Print msg depending on panel focus. */
+        g.setColor(Color.MAGENTA);
+        if (hasFocus())
+        {
+            g.drawString("Arrow keys move square", 7, 20);
+            g.drawString("K, R, G, B change colour", 7, 40);
+        }
+        else
+            g.drawString("Click to activate", 7, 20);
     }
     
 /* -------------------------------------------------------------------------- */
     
     /**
-     * Defines an object that listens for both focus and key events.
+     * Defines a listener object that listens for both focus and key events.
      */
-    private class Listener implements KeyListener implements FocusListener
+    private class Listener implements KeyListener, FocusListener
     {
         // KeyListener implementation.
         
@@ -190,44 +217,44 @@ public class KeyboardAndFocusDemo extends JFrame
          *    <li>G, g - green</li>
          *    <li>B, b - blue</li>
          *    <li>K, k - black</li></ul>
+         */
         @Override
         public void keyTyped(KeyEvent evt)
         {
-            switch (evt.getKeyCode()) {
-            case KeyEvent.VK_R:
+            char c = evt.getKeyChar();
+            
+            switch (c)
+            {
+            case 'R': case 'r':
                 setSquareColor(Color.RED);
                 break;
-            case KeyEvent.VK_G:
+            case 'G': case 'g':
                 setSquareColor(Color.GREEN);
                 break;
-            case KeyEvent.VK_B:
+            case 'B': case 'b':
                 setSquareColor(Color.BLUE);
                 break;
-            case KeyEvent.VK_K:
+            case 'K': case 'k':
                 setSquareColor(Color.BLACK);
                 break;
-            case KeyEvent.VK_EXCLAMATION_MARK:
+            case '!':
                 // set to random colour
                 break;
+            }
+            
+            repaint();
         }
         
         @Override
-        public void keyReleased(KeyEvent evt) {}
+        public void keyReleased(KeyEvent evt) { }
         
-
         // FocusListener implementation.
         
-        public void focusGained(FocusEvent evt)
-        {
-            // panel has input focus
-            repaint();
-        }
+        @Override
+        public void focusGained(FocusEvent evt) { repaint(); }
         
-        public void focusLost(FocusEvent evt)
-        {
-            // panel lost input focus
-            repaint();
-        }
-        
+        @Override
+        public void focusLost(FocusEvent evt) { repaint(); }
+    }
 /* -------------------------------------------------------------------------- */
 }
