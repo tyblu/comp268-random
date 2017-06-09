@@ -51,6 +51,10 @@ import java.awt.Color;
 public class KeyboardAndFocusDemo extends JPanel
 {
 /* -------------------------------------------------------------------------- */
+    // Constants for call()
+    private static final int WINDOW_INIT_SIZE = 800;
+    private static final int WINDOW_INIT_POS_XY = 400;
+
     /**
      * Similar to a {@code main(String[] args)} routine, is called by
      * {@link Chapter06.MainCaller}, as are all {@code call()} routines in most
@@ -64,8 +68,8 @@ public class KeyboardAndFocusDemo extends JPanel
         
         window.setContentPane(content);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLocation(4*100,4*100);
-        window.setSize(4*400,4*400);
+        window.setLocation(WINDOW_INIT_POS_XY,WINDOW_INIT_POS_XY);
+        window.setSize(WINDOW_INIT_SIZE,WINDOW_INIT_SIZE);
         window.setVisible(true);
         
         content.requestFocusInWindow();
@@ -77,13 +81,15 @@ public class KeyboardAndFocusDemo extends JPanel
     private Color squareColor;
     
     // Constants
-    private static int SQUARE_SIZE = 50;
+    private static final int SQUARE_SIZE = 150;
+    private static final int SQUARE_INIT_POS_XY =
+            (WINDOW_INIT_SIZE - SQUARE_SIZE) / 2;
 
     // Constructor
     KeyboardAndFocusDemo()
     {
-        this.squareTop = ( getHeight() - SQUARE_SIZE ) / 2;
-        this.squareLeft = ( getWidth() - SQUARE_SIZE ) / 2;
+        this.squareTop = SQUARE_INIT_POS_XY;
+        this.squareLeft = SQUARE_INIT_POS_XY;
         this.squareColor = Color.RED;
         
         setBackground(Color.WHITE);
@@ -126,6 +132,7 @@ public class KeyboardAndFocusDemo extends JPanel
     }
     
     // Methods
+    @Override
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);    // clears screen, better redraw.
