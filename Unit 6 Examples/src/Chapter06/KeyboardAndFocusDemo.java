@@ -27,6 +27,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Graphics;
@@ -97,6 +99,15 @@ public class KeyboardAndFocusDemo extends JPanel
         Listener l = new Listener();
         addKeyListener(l);
         addFocusListener(l);
+        
+        addMouseListener( new MouseAdapter()
+                {
+                    public void mousePressed(MouseEvent evt)
+                    {
+                        requestFocus();
+                    }
+                }
+        );
     }
     
     // Getters

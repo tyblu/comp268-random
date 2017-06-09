@@ -57,6 +57,7 @@ public class MainCaller {
     private static final boolean ENABLE_CLICKABLERANDOMSTRINGS2 = false;
     private static final boolean ENABLE_RANDOMART = false;
     private static final boolean ENABLE_KEYBOARDANDFOCUSDEMO = true;
+    private static final boolean ENABLE_SUBKILLER = false;
     
     // Exercises
     // private static...
@@ -75,6 +76,7 @@ public class MainCaller {
         if (ENABLE_CLICKABLERANDOMSTRINGS2) { ClickableRandomStrings2.call(); }
         if (ENABLE_RANDOMART) { RandomArt.call(); }
         if (ENABLE_KEYBOARDANDFOCUSDEMO) { KeyboardAndFocusDemo.call(); }
+        if (ENABLE_SUBKILLER) { SubKiller.call(); }
         
         // Exercises
 //        if (ENABLE...)
