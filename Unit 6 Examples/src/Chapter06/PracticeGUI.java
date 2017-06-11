@@ -340,5 +340,16 @@ public class PracticeGUI extends JPanel
         {
             return (new Random()).nextBoolean();
         }
+        
+        public boolean nextBoolean(double probability)
+        {
+//            if (probability < 0)
+//                return false;
+            
+//            if (probability > 1)
+//                return true;
+            
+            return (new Random()).nextDouble() <= probability;
+        }
     }
 }
