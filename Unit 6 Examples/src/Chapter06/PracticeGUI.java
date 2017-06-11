@@ -24,37 +24,38 @@ package Chapter06;
  * THE SOFTWARE.
  */
 
- import javax.swing.JPanel;
- import javax.swing.JFrame;
- import java.awt.GridLayout;
- 
- import java.awt.event.MouseAdapter;
- import java.awt.event.MouseEvent;
- 
- import java.awt.Component;
- import javax.swing.JComponent;
- import javax.swing.text.JTextComponent;
- import javax.swing.AbstractButton;
- 
- import javax.swing.JButton;
- import javax.swing.JLabel;
- import javax.swing.JCheckBox;
- import javax.swing.JTextField;
- import javax.swing.JPasswordField;
- import javax.swing.JTextArea;
- import javax.swing.JScrollPane;
- import javax.swing.JSlider;
- 
- import javax.swing.Timer;
- import java.awt.event.ActionListener;
- import java.awt.event.ActionEvent;
- import java.awt.Color;
- import java.util.Random;
- import java.awt.Font;
- import java.awt.Insets;
- import javax.swing.border.Border;
- import javax.swing.BorderFactory;
- 
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+import java.awt.GridLayout;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+
+import java.awt.Component;
+import javax.swing.JComponent;
+import javax.swing.text.JTextComponent;
+import javax.swing.AbstractButton;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.util.Random;
+import java.awt.Font;
+import java.awt.Insets;
+import javax.swing.border.Border;
+import javax.swing.BorderFactory;
+
 /**
  * Example GUI.
  * 
@@ -107,35 +108,38 @@ public class PracticeGUI extends JPanel
         setBackground(Color.WHITE);
         
         // PracticeGUI (JPanel) Listeners.
-        addMouseListener( new MouseAdapter()
-                {
-                    public void mousePressed(MouseEvent evt)
-                    {
-                        requestFocusInWindow();
-                    }
-                }
-        );
+//        addMouseListener( new MouseAdapter()
+//               {
+//                    public void mousePressed(MouseEvent evt)
+//                    {
+//                        requestFocusInWindow();
+//                    }
+//                }
+//        );
+        addMouseListener((MousePressedListener)evt -> requestFocusInWindow() );
         
-//        Timer t = new Timer( 1500, (ActionEvent evt) -> { randomize(); } );
-        Timer t = new Timer( 5000, new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent evt)
-                    {
-                        randomize();
-                    }
-                }
-        );
-        t.start();
+////        Timer t = new Timer( 1500, (ActionEvent evt) -> { randomize(); } );
+//        Timer t = new Timer( 5000, new ActionListener()
+//                {
+//                    public void actionPerformed(ActionEvent evt)
+//                    {
+//                        randomize();
+//                    }
+//                }
+//        );
+//        t.start();
+        (new Timer(5000, (ActionEvent evt) -> { randomize(); } )).start();
         
         this.button1 = new JButton("JButton button1");
-        this.button1.addActionListener( new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent evt)
-                    {
-                        randomize();
-                    }
-                }
-        );
+//        this.button1.addActionListener( new ActionListener()
+//                {
+//                    public void actionPerformed(ActionEvent evt)
+//                    {
+//                        randomize();
+//                    }
+//                }
+//        );
+        this.button1.addActionListener( (ActionEvent evt) -> { randomize(); } );
         add(button1);
         
         this.label1 = new JLabel("JLabel label1");
@@ -343,5 +347,23 @@ public class PracticeGUI extends JPanel
         {
             return nextDouble() <= probability;
         }
+    }
+    
+    /**
+     * Note that {@code mousePressed(MouseEvent)} is missing, allowing the use
+     * of lambdas to implement this interface.
+     *
+     * {@code component.addMouseListener((MousePressedListener)evt -> foo() );}
+     */
+    interface MousePressedListener extends MouseListener
+    {
+        @Override
+        default void mouseClicked(MouseEvent evt) {}
+        @Override
+        default void mouseReleased(MouseEvent evt) {}
+        @Override
+        default void mouseEntered(MouseEvent evt) {}
+        @Override
+        default void mouseExited(MouseEvent evt) {}
     }
 }
