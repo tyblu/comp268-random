@@ -172,16 +172,6 @@ public class PracticeGUI extends JPanel
                     this.scroller1,
                     this.slider1
                 };
-                
-        JComponent[] allJComponentsWithText = new JComponent[]
-                {
-                    this.button1, 
-                    this.label1, 
-                    this.checkbox1, 
-                    this.textfield1, 
-                    this.passwordfield1,
-                    this.textarea1
-                };
         
         for ( JComponent comp : allJComponents)
         {
@@ -190,9 +180,9 @@ public class PracticeGUI extends JPanel
             comp.setFont(rand.getFont());
             comp.setBackground(rand.getColor());
             comp.setForeground(rand.getColor2());
-            comp.setOpaque(rand.nextBoolean());
-            comp.setVisible(rand.nextBoolean() || rand.nextBoolean()); // 25% false
-            comp.setEnabled(rand.nextBoolean());
+            comp.setOpaque(RandTool.nextBoolean(1 - 1 / (double)2));
+            comp.setVisible(RandTool.nextBoolean(1 - 1 / (double)16));
+            comp.setEnabled(RandTool.nextBoolean(1 - 1 / (double)8));
             comp.setBorder(rand.getBorder());
             
             if ( comp instanceof JTextComponent )
@@ -206,6 +196,13 @@ public class PracticeGUI extends JPanel
                 ((AbstractButton)comp).setText(rand.getString());
                 ((AbstractButton)comp).setMargin(rand.getInsets());
             }
+            
+//            if (comp instanceof JLabel)
+            if (comp == label1)
+            {
+                ((JLabel)comp).setText(rand.getString());
+//                ((JLabel)comp).setMargin(rand.getInsets());
+            }
         }
         
         repaint();
@@ -213,6 +210,8 @@ public class PracticeGUI extends JPanel
     
     private class Randomize
     {
+        private Random r;
+        
         private Font font;
         private Color color, color2;
         private String string;
@@ -221,7 +220,9 @@ public class PracticeGUI extends JPanel
         
         // Constructor
         public Randomize()
-        {            
+        {
+            this.r = new Random();
+            
             this.font = randFont();
             this.color = randColor();
             this.color2 = randColor();
@@ -233,8 +234,6 @@ public class PracticeGUI extends JPanel
         // Private methods to help constructor
         private Font randFont()
         {
-            Random r = new Random();
-            
             String fontName;
             int fontStyle;
             int fontSize;
@@ -259,24 +258,23 @@ public class PracticeGUI extends JPanel
             if (r.nextBoolean())
                 fontStyle += Font.ITALIC;
             
-            fontSize = r.nextInt(30) + 6;
+            fontSize = r.nextInt(60) + 12;
             
             return new Font(fontName, fontStyle, fontSize);
         }
         
         private Color randColor()
         {
-            Random r = new Random();
-            
             return new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
         }
         
         private String randString()
         {
-            switch((new Random()).nextInt(7))
+            switch(r.nextInt(7))
             {
             case 0: return "Life is a beautiful struggle.";
             case 1: return "Every moment matters.";
+            case 2: return "Don\'t be obtuse.";
             case 3: return "No rain, no flowers.";
             case 4: return "C\'est la vie.";
             case 5: return "Take every chance.";
@@ -287,8 +285,6 @@ public class PracticeGUI extends JPanel
         
         private Insets randInsets()
         {
-            Random r = new Random();
-            
             return new Insets(
                     r.nextInt(20), 
                     r.nextInt(20), 
@@ -299,13 +295,11 @@ public class PracticeGUI extends JPanel
         
         private Border randBorder()
         {
-            Random r = new Random();
-            
             int[] m = new int[4];
             for (int i=0; i<4; i++)
                 m[i] = r.nextInt(20);
             
-            switch(r.nextInt(10))
+            switch(r.nextInt(7))
             {
             case 0:
                 return BorderFactory.createEmptyBorder(m[0], m[1], m[2], m[3]);
@@ -334,21 +328,13 @@ public class PracticeGUI extends JPanel
         public String getString() { return this.string; }
         public Insets getInsets() { return this.insets; }
         public Border getBorder() { return this.border; }
-        
+    }
+    
+    private static class RandTool
+    {
         // Methods
-        public boolean nextBoolean()
+        public static boolean nextBoolean(double probability)
         {
-            return (new Random()).nextBoolean();
-        }
-        
-        public boolean nextBoolean(double probability)
-        {
-//            if (probability < 0)
-//                return false;
-            
-//            if (probability > 1)
-//                return true;
-            
             return (new Random()).nextDouble() <= probability;
         }
     }
