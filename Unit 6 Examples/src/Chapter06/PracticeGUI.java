@@ -71,10 +71,7 @@ package Chapter06;
 public class PracticeGUI extends JPanel
 {
 /* -------------------------------------------------------------------------- */
-    public static void call()
-    {
-        call( new String[] { "" } );
-    }
+    public static void call() { call( new String[] { "" } ); }
     
     public static void call(String[] args)
     {
@@ -159,7 +156,8 @@ public class PracticeGUI extends JPanel
     // Methods.
     private void randomize()
     {
-        Randomize rand;
+        RandomizeJAttributes randJ;
+        RandomPlus r = new RandomPlus();
         
         JComponent[] allJComponents = new JComponent[]
                 {
@@ -175,42 +173,40 @@ public class PracticeGUI extends JPanel
         
         for ( JComponent comp : allJComponents)
         {
-            rand = new Randomize();
+            randJ = new RandomizeJAttributes();
             
-            comp.setFont(rand.getFont());
-            comp.setBackground(rand.getColor());
-            comp.setForeground(rand.getColor2());
-            comp.setOpaque(RandTool.nextBoolean(1 - 1 / (double)2));
-            comp.setVisible(RandTool.nextBoolean(1 - 1 / (double)16));
-            comp.setEnabled(RandTool.nextBoolean(1 - 1 / (double)8));
-            comp.setBorder(rand.getBorder());
+            comp.setFont(randJ.getFont());
+            comp.setBackground(randJ.getColor());
+            comp.setForeground(randJ.getColor2());
+            comp.setOpaque(r.nextBoolean());
+            comp.setVisible(r.nextBoolean(1 - 1 / (double)16));
+            comp.setEnabled(r.nextBoolean(1 - 1 / (double)8));
+            comp.setBorder(randJ.getBorder());
             
             if ( comp instanceof JTextComponent )
             {
-                ((JTextComponent)comp).setText(rand.getString());
-                ((JTextComponent)comp).setMargin(rand.getInsets());
+                ((JTextComponent)comp).setText(randJ.getString());
+                ((JTextComponent)comp).setMargin(randJ.getInsets());
             }
             
             if (comp instanceof AbstractButton)
             {
-                ((AbstractButton)comp).setText(rand.getString());
-                ((AbstractButton)comp).setMargin(rand.getInsets());
+                ((AbstractButton)comp).setText(randJ.getString());
+                ((AbstractButton)comp).setMargin(randJ.getInsets());
             }
             
-//            if (comp instanceof JLabel)
-            if (comp == label1)
+            if (comp instanceof JLabel)
             {
-                ((JLabel)comp).setText(rand.getString());
-//                ((JLabel)comp).setMargin(rand.getInsets());
+                ((JLabel)comp).setText(randJ.getString());
             }
         }
         
         repaint();
     }
     
-    private class Randomize
+    private class RandomizeJAttributes
     {
-        private Random r;
+        private RandomPlus r;
         
         private Font font;
         private Color color, color2;
@@ -219,9 +215,9 @@ public class PracticeGUI extends JPanel
         private Border border;
         
         // Constructor
-        public Randomize()
+        public RandomizeJAttributes()
         {
-            this.r = new Random();
+            this.r = new RandomPlus();
             
             this.font = randFont();
             this.color = randColor();
@@ -330,12 +326,14 @@ public class PracticeGUI extends JPanel
         public Border getBorder() { return this.border; }
     }
     
-    private static class RandTool
+    private class RandomPlus extends Random
     {
         // Methods
-        public static boolean nextBoolean(double probability)
+        public boolean nextBoolean(double probability)
         {
-            return (new Random()).nextDouble() <= probability;
+            return nextDouble() <= probability;
         }
+        
+        
     }
 }
