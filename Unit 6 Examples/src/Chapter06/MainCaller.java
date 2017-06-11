@@ -60,8 +60,8 @@ public class MainCaller {
     private static final boolean ENABLE_SUBKILLER = false;
     private static final boolean ENABLE_SIMPLECALC = false;
     private static final boolean ENABLE_HIGHLOWGUI = false;
-    private static final boolean ENABLE_PRACTICEGUI = false;
-    private static final boolean ENABLE_BORDERDEMO = true;
+    private static final boolean ENABLE_PRACTICEGUI = true;
+    private static final boolean ENABLE_BORDERDEMO = false;
     
     // Exercises
     // private static...

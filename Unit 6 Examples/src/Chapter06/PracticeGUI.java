@@ -106,6 +106,7 @@ public class PracticeGUI extends JPanel
         
         setBackground(Color.WHITE);
         
+        // PracticeGUI (JPanel) Listeners.
         addMouseListener( new MouseAdapter()
                 {
                     public void mousePressed(MouseEvent evt)
@@ -127,6 +128,14 @@ public class PracticeGUI extends JPanel
         t.start();
         
         this.button1 = new JButton("JButton button1");
+        this.button1.addActionListener( new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent evt)
+                    {
+                        randomize();
+                    }
+                }
+        );
         add(button1);
         
         this.label1 = new JLabel("JLabel label1");
@@ -182,6 +191,7 @@ public class PracticeGUI extends JPanel
             comp.setVisible(r.nextBoolean(1 - 1 / (double)16));
             comp.setEnabled(r.nextBoolean(1 - 1 / (double)8));
             comp.setBorder(randJ.getBorder());
+            comp.setToolTipText(randJ.getString());
             
             if ( comp instanceof JTextComponent )
             {
@@ -333,7 +343,5 @@ public class PracticeGUI extends JPanel
         {
             return nextDouble() <= probability;
         }
-        
-        
     }
 }
