@@ -26,7 +26,15 @@ package Chapter06;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
+
+import javax.swing.SpringLayout;
+import javax.swing.BoxLayout;
+import java.awt.CardLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import javax.swing.GroupLayout;
+import java.awt.BorderLayout;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
@@ -164,11 +172,62 @@ public class PracticeGUI extends JPanel
     {
         this.allJComponents = allJComponents;
     }
+        
+    private void setAllJComponents(
+            JButton button1,
+            JLabel label1,
+            JCheckBox checkbox1,
+            JTextField textfield1,
+            JPasswordField passfield1,
+            JTextArea textarea1,
+            JScrollPane scroller1,
+            JSlider slider1
+    )
+    {
+        setAllJComponents( new JComponent[]
+                {
+                    button1, 
+                    label1, 
+                    checkbox1, 
+                    textfield1, 
+                    passfield1,
+                    textarea1,
+                    scroller1,
+                    slider1
+                }
+        );
+//        JComponent[] arr = new JComponent[]
+//                {
+//                    button1, 
+//                    label1, 
+//                    checkbox1, 
+//                    textfield1, 
+//                    passfield1,
+//                    textarea1,
+//                    scroller1,
+//                    slider1
+//                };
+//        setAllJComponents(arr);
+    }
+    
+    private void setAllJComponents()
+    {
+        setAllJComponents(
+                this.button1, 
+                this.label1, 
+                this.checkbox1, 
+                this.textfield1, 
+                this.passfield1,
+                this.textarea1,
+                this.scroller1,
+                this.slider1
+        );
+    }
     
     // Methods.
     private void reset()
     {
-        if (getComponentCount() > 2)
+        if (getComponentCount() > 1)
         {
             this.removeAll();
             this.revalidate();
@@ -200,13 +259,15 @@ public class PracticeGUI extends JPanel
         this.button1.addActionListener( (ActionEvent evt) -> { reset(); } );
         
         // Add components.
-        add(button1, 0);
-        add(label1, 1);
-        add(checkbox1, 2);
-        add(textfield1, 3);
-        add(passfield1, 4);
-        add(scroller1, 5);
-        add(slider1, 6);
+        // Need to change to add(button1, getLayoutPosition(button1));
+        int pos = 0;
+        add(button1, pos++);
+        add(label1, pos++);
+        add(checkbox1, pos++);
+        add(textfield1, pos++);
+        add(passfield1, pos++);
+        add(scroller1, pos++);  // textarea1 inside scroller1
+        add(slider1, pos++);
         
         this.repaint();
     }
@@ -216,92 +277,63 @@ public class PracticeGUI extends JPanel
         RandomizeJAttributes randJ;
         RandomPlus r = new RandomPlus();
         
-        for ( JComponent comp : allJComponents)
+        // set to random layout and mix up positions: this.
+        // set random background and foreground colours
+        
+        for ( JComponent comp : this.allJComponents)
         {
             randJ = new RandomizeJAttributes();
             
-            comp.setFont(randJ.getFont());
-            comp.setBackground(randJ.getColor());
-            comp.setForeground(randJ.getColor2());
-            comp.setOpaque(r.nextBoolean());
-            comp.setVisible(r.nextBoolean(1 - 1 / (double)16));
-            comp.setEnabled(r.nextBoolean(1 - 1 / (double)8));
-            comp.setBorder(randJ.getBorder());
-            comp.setToolTipText(randJ.getString());
+//            comp.setFont(randJ.getFont());
+//            comp.setBackground(randJ.getColor());
+//            comp.setForeground(randJ.getColor2());
+//            comp.setOpaque(r.nextBoolean());
+//            comp.setVisible(r.nextBoolean(1 - 1 / (double)16));
+//            comp.setEnabled(r.nextBoolean(1 - 1 / (double)8));
+//            comp.setBorder(randJ.getBorder());
+//            comp.setToolTipText(randJ.getString());
             
-            if (comp instanceof JTextComponent)
+            System.out.print("Outside ifs: ");
+            System.out.println(comp.getClass());
+            
+            if (comp instanceof JTextComponent) // JTextField, JPasswordField, JTextArea
             {
                 JTextComponent tc = (JTextComponent)comp;
+                System.out.print("Inside ifs: ");
+                System.out.println(tc.getClass());
                 tc.setText(randJ.getString());
-                tc.setMargin(randJ.getInsets());
+//                tc.setMargin(randJ.getInsets());
                 
-                if (r.nextBoolean(1 - 1 / (double)4))
-                    tc.select(r.nextInt(8), 8 + r.nextInt(8));
-                else if (r.nextBoolean())
-                    tc.selectAll();
+//                if (r.nextBoolean(1 - 1 / (double)4))
+//                    tc.select(r.nextInt(8), 8 + r.nextInt(8));
+//                else if (r.nextBoolean())
+//                    tc.selectAll();
                 
-                tc.setDisabledTextColor(randJ.getColor());
+//                tc.setDisabledTextColor(randJ.getColor());
+
+                tc.invalidate();
             }
             
-            if (comp instanceof AbstractButton) // JButton and JCheckBox
-            {
-                AbstractButton ab = (AbstractButton)comp;
-                ab.setText(randJ.getString());
-                ab.setMargin(randJ.getInsets());
-                ab.setContentAreaFilled(r.nextBoolean(1 - 1 / (double)8));
-                ab.setVerticalAlignment(randJ.getVerticalAlignment());
-                ab.setHorizontalAlignment(randJ.getHorizontalAlignment());
-                ab.setVerticalTextPosition(randJ.getVerticalAlignment());
-                ab.setHorizontalTextPosition(randJ.getHorizontalAlignment());
-            }
+//            if (comp instanceof AbstractButton) // JButton and JCheckBox
+//            {
+//                AbstractButton ab = (AbstractButton)comp;
+//               ab.setText(randJ.getString());
+//                ab.setMargin(randJ.getInsets());
+//                ab.setContentAreaFilled(r.nextBoolean(1 - 1 / (double)8));
+//                ab.setVerticalAlignment(randJ.getVerticalAlignment());
+//                ab.setHorizontalAlignment(randJ.getHorizontalAlignment());
+//               ab.setVerticalTextPosition(randJ.getVerticalAlignment());
+//                ab.setHorizontalTextPosition(randJ.getHorizontalAlignment());
+//            }
             
-            if (comp instanceof JLabel)
-            {
-                JLabel l = (JLabel)comp;
-                l.setText(randJ.getString());
-            }
+//            if (comp instanceof JLabel)
+//            {
+//                JLabel l = (JLabel)comp;
+//                l.setText(randJ.getString());
+//            }
         }
         
         repaint();
-    }
-    
-    private void setAllJComponents()
-    {
-        setAllJComponents(
-                this.button1, 
-                this.label1, 
-                this.checkbox1, 
-                this.textfield1, 
-                this.passfield1,
-                this.textarea1,
-                this.scroller1,
-                this.slider1
-        );
-    }
-        
-    private void setAllJComponents(
-            JButton button1,
-            JLabel label1,
-            JCheckBox checkbox1,
-            JTextField textfield1,
-            JPasswordField passfield1,
-            JTextArea textarea1,
-            JScrollPane scroller1,
-            JSlider slider1
-    )
-    {
-        JComponent[] arr = new JComponent[]
-                {
-                    button1, 
-                    label1, 
-                    checkbox1, 
-                    textfield1, 
-                    passfield1,
-                    textarea1,
-                    scroller1,
-                    slider1
-                };
-        setAllJComponents(arr);
     }
     
     private void replaceJComponent(JComponent currentComp, JComponent newComp)
@@ -319,29 +351,38 @@ public class PracticeGUI extends JPanel
     
     private void setJComponent(JComponent comp)
     {
-        if (JButton.class.isInstance(comp))
+        String stringJComponentClass = comp.getClass().toString()
+                .substring(("class javax.swing.").length());
+        
+        switch (comp.getClass().toString().substring(18))
+        {
+        case "JButton":
             setButton1((JButton)comp);
-        
-        if (JLabel.class.isInstance(comp))
+            break;
+        case "JLabel":
             setLabel1((JLabel)comp);
-        
-        if (JCheckBox.class.isInstance(comp))
+            break;
+        case "JCheckBox":
             setCheckbox1((JCheckBox)comp);
-        
-        if (JTextField.class.isInstance(comp))
+            break;
+        case "JTextField":
             setTextfield1((JTextField)comp);
-        
-        if (JPasswordField.class.isInstance(comp))
+            break;
+        case "JPasswordField":
             setPassfield1((JPasswordField)comp);
-        
-        if (JTextArea.class.isInstance(comp))
+            break;
+        case "JTextArea":
             setTextarea1((JTextArea)comp);
-        
-        if (JScrollPane.class.isInstance(comp))
+            break;
+        case "JScrollPane":
             setScroller1((JScrollPane)comp);
-        
-        if (JSlider.class.isInstance(comp))
+            break;
+        case "JSlider":
             setSlider1((JSlider)comp);
+            break;
+        default:
+            break;
+        }
     }
     
     // Inner classes.
@@ -493,6 +534,31 @@ public class PracticeGUI extends JPanel
         public Border getBorder() { return this.border; }
         public int getVerticalAlignment() { return this.verticalAlignment; }
         public int getHorizontalAlignment() { return this.horizontalAlignment; }
+        
+        public Object getLayout()
+        {
+            switch(r.nextInt(8))
+            {
+            case 0:             // SpringLayout
+                break;
+            case 1:             // BoxLayout
+                break;
+            case 2:             // CardLayout
+                break;
+            case 3:             // FlowLayout
+                break;
+            case 4:             // GridBagLayout
+                break;
+            case 5: default:    // GridLayout
+                break;
+            case 6:             // GroupLayout
+                break;
+            case 7:             // BorderLayout
+                break;
+            }
+            
+            return null;
+        }
     }
     
     private class RandomPlus extends Random
