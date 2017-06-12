@@ -99,6 +99,18 @@ public class PracticeGUI extends JPanel
     private JTextArea textarea1;
     private JScrollPane scroller1;
     private JSlider slider1;
+    private JComponent[] allJComponents = new JComponent[]
+            {
+                this.button1, 
+                this.label1, 
+                this.checkbox1, 
+                this.textfield1, 
+                this.passwordfield1,
+                this.textarea1,
+                this.scroller1,
+                this.slider1
+            };
+    private DefaultJPanel default;
     
     // Constructor.
     public PracticeGUI()
@@ -108,37 +120,11 @@ public class PracticeGUI extends JPanel
         setBackground(Color.WHITE);
         
         // PracticeGUI (JPanel) Listeners.
-//        addMouseListener( new MouseAdapter()
-//               {
-//                    public void mousePressed(MouseEvent evt)
-//                    {
-//                        requestFocusInWindow();
-//                    }
-//                }
-//        );
         addMouseListener((MousePressedListener)evt -> requestFocusInWindow() );
         
-////        Timer t = new Timer( 1500, (ActionEvent evt) -> { randomize(); } );
-//        Timer t = new Timer( 5000, new ActionListener()
-//                {
-//                    public void actionPerformed(ActionEvent evt)
-//                    {
-//                        randomize();
-//                    }
-//                }
-//        );
-//        t.start();
         (new Timer(5000, (ActionEvent evt) -> { randomize(); } )).start();
         
         this.button1 = new JButton("JButton button1");
-//        this.button1.addActionListener( new ActionListener()
-//                {
-//                    public void actionPerformed(ActionEvent evt)
-//                    {
-//                        randomize();
-//                    }
-//                }
-//        );
         this.button1.addActionListener( (ActionEvent evt) -> { randomize(); } );
         add(button1);
         
@@ -160,7 +146,10 @@ public class PracticeGUI extends JPanel
         
         this.slider1 = new JSlider(0, 7, 5);
         add(slider1);
+        
+        setDefaults();
     }
+
     
     // Getters.
     
@@ -218,6 +207,64 @@ public class PracticeGUI extends JPanel
         repaint();
     }
     
+    private void defaulterize()
+    {
+        DefaultJAttributes defaults;
+        
+        JComponent[] allJComponents = new JComponent[]
+                {
+                    this.button1, 
+                    this.label1, 
+                    this.checkbox1, 
+                    this.textfield1, 
+                    this.passwordfield1,
+                    this.textarea1,
+                    this.scroller1,
+                    this.slider1
+                };
+        
+        for ( JComponent comp : allJComponents)
+        {
+            defaults = new DefaultJAttributes();
+            
+            comp.setFont(defaults.getFont());
+            comp.setBackground(defaults.getColor());
+            comp.setForeground(defaults.getColor2());
+            comp.setOpaque(true);
+            comp.setVisible(true);
+            comp.setEnabled(true);
+            comp.setBorder(defaults.getBorder());
+            comp.setToolTipText(defaults.getString());
+            
+            if ( comp instanceof JTextComponent )
+            {
+                ((JTextComponent)comp).setText(defaults.getString());
+                ((JTextComponent)comp).setMargin(defaults.getInsets());
+            }
+            
+            if (comp instanceof AbstractButton)
+            {
+                ((AbstractButton)comp).setText(defaults.getString());
+                ((AbstractButton)comp).setMargin(defaults.getInsets());
+            }
+            
+            if (comp instanceof JLabel)
+            {
+                ((JLabel)comp).setText(defaults.getString());
+            }
+        }
+        
+        repaint();
+    }
+    
+    private void setDefaults()
+    {
+        DefaultJPanel default;
+        
+        this.defaultJComp = new DefaultJComponent(this);
+    }
+    
+    // Inner classes.
     private class RandomizeJAttributes
     {
         private RandomPlus r;
@@ -347,6 +394,86 @@ public class PracticeGUI extends JPanel
         {
             return nextDouble() <= probability;
         }
+    }
+    
+    private class DefaultJPanel extends JPanel
+    {
+        DefaultJPanel panel;
+        
+        public DefaultJPanel() {}
+        
+        public DefaultJPanel(PracticeGUI panel)
+        {
+            PracticeGUI tempPanel = panel;
+            
+            this.panel.setLayout(tempPanel.getLayout());
+            this.panel.setBackground(tempPanel.getBackground());
+            
+            for( Component comp : tempPanel.getComponents() )
+            {
+                
+        }
+        
+// Constructor.
+public PracticeGUI()
+{
+    setLayout( new GridLayout(0,1) );
+    
+    setBackground(Color.WHITE);
+    
+    // PracticeGUI (JPanel) Listeners.
+    addMouseListener((MousePressedListener)evt -> requestFocusInWindow() );
+    
+    (new Timer(5000, (ActionEvent evt) -> { randomize(); } )).start();
+    
+    this.button1 = new JButton("JButton button1");
+    this.button1.addActionListener( (ActionEvent evt) -> { randomize(); } );
+    add(button1);
+    
+    this.label1 = new JLabel("JLabel label1");
+    add(label1);
+    
+    this.checkbox1 = new JCheckBox("JCheckBox checkbox1");
+    add(checkbox1);
+    
+    this.textfield1 = new JTextField("JTextField textfield1");
+    add(textfield1);
+    
+    this.passwordfield1 = new JPasswordField("JPasswordField passwordfield1");
+    add(passwordfield1);
+    
+    this.textarea1 = new JTextArea("JTextArea textarea1");
+    this.scroller1 = new JScrollPane(this.textarea1);
+    add(scroller1);
+    
+    this.slider1 = new JSlider(0, 7, 5);
+    add(slider1);
+}
+    
+        private void setValues(
+                Font font, 
+                Color color, 
+                Color color2, 
+                String string, 
+                Insets insets, 
+                Border border
+        )
+        {
+            this.font = font;
+            this.color = color;
+            this.color2 = color2;
+            this.string = string;
+            this.insets = insets;
+            this.border = border;
+        }
+        
+        // Getters
+        public Font getFont() { return this.font; }
+        public Color getColor() { return this.color; }
+        public Color getColor2() { return this.color2; }
+        public String getString() { return this.string; }
+        public Insets getInsets() { return this.insets; }
+        public Border getBorder() { return this.border; }
     }
     
     /**
