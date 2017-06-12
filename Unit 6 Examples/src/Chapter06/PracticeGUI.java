@@ -62,7 +62,7 @@ import javax.swing.BorderFactory;
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 9, 2017
- * Version      0.1
+ * Version      0.3
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -95,83 +95,124 @@ public class PracticeGUI extends JPanel
     private JLabel label1;
     private JCheckBox checkbox1;
     private JTextField textfield1;
-    private JPasswordField passwordfield1;
+    private JPasswordField passfield1;
     private JTextArea textarea1;
     private JScrollPane scroller1;
     private JSlider slider1;
-    private JComponent[] allJComponents = new JComponent[]
-            {
-                this.button1, 
-                this.label1, 
-                this.checkbox1, 
-                this.textfield1, 
-                this.passwordfield1,
-                this.textarea1,
-                this.scroller1,
-                this.slider1
-            };
-    private DefaultJPanel default;
+    private JComponent[] allJComponents;
     
     // Constructor.
     public PracticeGUI()
     {
-        setLayout( new GridLayout(0,1) );
-        
-        setBackground(Color.WHITE);
-        
-        // PracticeGUI (JPanel) Listeners.
+        // Add panel listeners.
         addMouseListener((MousePressedListener)evt -> requestFocusInWindow() );
-        
         (new Timer(5000, (ActionEvent evt) -> { randomize(); } )).start();
         
-        this.button1 = new JButton("JButton button1");
-        this.button1.addActionListener( (ActionEvent evt) -> { randomize(); } );
-        add(button1);
+        reset();
         
-        this.label1 = new JLabel("JLabel label1");
-        add(label1);
-        
-        this.checkbox1 = new JCheckBox("JCheckBox checkbox1");
-        add(checkbox1);
-        
-        this.textfield1 = new JTextField("JTextField textfield1");
-        add(textfield1);
-        
-        this.passwordfield1 = new JPasswordField("JPasswordField passwordfield1");
-        add(passwordfield1);
-        
-        this.textarea1 = new JTextArea("JTextArea textarea1");
-        this.scroller1 = new JScrollPane(this.textarea1);
-        add(scroller1);
-        
-        this.slider1 = new JSlider(0, 7, 5);
-        add(slider1);
-        
-        setDefaults();
+        setAllJComponents();
     }
 
     
     // Getters.
+    public JComponent[] getAllJComponents() { return this.allJComponents; }
     
     // Setters.
+    public void setButton1(JButton button1)
+    {
+        this.button1 = button1;
+    }
+    
+    public void setLabel1(JLabel label1)
+    {
+        this.label1 = label1;
+    }
+    
+    public void setCheckbox1(JCheckBox checkbox1)
+    {
+        this.checkbox1 = checkbox1;
+    }
+    
+    public void setTextfield1(JTextField textfield1)
+    {
+        this.textfield1 = textfield1;
+    }
+    
+    public void setPassfield1(JPasswordField passfield1)
+    {
+        this.passfield1 = passfield1;
+    }
+    
+    public void setTextarea1(JTextArea textarea1)
+    {
+        this.textarea1 = textarea1;
+    }
+    
+    public void setScroller1(JScrollPane scroller1)
+    {
+        this.scroller1 = scroller1;
+    }
+    
+    public void setSlider1(JSlider slider1)
+    {
+        this.slider1 = slider1;
+    }
+
+    public void setAllJComponents(JComponent[] allJComponents)
+    {
+        this.allJComponents = allJComponents;
+    }
     
     // Methods.
+    private void reset()
+    {
+        if (getComponentCount() > 2)
+        {
+            this.removeAll();
+            this.revalidate();
+        }
+        
+        setLayout( new GridLayout(0,1) );
+        
+        setBackground(Color.WHITE);
+
+        // Re-initialize components.
+        replaceJComponent(this.button1, 
+                new JButton("JButton button1"));
+        replaceJComponent(this.label1, 
+                new JLabel("JLabel label1"));
+        replaceJComponent(this.checkbox1, 
+                new JCheckBox("JCheckBox checkbox1"));
+        replaceJComponent(this.textfield1, 
+                new JTextField("JTextField textfield1"));
+        replaceJComponent(this.passfield1, 
+                new JPasswordField("JPasswordField passfield1"));
+        replaceJComponent(this.textarea1, 
+                new JTextArea("JTextArea textarea1"));
+        replaceJComponent(this.scroller1, 
+                new JScrollPane(this.textarea1));
+        replaceJComponent(this.slider1, 
+                new JSlider(0, 7, 5));
+        
+        // Add component listeners.
+        this.button1.addActionListener( (ActionEvent evt) -> { reset(); } );
+        
+        // Add components.
+        add(button1, 0);
+        add(label1, 1);
+        add(checkbox1, 2);
+        add(textfield1, 3);
+        add(passfield1, 4);
+        add(scroller1, 5);
+        add(slider1, 6);
+        
+        this.repaint();
+    }
+        
     private void randomize()
     {
         RandomizeJAttributes randJ;
         RandomPlus r = new RandomPlus();
-        
-        JComponent[] allJComponents = new JComponent[]
-                {
-                    this.button1, 
-                    this.label1, 
-                    this.checkbox1, 
-                    this.textfield1, 
-                    this.passwordfield1,
-                    this.textarea1,
-                    this.scroller1,
-                    this.slider1
-                };
         
         for ( JComponent comp : allJComponents)
         {
@@ -186,7 +227,7 @@ public class PracticeGUI extends JPanel
             comp.setBorder(randJ.getBorder());
             comp.setToolTipText(randJ.getString());
             
-            if ( comp instanceof JTextComponent )
+            if (comp instanceof JTextComponent)
             {
                 ((JTextComponent)comp).setText(randJ.getString());
                 ((JTextComponent)comp).setMargin(randJ.getInsets());
@@ -207,61 +248,83 @@ public class PracticeGUI extends JPanel
         repaint();
     }
     
-    private void defaulterize()
+    private void setAllJComponents()
     {
-        DefaultJAttributes defaults;
+        setAllJComponents(
+                this.button1, 
+                this.label1, 
+                this.checkbox1, 
+                this.textfield1, 
+                this.passfield1,
+                this.textarea1,
+                this.scroller1,
+                this.slider1
+        );
+    }
         
-        JComponent[] allJComponents = new JComponent[]
+    private void setAllJComponents(
+            JButton button1,
+            JLabel label1,
+            JCheckBox checkbox1,
+            JTextField textfield1,
+            JPasswordField passfield1,
+            JTextArea textarea1,
+            JScrollPane scroller1,
+            JSlider slider1
+    )
+    {
+        JComponent[] arr = new JComponent[]
                 {
-                    this.button1, 
-                    this.label1, 
-                    this.checkbox1, 
-                    this.textfield1, 
-                    this.passwordfield1,
-                    this.textarea1,
-                    this.scroller1,
-                    this.slider1
+                    button1, 
+                    label1, 
+                    checkbox1, 
+                    textfield1, 
+                    passfield1,
+                    textarea1,
+                    scroller1,
+                    slider1
                 };
-        
-        for ( JComponent comp : allJComponents)
-        {
-            defaults = new DefaultJAttributes();
-            
-            comp.setFont(defaults.getFont());
-            comp.setBackground(defaults.getColor());
-            comp.setForeground(defaults.getColor2());
-            comp.setOpaque(true);
-            comp.setVisible(true);
-            comp.setEnabled(true);
-            comp.setBorder(defaults.getBorder());
-            comp.setToolTipText(defaults.getString());
-            
-            if ( comp instanceof JTextComponent )
-            {
-                ((JTextComponent)comp).setText(defaults.getString());
-                ((JTextComponent)comp).setMargin(defaults.getInsets());
-            }
-            
-            if (comp instanceof AbstractButton)
-            {
-                ((AbstractButton)comp).setText(defaults.getString());
-                ((AbstractButton)comp).setMargin(defaults.getInsets());
-            }
-            
-            if (comp instanceof JLabel)
-            {
-                ((JLabel)comp).setText(defaults.getString());
-            }
-        }
-        
-        repaint();
+        setAllJComponents(arr);
     }
     
-    private void setDefaults()
+    private void replaceJComponent(JComponent currentComp, JComponent newComp)
     {
-        DefaultJPanel default;
+        if (currentComp != null)
+        {
+            remove(currentComp);
+            revalidate();
+        }
         
-        this.defaultJComp = new DefaultJComponent(this);
+        setJComponent(newComp);
+        setAllJComponents();
+        add(newComp);
+    }
+    
+    private void setJComponent(JComponent comp)
+    {
+        if (JButton.class.isInstance(comp))
+            setButton1((JButton)comp);
+        
+        if (JLabel.class.isInstance(comp))
+            setLabel1((JLabel)comp);
+        
+        if (JCheckBox.class.isInstance(comp))
+            setCheckbox1((JCheckBox)comp);
+        
+        if (JTextField.class.isInstance(comp))
+            setTextfield1((JTextField)comp);
+        
+        if (JPasswordField.class.isInstance(comp))
+            setPassfield1((JPasswordField)comp);
+        
+        if (JTextArea.class.isInstance(comp))
+            setTextarea1((JTextArea)comp);
+        
+        if (JScrollPane.class.isInstance(comp))
+            setScroller1((JScrollPane)comp);
+        
+        if (JSlider.class.isInstance(comp))
+            setSlider1((JSlider)comp);
     }
     
     // Inner classes.
@@ -394,86 +457,6 @@ public class PracticeGUI extends JPanel
         {
             return nextDouble() <= probability;
         }
-    }
-    
-    private class DefaultJPanel extends JPanel
-    {
-        DefaultJPanel panel;
-        
-        public DefaultJPanel() {}
-        
-        public DefaultJPanel(PracticeGUI panel)
-        {
-            PracticeGUI tempPanel = panel;
-            
-            this.panel.setLayout(tempPanel.getLayout());
-            this.panel.setBackground(tempPanel.getBackground());
-            
-            for( Component comp : tempPanel.getComponents() )
-            {
-                
-        }
-        
-// Constructor.
-public PracticeGUI()
-{
-    setLayout( new GridLayout(0,1) );
-    
-    setBackground(Color.WHITE);
-    
-    // PracticeGUI (JPanel) Listeners.
-    addMouseListener((MousePressedListener)evt -> requestFocusInWindow() );
-    
-    (new Timer(5000, (ActionEvent evt) -> { randomize(); } )).start();
-    
-    this.button1 = new JButton("JButton button1");
-    this.button1.addActionListener( (ActionEvent evt) -> { randomize(); } );
-    add(button1);
-    
-    this.label1 = new JLabel("JLabel label1");
-    add(label1);
-    
-    this.checkbox1 = new JCheckBox("JCheckBox checkbox1");
-    add(checkbox1);
-    
-    this.textfield1 = new JTextField("JTextField textfield1");
-    add(textfield1);
-    
-    this.passwordfield1 = new JPasswordField("JPasswordField passwordfield1");
-    add(passwordfield1);
-    
-    this.textarea1 = new JTextArea("JTextArea textarea1");
-    this.scroller1 = new JScrollPane(this.textarea1);
-    add(scroller1);
-    
-    this.slider1 = new JSlider(0, 7, 5);
-    add(slider1);
-}
-    
-        private void setValues(
-                Font font, 
-                Color color, 
-                Color color2, 
-                String string, 
-                Insets insets, 
-                Border border
-        )
-        {
-            this.font = font;
-            this.color = color;
-            this.color2 = color2;
-            this.string = string;
-            this.insets = insets;
-            this.border = border;
-        }
-        
-        // Getters
-        public Font getFont() { return this.font; }
-        public Color getColor() { return this.color; }
-        public Color getColor2() { return this.color2; }
-        public String getString() { return this.string; }
-        public Insets getInsets() { return this.insets; }
-        public Border getBorder() { return this.border; }
     }
     
     /**
