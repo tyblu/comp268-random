@@ -284,53 +284,48 @@ public class PracticeGUI extends JPanel
         {
             randJ = new RandomizeJAttributes();
             
-//            comp.setFont(randJ.getFont());
-//            comp.setBackground(randJ.getColor());
-//            comp.setForeground(randJ.getColor2());
-//            comp.setOpaque(r.nextBoolean());
-//            comp.setVisible(r.nextBoolean(1 - 1 / (double)16));
-//            comp.setEnabled(r.nextBoolean(1 - 1 / (double)8));
-//            comp.setBorder(randJ.getBorder());
-//            comp.setToolTipText(randJ.getString());
-            
-            System.out.print("Outside ifs: ");
-            System.out.println(comp.getClass());
+            comp.setFont(randJ.getFont());
+            comp.setBackground(randJ.getColor());
+            comp.setForeground(randJ.getColor2());
+            comp.setOpaque(r.nextBoolean());
+            comp.setVisible(r.nextBoolean(1 - 1 / (double)16));
+            comp.setEnabled(r.nextBoolean(1 - 1 / (double)8));
+            comp.setBorder(randJ.getBorder());
+            comp.setToolTipText(randJ.getString());
             
             if (comp instanceof JTextComponent) // JTextField, JPasswordField, JTextArea
             {
                 JTextComponent tc = (JTextComponent)comp;
-                System.out.print("Inside ifs: ");
-                System.out.println(tc.getClass());
                 tc.setText(randJ.getString());
-//                tc.setMargin(randJ.getInsets());
+                tc.setMargin(randJ.getInsets());
                 
-//                if (r.nextBoolean(1 - 1 / (double)4))
-//                    tc.select(r.nextInt(8), 8 + r.nextInt(8));
-//                else if (r.nextBoolean())
-//                    tc.selectAll();
+                if (r.nextBoolean(1 - 1 / (double)4))
+                    tc.select(r.nextInt(8), 8 + r.nextInt(8));
+                else if (r.nextBoolean())
+                    tc.selectAll();
                 
-//                tc.setDisabledTextColor(randJ.getColor());
+                tc.setDisabledTextColor(randJ.getColor());
 
-                tc.invalidate();
+//                tc.invalidate();
             }
             
-//            if (comp instanceof AbstractButton) // JButton and JCheckBox
-//            {
-//                AbstractButton ab = (AbstractButton)comp;
-//               ab.setText(randJ.getString());
-//                ab.setMargin(randJ.getInsets());
-//                ab.setContentAreaFilled(r.nextBoolean(1 - 1 / (double)8));
-//                ab.setVerticalAlignment(randJ.getVerticalAlignment());
-//                ab.setHorizontalAlignment(randJ.getHorizontalAlignment());
-//               ab.setVerticalTextPosition(randJ.getVerticalAlignment());
-//                ab.setHorizontalTextPosition(randJ.getHorizontalAlignment());
-//            }
+            if (comp instanceof AbstractButton) // JButton and JCheckBox
+            {
+                AbstractButton ab = (AbstractButton)comp;
+                ab.setText(randJ.getString());
+                ab.setMargin(randJ.getInsets());
+                ab.setContentAreaFilled(r.nextBoolean(1 - 1 / (double)8));
+                ab.setVerticalAlignment(randJ.getVerticalAlignment());
+                ab.setHorizontalAlignment(randJ.getHorizontalAlignment());
+                ab.setVerticalTextPosition(randJ.getVerticalAlignment());
+                ab.setHorizontalTextPosition(randJ.getHorizontalAlignment());
+            }
             
-//            if (comp instanceof JLabel)
-//            {
-//                JLabel l = (JLabel)comp;
-//                l.setText(randJ.getString());
-//            }
+            if (comp instanceof JLabel)
+            {
+                JLabel l = (JLabel)comp;
+                l.setText(randJ.getString());
+            }
         }
         
         repaint();
