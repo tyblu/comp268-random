@@ -56,6 +56,8 @@ import java.awt.Insets;
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
 
+import javax.swing.SwingConstants;
+
 /**
  * Example GUI.
  * 
@@ -229,19 +231,34 @@ public class PracticeGUI extends JPanel
             
             if (comp instanceof JTextComponent)
             {
-                ((JTextComponent)comp).setText(randJ.getString());
-                ((JTextComponent)comp).setMargin(randJ.getInsets());
+                JTextComponent tc = (JTextComponent)comp;
+                tc.setText(randJ.getString());
+                tc.setMargin(randJ.getInsets());
+                
+                if (r.nextBoolean(1 - 1 / (double)4))
+                    tc.select(r.nextInt(8), 8 + r.nextInt(8));
+                else if (r.nextBoolean())
+                    tc.selectAll();
+                
+                tc.setDisabledTextColor(randJ.getColor());
             }
             
-            if (comp instanceof AbstractButton)
+            if (comp instanceof AbstractButton) // JButton and JCheckBox
             {
-                ((AbstractButton)comp).setText(randJ.getString());
-                ((AbstractButton)comp).setMargin(randJ.getInsets());
+                AbstractButton ab = (AbstractButton)comp;
+                ab.setText(randJ.getString());
+                ab.setMargin(randJ.getInsets());
+                ab.setContentAreaFilled(r.nextBoolean(1 - 1 / (double)8));
+                ab.setVerticalAlignment(randJ.getVerticalAlignment());
+                ab.setHorizontalAlignment(randJ.getHorizontalAlignment());
+                ab.setVerticalTextPosition(randJ.getVerticalAlignment());
+                ab.setHorizontalTextPosition(randJ.getHorizontalAlignment());
             }
             
             if (comp instanceof JLabel)
             {
-                ((JLabel)comp).setText(randJ.getString());
+                JLabel l = (JLabel)comp;
+                l.setText(randJ.getString());
             }
         }
         
@@ -337,6 +354,8 @@ public class PracticeGUI extends JPanel
         private String string;
         private Insets insets;
         private Border border;
+        private int verticalAlignment;
+        private int horizontalAlignment;
         
         // Constructor
         public RandomizeJAttributes()
@@ -349,6 +368,8 @@ public class PracticeGUI extends JPanel
             this.string = randString();
             this.insets = randInsets();
             this.border = randBorder();
+            this.verticalAlignment = randVerticalAlignment();
+            this.horizontalAlignment = randHorizontalAlignment();
         }
         
         // Private methods to help constructor
@@ -440,6 +461,28 @@ public class PracticeGUI extends JPanel
                 return BorderFactory.createTitledBorder(randString());
             }
         }
+        
+        private int randVerticalAlignment()
+        {
+            switch(r.nextInt(3))
+            {
+            case 0: return SwingConstants.CENTER;
+            case 1: return SwingConstants.TOP;
+            case 3: default: return SwingConstants.BOTTOM;
+            }
+        }
+        
+        private int randHorizontalAlignment()
+        {
+            switch(r.nextInt(5))
+            {
+            case 0: return SwingConstants.RIGHT;
+            case 1: return SwingConstants.LEFT;
+            case 2: return SwingConstants.CENTER;
+            case 3: return SwingConstants.LEADING;
+            case 4: default: return SwingConstants.TRAILING;
+            }
+        }
 
         // Getters
         public Font getFont() { return this.font; }
@@ -448,6 +491,8 @@ public class PracticeGUI extends JPanel
         public String getString() { return this.string; }
         public Insets getInsets() { return this.insets; }
         public Border getBorder() { return this.border; }
+        public int getVerticalAlignment() { return this.verticalAlignment; }
+        public int getHorizontalAlignment() { return this.horizontalAlignment; }
     }
     
     private class RandomPlus extends Random
