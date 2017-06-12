@@ -196,18 +196,6 @@ public class PracticeGUI extends JPanel
                     slider1
                 }
         );
-//        JComponent[] arr = new JComponent[]
-//                {
-//                    button1, 
-//                    label1, 
-//                    checkbox1, 
-//                    textfield1, 
-//                    passfield1,
-//                    textarea1,
-//                    scroller1,
-//                    slider1
-//                };
-//        setAllJComponents(arr);
     }
     
     private void setAllJComponents()
@@ -274,7 +262,6 @@ public class PracticeGUI extends JPanel
         
     private void randomize()
     {
-        RandomizeJAttributes randJ;
         RandomPlus r = new RandomPlus();
         
         // set to random layout and mix up positions: this.
@@ -282,29 +269,27 @@ public class PracticeGUI extends JPanel
         
         for ( JComponent comp : this.allJComponents)
         {
-            randJ = new RandomizeJAttributes();
-            
-            comp.setFont(randJ.getFont());
-            comp.setBackground(randJ.getColor());
-            comp.setForeground(randJ.getColor2());
+            comp.setFont(r.nextFont());
+            comp.setBackground(r.nextColor());
+            comp.setForeground(r.nextColor());
             comp.setOpaque(r.nextBoolean());
             comp.setVisible(r.nextBoolean(1 - 1 / (double)16));
             comp.setEnabled(r.nextBoolean(1 - 1 / (double)8));
-            comp.setBorder(randJ.getBorder());
-            comp.setToolTipText(randJ.getString());
+            comp.setBorder(r.nextBorder());
+            comp.setToolTipText(r.nextString());
             
             if (comp instanceof JTextComponent) // JTextField, JPasswordField, JTextArea
             {
                 JTextComponent tc = (JTextComponent)comp;
-                tc.setText(randJ.getString());
-                tc.setMargin(randJ.getInsets());
+                tc.setText(r.nextString());
+                tc.setMargin(r.nextInsets());
                 
                 if (r.nextBoolean(1 - 1 / (double)4))
                     tc.select(r.nextInt(8), 8 + r.nextInt(8));
                 else if (r.nextBoolean())
                     tc.selectAll();
                 
-                tc.setDisabledTextColor(randJ.getColor());
+                tc.setDisabledTextColor(r.nextColor());
 
 //                tc.invalidate();
             }
@@ -312,19 +297,19 @@ public class PracticeGUI extends JPanel
             if (comp instanceof AbstractButton) // JButton and JCheckBox
             {
                 AbstractButton ab = (AbstractButton)comp;
-                ab.setText(randJ.getString());
-                ab.setMargin(randJ.getInsets());
+                ab.setText(r.nextString());
+                ab.setMargin(r.nextInsets());
                 ab.setContentAreaFilled(r.nextBoolean(1 - 1 / (double)8));
-                ab.setVerticalAlignment(randJ.getVerticalAlignment());
-                ab.setHorizontalAlignment(randJ.getHorizontalAlignment());
-                ab.setVerticalTextPosition(randJ.getVerticalAlignment());
-                ab.setHorizontalTextPosition(randJ.getHorizontalAlignment());
+                ab.setVerticalAlignment(r.nextVerticalAlignment());
+                ab.setHorizontalAlignment(r.nextHorizontalAlignment());
+                ab.setVerticalTextPosition(r.nextVerticalAlignment());
+                ab.setHorizontalTextPosition(r.nextHorizontalAlignment());
             }
             
             if (comp instanceof JLabel)
             {
                 JLabel l = (JLabel)comp;
-                l.setText(randJ.getString());
+                l.setText(r.nextString());
             }
         }
         
@@ -381,41 +366,16 @@ public class PracticeGUI extends JPanel
     }
     
     // Inner classes.
-    private class RandomizeJAttributes
+    private class RandomPlus extends Random
     {
-        private RandomPlus r;
-        
-        private Font font;
-        private Color color, color2;
-        private String string;
-        private Insets insets;
-        private Border border;
-        private int verticalAlignment;
-        private int horizontalAlignment;
-        
-        // Constructor
-        public RandomizeJAttributes()
-        {
-            this.r = new RandomPlus();
-            
-            this.font = randFont();
-            this.color = randColor();
-            this.color2 = randColor();
-            this.string = randString();
-            this.insets = randInsets();
-            this.border = randBorder();
-            this.verticalAlignment = randVerticalAlignment();
-            this.horizontalAlignment = randHorizontalAlignment();
-        }
-        
-        // Private methods to help constructor
-        private Font randFont()
+        // Methods
+        public Font nextFont()
         {
             String fontName;
             int fontStyle;
             int fontSize;
             
-            switch(r.nextInt(3))
+            switch(nextInt(3))
             {
             case 0:
                 fontName = Font.SANS_SERIF;
@@ -430,24 +390,24 @@ public class PracticeGUI extends JPanel
             }
             
             fontStyle = Font.PLAIN;
-            if (r.nextBoolean())
+            if (nextBoolean())
                 fontStyle += Font.BOLD;
-            if (r.nextBoolean())
+            if (nextBoolean())
                 fontStyle += Font.ITALIC;
             
-            fontSize = r.nextInt(60) + 12;
+            fontSize = nextInt(60) + 12;
             
             return new Font(fontName, fontStyle, fontSize);
         }
         
-        private Color randColor()
+        public Color nextColor()
         {
-            return new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
+            return new Color(nextFloat(), nextFloat(), nextFloat());
         }
         
-        private String randString()
+        public String nextString()
         {
-            switch(r.nextInt(7))
+            switch(nextInt(7))
             {
             case 0: return "Life is a beautiful struggle.";
             case 1: return "Every moment matters.";
@@ -460,47 +420,47 @@ public class PracticeGUI extends JPanel
             }
         }
         
-        private Insets randInsets()
+        public Insets nextInsets()
         {
             return new Insets(
-                    r.nextInt(20), 
-                    r.nextInt(20), 
-                    r.nextInt(20), 
-                    r.nextInt(20)
+                    nextInt(20), 
+                    nextInt(20), 
+                    nextInt(20), 
+                    nextInt(20)
             );
         }
         
-        private Border randBorder()
+        public Border nextBorder()
         {
             int[] m = new int[4];
             for (int i=0; i<4; i++)
-                m[i] = r.nextInt(20);
+                m[i] = nextInt(20);
             
-            switch(r.nextInt(7))
+            switch(nextInt(7))
             {
             case 0:
                 return BorderFactory.createEmptyBorder(m[0], m[1], m[2], m[3]);
             case 1:
                 return BorderFactory.createEtchedBorder();
             case 2:
-                return BorderFactory.createLineBorder(randColor(), 
-                        r.nextInt(20), r.nextBoolean());
+                return BorderFactory.createLineBorder(nextColor(), 
+                        nextInt(20), nextBoolean());
             case 3:
                 return BorderFactory.createLoweredSoftBevelBorder();
             case 4:
                 return BorderFactory.createMatteBorder(m[0], m[1], m[2], m[3], 
-                        randColor());
+                        nextColor());
             case 5:
                 return BorderFactory.createRaisedSoftBevelBorder();
             case 6:
             default:
-                return BorderFactory.createTitledBorder(randString());
+                return BorderFactory.createTitledBorder(nextString());
             }
         }
         
-        private int randVerticalAlignment()
+        public int nextVerticalAlignment()
         {
-            switch(r.nextInt(3))
+            switch(nextInt(3))
             {
             case 0: return SwingConstants.CENTER;
             case 1: return SwingConstants.TOP;
@@ -508,9 +468,9 @@ public class PracticeGUI extends JPanel
             }
         }
         
-        private int randHorizontalAlignment()
+        public int nextHorizontalAlignment()
         {
-            switch(r.nextInt(5))
+            switch(nextInt(5))
             {
             case 0: return SwingConstants.RIGHT;
             case 1: return SwingConstants.LEFT;
@@ -519,20 +479,10 @@ public class PracticeGUI extends JPanel
             case 4: default: return SwingConstants.TRAILING;
             }
         }
-
-        // Getters
-        public Font getFont() { return this.font; }
-        public Color getColor() { return this.color; }
-        public Color getColor2() { return this.color2; }
-        public String getString() { return this.string; }
-        public Insets getInsets() { return this.insets; }
-        public Border getBorder() { return this.border; }
-        public int getVerticalAlignment() { return this.verticalAlignment; }
-        public int getHorizontalAlignment() { return this.horizontalAlignment; }
         
-        public Object getLayout()
+        public Object nextLayout()
         {
-            switch(r.nextInt(8))
+            switch(nextInt(8))
             {
             case 0:             // SpringLayout
                 break;
@@ -554,11 +504,7 @@ public class PracticeGUI extends JPanel
             
             return null;
         }
-    }
-    
-    private class RandomPlus extends Random
-    {
-        // Methods
+        
         public boolean nextBoolean(double probability)
         {
             return nextDouble() <= probability;
