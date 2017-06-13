@@ -298,12 +298,15 @@ public class PracticeGUI extends JPanel
                 if ( !isTextSelected && r.nextBoolean(1 - 1 / (double)3))
                 {
                     isTextSelected = true;
+                    tc.requestFocusInWindow();
                     if (r.nextBoolean(0.8))
                     {
-                        int posA = r.nextInt((int)(tc.getText().length() / (double)3));
-                        int posB = posA + r.nextInt((int)(tc.getText().length() * 2 / (double)3));
+                        int posA = r.nextInt(
+                                (int)(tc.getText().length() / (double)3));
+                        int posB = posA + r.nextInt(
+                                (int)(tc.getText().length() * 2 / (double)3));
                         tc.setCaretPosition(posA);
-                        tc.select(posA, posB);
+                        tc.moveCaretPosition(posB);
                     }
                     else
                         tc.selectAll();
@@ -318,6 +321,10 @@ public class PracticeGUI extends JPanel
             if (comp instanceof AbstractButton) // JButton and JCheckBox
                 ((AbstractButton)comp)
                         .setContentAreaFilled(r.nextBoolean(1 - 1 / (double)8));
+            
+            if (comp instanceof JCheckBox)
+                ((JCheckBox)comp).setSelected(r.nextBoolean());
+            
         }
         
         repaint();
