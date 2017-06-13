@@ -264,7 +264,7 @@ public class PracticeGUI extends JPanel
     {
         RandomPlus r = new RandomPlus();
         
-        // set to random layout and mix up positions: this.
+        // set to random layout and mix up positions
         // set random background and foreground colours
         
         for ( JComponent comp : this.allJComponents)
@@ -277,12 +277,18 @@ public class PracticeGUI extends JPanel
             comp.setEnabled(r.nextBoolean(1 - 1 / (double)8));
             comp.setBorder(r.nextBorder());
             comp.setToolTipText(r.nextString());
+            comp.setAlignmentX(r.nextAlignmentX());
+            comp.setAlignmentY(r.nextAlignmentY());
+            setJCompText(r.nextString(), comp);
+            setJCompMargin(r.nextInsets(), comp);
+            setJCompHorizontalAlignment(r.nextHorizontalAlignment(), comp);
+            setJCompVerticalAlignment(r.nextVerticalAlignment(), comp);
+            setJCompHorizontalTextPosition(r.nextHorizontalAlignment(), comp);
+            setJCompVerticalTextPosition(r.nextVerticalAlignment(), comp);
             
-            if (comp instanceof JTextComponent) // JTextField, JPasswordField, JTextArea
+            if (comp instanceof JTextComponent)
             {
                 JTextComponent tc = (JTextComponent)comp;
-                tc.setText(r.nextString());
-                tc.setMargin(r.nextInsets());
                 
                 if (r.nextBoolean(1 - 1 / (double)4))
                     tc.select(r.nextInt(8), 8 + r.nextInt(8));
@@ -290,27 +296,11 @@ public class PracticeGUI extends JPanel
                     tc.selectAll();
                 
                 tc.setDisabledTextColor(r.nextColor());
-
-//                tc.invalidate();
             }
             
             if (comp instanceof AbstractButton) // JButton and JCheckBox
-            {
-                AbstractButton ab = (AbstractButton)comp;
-                ab.setText(r.nextString());
-                ab.setMargin(r.nextInsets());
-                ab.setContentAreaFilled(r.nextBoolean(1 - 1 / (double)8));
-                ab.setVerticalAlignment(r.nextVerticalAlignment());
-                ab.setHorizontalAlignment(r.nextHorizontalAlignment());
-                ab.setVerticalTextPosition(r.nextVerticalAlignment());
-                ab.setHorizontalTextPosition(r.nextHorizontalAlignment());
-            }
-            
-            if (comp instanceof JLabel)
-            {
-                JLabel l = (JLabel)comp;
-                l.setText(r.nextString());
-            }
+                ((AbstractButton)comp)
+                        .setContentAreaFilled(r.nextBoolean(1 - 1 / (double)8));
         }
         
         repaint();
@@ -327,6 +317,82 @@ public class PracticeGUI extends JPanel
         setJComponent(newComp);
         setAllJComponents();
         add(newComp);
+    }
+    
+    private void setJCompText(String text, JComponent comp)
+    {
+        if (comp instanceof JTextComponent)
+            ((JTextComponent)comp).setText(text);
+        else if (comp instanceof AbstractButton)
+            ((AbstractButton)comp).setText(text);
+        else if (comp instanceof JLabel)
+            ((JLabel)comp).setText(text);
+    }
+    
+    private void setJCompMargin(Insets insets, JComponent comp)
+    {
+        if (comp instanceof JTextComponent)
+            ((JTextComponent)comp).setMargin(insets);
+        else if (comp instanceof AbstractButton)
+            ((AbstractButton)comp).setMargin(insets);
+    }
+    
+    private void setJCompHorizontalAlignment(int horAlign, JComponent comp)
+    {
+        setJCompAlignments(horAlign, comp, JCOMP_ALIGN_TYPE_HORIZONTAL);
+    }
+    
+    private void setJCompVerticalAlignment(int verAlign, JComponent comp)
+    {
+        setJCompAlignments(verAlign, comp, JCOMP_ALIGN_TYPE_VERTICAL);
+    }
+    
+    private void setJCompHorizontalTextPosition(int horAlign, JComponent comp)
+    {
+        setJCompAlignments(horAlign, comp, JCOMP_ALIGN_TYPE_HORIZONTAL_TEXT);
+    }
+    
+    private void setJCompVerticalTextPosition(int verAlign, JComponent comp)
+    {
+        setJCompAlignments(verAlign, comp, JCOMP_ALIGN_TYPE_VERTICAL_TEXT);
+    }
+    
+    private final int JCOMP_ALIGN_TYPE_HORIZONTAL = 1;
+    private final int JCOMP_ALIGN_TYPE_VERTICAL = 2;
+    private final int JCOMP_ALIGN_TYPE_HORIZONTAL_TEXT = 4;
+    private final int JCOMP_ALIGN_TYPE_VERTICAL_TEXT = 8;
+    
+    private void setJCompAlignments(int align, JComponent comp, int alignType)
+    {
+        switch (alignType)
+        {
+        case JCOMP_ALIGN_TYPE_HORIZONTAL:
+            if (comp instanceof AbstractButton)
+                ((AbstractButton)comp).setHorizontalAlignment(align);
+            else if (comp instanceof JLabel)
+                ((JLabel)comp).setHorizontalAlignment(align);
+            break;
+        case JCOMP_ALIGN_TYPE_VERTICAL:
+            if (comp instanceof AbstractButton)
+                ((AbstractButton)comp).setVerticalAlignment(align);
+            else if (comp instanceof JLabel)
+                ((JLabel)comp).setVerticalAlignment(align);
+            break;
+        case JCOMP_ALIGN_TYPE_HORIZONTAL_TEXT:
+            if (comp instanceof AbstractButton)
+                ((AbstractButton)comp).setHorizontalTextPosition(align);
+            else if (comp instanceof JLabel)
+                ((JLabel)comp).setHorizontalTextPosition(align);
+            break;
+        case JCOMP_ALIGN_TYPE_VERTICAL_TEXT:
+            if (comp instanceof AbstractButton)
+                ((AbstractButton)comp).setVerticalTextPosition(align);
+            else if (comp instanceof JLabel)
+                ((JLabel)comp).setVerticalTextPosition(align);
+            break;
+        default:
+            break;
+        }
     }
     
     private void setJComponent(JComponent comp)
@@ -471,6 +537,16 @@ public class PracticeGUI extends JPanel
             }
         }
         
+        public float nextAlignmentX()
+        {
+            switch(nextInt(3))
+            {
+            case 0: return Component.CENTER_ALIGNMENT;
+            case 1: return Component.LEFT_ALIGNMENT;
+            case 3: default: return Component.RIGHT_ALIGNMENT;
+            }
+        }
+        
         public int nextHorizontalAlignment()
         {
             switch(nextInt(5))
@@ -480,6 +556,16 @@ public class PracticeGUI extends JPanel
             case 2: return SwingConstants.CENTER;
             case 3: return SwingConstants.LEADING;
             case 4: default: return SwingConstants.TRAILING;
+            }
+        }
+        
+        public float nextAlignmentY()
+        {
+            switch(nextInt(3))
+            {
+            case 0: return Component.CENTER_ALIGNMENT;
+            case 1: return Component.BOTTOM_ALIGNMENT;
+            case 3: default: return Component.TOP_ALIGNMENT;
             }
         }
         
