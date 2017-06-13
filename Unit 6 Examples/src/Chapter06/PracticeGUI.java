@@ -65,6 +65,7 @@ import javax.swing.border.Border;
 import javax.swing.BorderFactory;
 
 import javax.swing.SwingConstants;
+import javax.swing.DefaultBoundedRangeModel;
 
 /**
  * Example GUI.
@@ -325,6 +326,27 @@ public class PracticeGUI extends JPanel
             if (comp instanceof JCheckBox)
                 ((JCheckBox)comp).setSelected(r.nextBoolean());
             
+            if (comp instanceof JSlider)
+            {
+                JSlider s = (JSlider)comp;
+                
+                s.setModel(r.nextBoundedRangeModel());
+                
+                if (r.nextBoolean(0.85))
+                {
+                    s.setLabelTable(null);  // Force recreating labels.
+                    s.setMajorTickSpacing((int)((s.getMaximum() - s.getMinimum())
+                            / (double)(2 + r.nextInt(4))));
+                    s.setMinorTickSpacing((int)((s.getMaximum() - s.getMinimum())
+                            / (double)(6 + r.nextInt(12))));
+                    s.setPaintTicks(true);
+                    s.setPaintLabels(true);
+                }
+                
+                s.setInverted(r.nextBoolean());
+                s.setPaintTrack(r.nextBoolean());
+                s.setSnapToTicks(r.nextBoolean());
+            }
         }
         
         repaint();
@@ -453,6 +475,14 @@ public class PracticeGUI extends JPanel
         default:
             break;
         }
+    }
+    
+    public Object eitherOr(Object a, Object b, double probabilityOfA)
+    {
+        if ((new Random()).nextDouble() <= probabilityOfA)
+            return a;
+        else
+            return b;
     }
     
     // Inner classes.
@@ -625,6 +655,20 @@ public class PracticeGUI extends JPanel
         public boolean nextBoolean(double probability)
         {
             return nextDouble() <= probability;
+        }
+        
+        public DefaultBoundedRangeModel nextBoundedRangeModel()
+        {
+            int value = nextInt();
+            int min = value - nextInt(1000);
+            int extent = nextInt(100);
+            int max = value + extent + nextInt((int)(0.05*(extent + value - min)));
+            
+            return new DefaultBoundedRangeModel(
+                    value, extent, min, max);
+
+//            return new DefaultBoundedRangeModel(100 + nextInt(100), 
+//                nextInt(10), nextInt(100), 210 + nextInt(100));
         }
     }
     
