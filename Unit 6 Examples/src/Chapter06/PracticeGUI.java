@@ -72,7 +72,7 @@ import javax.swing.SwingConstants;
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 9, 2017
- * Version      0.3
+ * Version      0.4
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -266,7 +266,10 @@ public class PracticeGUI extends JPanel
         
         // set to random layout and mix up positions
         // set random background and foreground colours
+        setBackground(r.nextColor());
+        setForeground(r.nextColor());
         
+        boolean isTextSelected = false; // Only select text in one JComp.
         for ( JComponent comp : this.allJComponents)
         {
             comp.setFont(r.nextFont());
@@ -290,10 +293,24 @@ public class PracticeGUI extends JPanel
             {
                 JTextComponent tc = (JTextComponent)comp;
                 
-                if (r.nextBoolean(1 - 1 / (double)4))
-                    tc.select(r.nextInt(8), 8 + r.nextInt(8));
-                else if (r.nextBoolean())
-                    tc.selectAll();
+                tc.setCaretColor(r.nextColor());
+                
+                if ( !isTextSelected && r.nextBoolean(1 - 1 / (double)3))
+                {
+                    isTextSelected = true;
+                    if (r.nextBoolean(0.8))
+                    {
+                        int posA = r.nextInt((int)(tc.getText().length() / (double)3));
+                        int posB = posA + r.nextInt((int)(tc.getText().length() * 2 / (double)3));
+                        tc.setCaretPosition(posA);
+                        tc.select(posA, posB);
+                    }
+                    else
+                        tc.selectAll();
+                    
+                    tc.setSelectedTextColor(r.nextColor());
+                    tc.setSelectionColor(r.nextColor());
+                }
                 
                 tc.setDisabledTextColor(r.nextColor());
             }
