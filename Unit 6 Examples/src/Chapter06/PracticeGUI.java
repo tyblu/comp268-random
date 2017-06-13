@@ -321,7 +321,7 @@ public class PracticeGUI extends JPanel
         if (currentComp != null)
         {
             remove(currentComp);
-            revalidate();
+//            revalidate();
         }
         
         setJComponent(newComp);
@@ -405,9 +405,12 @@ public class PracticeGUI extends JPanel
             return new Color(nextFloat(), nextFloat(), nextFloat());
         }
         
+        private int nextStringIndex = 0;
+        
         public String nextString()
         {
-            switch(nextInt(7))
+            nextStringIndex += 1 + nextInt(2);
+            switch(Integer.remainderUnsigned(nextStringIndex, 7))
             {
             case 0: return "Life is a beautiful struggle.";
             case 1: return "Every moment matters.";
@@ -480,6 +483,10 @@ public class PracticeGUI extends JPanel
             }
         }
         
+        /**
+         * Not yet implemented.
+         * @returns {@code Object null}.
+         */
         public Object nextLayout()
         {
             switch(nextInt(8))
