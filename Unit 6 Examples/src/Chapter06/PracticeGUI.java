@@ -27,6 +27,7 @@ package Chapter06;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 
+import java.awt.LayoutManager;
 import javax.swing.SpringLayout;
 import javax.swing.BoxLayout;
 import java.awt.CardLayout;
@@ -265,8 +266,9 @@ public class PracticeGUI extends JPanel
     {
         RandomPlus r = new RandomPlus();
         
-        // set to random layout and mix up positions
-        // set random background and foreground colours
+        // randomize layout
+        setLayout( r.nextLayout() );
+        
         setBackground(r.nextColor());
         setForeground(r.nextColor());
         
@@ -477,7 +479,7 @@ public class PracticeGUI extends JPanel
         }
     }
     
-    public Object eitherOr(Object a, Object b, double probabilityOfA)
+    protected static Object eitherOr(Object a, Object b, double probabilityOfA)
     {
         if ((new Random()).nextDouble() <= probabilityOfA)
             return a;
@@ -627,29 +629,37 @@ public class PracticeGUI extends JPanel
          * Not yet implemented.
          * @returns {@code Object null}.
          */
-        public Object nextLayout()
+        public LayoutManager nextLayout()
         {
             switch(nextInt(8))
             {
             case 0:             // SpringLayout
-                break;
             case 1:             // BoxLayout
-                break;
             case 2:             // CardLayout
-                break;
             case 3:             // FlowLayout
-                break;
+                return new FlowLayout(
+                        nextFlowLayoutAlignment(), nextInt(50), nextInt(50));
             case 4:             // GridBagLayout
-                break;
             case 5: default:    // GridLayout
-                break;
+                return new GridLayout(
+                        0, 1 + nextInt(3), nextInt(50), nextInt(50));
             case 6:             // GroupLayout
-                break;
+                return nextLayout();
             case 7:             // BorderLayout
-                break;
+                return nextLayout();
             }
-            
-            return null;
+        }
+        
+        private int nextFlowLayoutAlignment()
+        {
+            switch(nextInt(5))
+            {
+            case 0: return FlowLayout.LEFT;
+            case 1: return FlowLayout.RIGHT;
+            case 2: return FlowLayout.CENTER;
+            case 3: return FlowLayout.LEADING;
+            case 4: default: return FlowLayout.TRAILING;
+            }
         }
         
         public boolean nextBoolean(double probability)
@@ -659,16 +669,25 @@ public class PracticeGUI extends JPanel
         
         public DefaultBoundedRangeModel nextBoundedRangeModel()
         {
-            int value = nextInt();
-            int min = value - nextInt(1000);
-            int extent = nextInt(100);
-            int max = value + extent + nextInt((int)(0.05*(extent + value - min)));
+            int halfMaxValue = 17;
+            int value = halfMaxValue + nextInt(halfMaxValue);
+            int min = (int)java.lang.Math.max(
+                    value - nextInt((int)(0.6 * 2 * halfMaxValue)), 0);
+            int extent = nextInt((int)(0.1 * 2 * halfMaxValue));
+            int max = value + extent 
+                    + nextInt((int)(0.1*(extent + value - min)));
             
             return new DefaultBoundedRangeModel(
                     value, extent, min, max);
-
-//            return new DefaultBoundedRangeModel(100 + nextInt(100), 
-//                nextInt(10), nextInt(100), 210 + nextInt(100));
+        }
+        
+        @Override
+        public int nextInt(int bounds)
+        {
+            if (bounds < 1)
+                return 0;
+            else
+                return super.nextInt(bounds);
         }
     }
     
