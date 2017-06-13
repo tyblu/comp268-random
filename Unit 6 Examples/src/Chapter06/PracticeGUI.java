@@ -267,7 +267,8 @@ public class PracticeGUI extends JPanel
         RandomPlus r = new RandomPlus();
         
         // randomize layout
-        setLayout( r.nextLayout() );
+        reset();
+        setLayoutPlease( r.nextLayout() );
         
         setBackground(r.nextColor());
         setForeground(r.nextColor());
@@ -352,6 +353,33 @@ public class PracticeGUI extends JPanel
         }
         
         repaint();
+    }
+    
+    public void setLayoutPlease(LayoutManager l)
+    {
+        if (l instanceof FlowLayout || l instanceof GridLayout)
+            setLayout(l);
+        else if (l instanceof BorderLayout)
+            setBorderLayout();
+        else
+            System.out.println("Whoooops!");
+    }
+    
+    private void setBorderLayout()
+    {
+        if (getComponentCount() > 1)
+        {
+            this.removeAll();
+            this.revalidate();
+        }
+        
+        setLayout( new BorderLayout() );
+        setBorderLayoutConstraints(getAllJComponents(), new String[]{"random"});
+        
+        // Add component listeners.
+        this.button1.addActionListener( (ActionEvent evt) -> { reset(); } );
+        
+        this.repaint();
     }
     
     private void replaceJComponent(JComponent currentComp, JComponent newComp)
@@ -486,6 +514,59 @@ public class PracticeGUI extends JPanel
         else
             return b;
     }
+    
+    private void setBorderLayoutConstraints(
+        JComponent[] components, String[] constraints)
+    {
+        String[] newConstraints;
+        if (constraints[0].equals("random"))
+            constraints = (new RandomPlus())
+                    .nextBorderLayoutConstraints(components.length);
+        
+        for (int i=0; i<components.length; i++)
+            if (constraints[i] != null && !constraints[i].equals(""))
+                add(components[i], constraints[i]);
+    }
+    
+    /**
+     * From Wikipedia: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
+     * To shuffle an array a of n elements (indices 0..n-1):
+     * for i from n−1 downto 1 do
+     * j <- random integer such that 0 ≤ j ≤ i
+     * exchange a[j] and a[i]
+     */
+    private static int[] shuffle(int[] arr)
+    {
+        Random r = new Random();
+        
+        for (int i = arr.length - 1; i>0; i--)
+        {
+            int randomIndex = r.nextInt(i+1);
+            // swap
+            int temp = arr[i];
+            arr[i] = arr[randomIndex];
+            arr[randomIndex] = temp;
+        }
+        
+        return arr;
+    }
+    
+    private static String[] shuffle(String[] arr)
+    {
+        Random r = new Random();
+        
+        for (int i = arr.length - 1; i>0; i--)
+        {
+            int randomIndex = r.nextInt(i+1);
+            // swap
+            String temp = arr[i];
+            arr[i] = arr[randomIndex];
+            arr[randomIndex] = temp;
+        }
+        
+        return arr;
+    }
+            
     
     // Inner classes.
     private class RandomPlus extends Random
@@ -634,19 +715,23 @@ public class PracticeGUI extends JPanel
             switch(nextInt(8))
             {
             case 0:             // SpringLayout
+                return nextLayout();
             case 1:             // BoxLayout
+                return nextLayout();
             case 2:             // CardLayout
+                return nextLayout();
             case 3:             // FlowLayout
                 return new FlowLayout(
                         nextFlowLayoutAlignment(), nextInt(50), nextInt(50));
             case 4:             // GridBagLayout
+                return nextLayout();
             case 5: default:    // GridLayout
                 return new GridLayout(
                         0, 1 + nextInt(3), nextInt(50), nextInt(50));
             case 6:             // GroupLayout
                 return nextLayout();
             case 7:             // BorderLayout
-                return nextLayout();
+                return new BorderLayout();
             }
         }
         
@@ -660,6 +745,43 @@ public class PracticeGUI extends JPanel
             case 3: return FlowLayout.LEADING;
             case 4: default: return FlowLayout.TRAILING;
             }
+        }
+        
+        public String[] nextBorderLayoutConstraints()
+        {
+            return nextBorderLayoutConstraints(5);
+        }
+        
+        public String[] nextBorderLayoutConstraints(int componentCount)
+        {
+            int arraySize = java.lang.Math.max(componentCount, 5);
+            String[] constraints = new String[arraySize];
+            constraints[0] = BorderLayout.NORTH;
+            constraints[1] = BorderLayout.SOUTH;
+            constraints[2] = BorderLayout.EAST;
+            constraints[3] = BorderLayout.WEST;
+            constraints[4] = BorderLayout.CENTER;
+            return shuffle(constraints);
+        }
+        
+        public int[] nextIntArray(int size)
+        {
+            int[] arr = new int[size];
+            for (int i=0; i<size; i++)
+            {
+                arr[i] = nextInt();
+            }
+            return arr;
+        }
+        
+        public int[] nextIntArray(int bound, int size)
+        {
+            int[] arr = new int[size];
+            for (int i=0; i<size; i++)
+            {
+                arr[i] = nextInt(bound);
+            }
+            return arr;
         }
         
         public boolean nextBoolean(double probability)
