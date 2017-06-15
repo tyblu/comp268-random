@@ -217,7 +217,7 @@ public class PracticeGUI extends JPanel
     // Methods.
     private void reset()
     {
-        if (getComponentCount() > 1)
+        if (true)
         {
             this.removeAll();
             this.revalidate();
