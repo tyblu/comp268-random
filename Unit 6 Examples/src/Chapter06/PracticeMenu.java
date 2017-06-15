@@ -24,8 +24,15 @@ package Chapter06;
  * THE SOFTWARE.
  */
 
+import java.awt.Color;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 /**
  * Example GUI with a menu.
@@ -33,7 +40,7 @@ import javax.swing.JFrame;
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 15, 2017
- * Version      0.1
+ * Version      0.2
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -51,10 +58,11 @@ public class PracticeMenu extends JPanel
         
         PracticeMenu panel = new PracticeMenu();
         
+        window.setJMenuBar(panel.getMenuBar());
         window.setContentPane(panel);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLocation(200,200);
-        window.setSize(1600,1200);
+        window.setLocation(400,200);
+        window.setSize(800,600);
         window.setVisible(true);
     }
 /* -------------------------------------------------------------------------- */
@@ -62,20 +70,142 @@ public class PracticeMenu extends JPanel
     // Constants.
     
     // Instance variables.
+    private final RandomPlus r;
+    
+    // components
+    private JMenuBar menuBar;
     
     // Constructor.
     public PracticeMenu()
     {
-        // add listeners
+        this.r = new RandomPlus();
         
         reset();
     }
     
     // Methods.
+    private void reset()
+    {
+        removeAll();
+        
+        setBackground(Color.WHITE);
+        
+        JMenu menuTools = new JMenu("Tools");
+        
+        JMenuItem randomizeCommand = new JMenuItem("randomize");
+        randomizeCommand.addMouseListener((ML.Pressed)evt -> randomize());
+        menuTools.add(randomizeCommand);
+        
+        JMenuItem resetCommand = new JMenuItem("reset");
+        resetCommand.addMouseListener((ML.Pressed)evt -> reset());
+        menuTools.add(resetCommand);
+        
+        JMenuItem rolloverCommand = new JMenuItem("rollover");
+        rolloverCommand.addMouseListener((ML.Entered)evt -> rollOn());
+        rolloverCommand.addMouseListener((ML.Exited)evt -> rollOff());
+        rolloverCommand.addMouseListener((ML.Pressed)evt -> reset());
+        menuTools.add(rolloverCommand);
+        
+        setMenuBar(new JMenuBar());
+        menuBar.add(menuTools);
+    }
+    
+    private void randomize()
+    {
+        setBackground(this.r.nextColor());
+    }
+    
+    private void rollOn()
+    {
+        randomize();
+    }
+    
+    private void rollOff()
+    {
+        randomize();
+    }
     
     // Getters.
+    /**
+     * Used to send JMenuBar item to main routine so it can be set.
+     * @return JMenuBar menuBar
+     */
+    public JMenuBar getMenuBar()
+    {
+        return this.menuBar;
+    }
     
     // Setters.
+    private void setMenuBar(JMenuBar menuBar)
+    {
+        this.menuBar = menuBar;
+    }
     
-    // Nested Classes.
+    // Nested Classes, Interfaces
+    
+    /**
+     * An interface that gives "deaf" default listener methods (Java 8).
+     * It makes writing multiple functional interfaces for MouseListener
+     * easier, as you don't have to define the default implementations for the
+     * functions you aren't using.
+     */
+    interface MouseDeafListener extends MouseListener
+    {
+        @Override
+        default void mouseClicked(MouseEvent e) {}
+        @Override
+        default void mouseEntered(MouseEvent e) {}
+        @Override
+        default void mouseExited(MouseEvent e) {}
+        @Override
+        default void mousePressed(MouseEvent e) {}
+        @Override
+        default void mouseReleased(MouseEvent e) {}
+    }
+    
+    /**
+     * Collection of functional interfaces extending MouseListener, using
+     * {@link MouseDeafListener} to shorten them, for use with lambdas (Java 8).
+     */
+    interface ML
+    {
+        interface Pressed extends MouseDeafListener
+        {
+            @Override
+            abstract void mousePressed(MouseEvent e);
+        }
+
+        interface Clicked extends MouseDeafListener
+        {
+            @Override
+            abstract void mouseClicked(MouseEvent e);
+        }
+
+        interface Entered extends MouseDeafListener
+        {
+            @Override
+            abstract void mouseEntered(MouseEvent e);
+        }
+
+        interface Exited extends MouseDeafListener
+        {
+            @Override
+            abstract void mouseExited(MouseEvent e);
+        }
+
+        interface Released extends MouseDeafListener
+        {
+            @Override
+            abstract void mouseReleased(MouseEvent e);
+        }
+    }
+
+    class RandomPlus extends Random
+    {
+        // Methods.
+        public Color nextColor()
+        {
+            return new Color(nextFloat(), nextFloat(), nextFloat());
+        }
+    }
 }

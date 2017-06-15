@@ -60,8 +60,9 @@ public class MainCaller {
     private static final boolean ENABLE_SUBKILLER = false;
     private static final boolean ENABLE_SIMPLECALC = false;
     private static final boolean ENABLE_HIGHLOWGUI = false;
-    private static final boolean ENABLE_PRACTICEGUI = true;
+    private static final boolean ENABLE_PRACTICEGUI = false;
     private static final boolean ENABLE_BORDERDEMO = false;
+    private static final boolean ENABLE_PRACTICEMENU = true;
     
     // Exercises
     // private static...
@@ -85,6 +86,7 @@ public class MainCaller {
         if (ENABLE_HIGHLOWGUI) { HighLowGUI.call(); }
         if (ENABLE_PRACTICEGUI) { PracticeGUI.call(args); }
         if (ENABLE_BORDERDEMO) { BorderDemo.call(args); }
+        if (ENABLE_PRACTICEMENU) { PracticeMenu.call(args); }
         
         // Exercises
 //        if (ENABLE...)
