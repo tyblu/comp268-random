@@ -35,13 +35,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 /**
- * Example GUI with a menu. Version 0.21 is edited to include a {code main()}
- * method so someone can run it as a program with only this .java file.
+ * Example GUI with a menu.
  * 
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 15, 2017
- * Version      0.21
+ * Version      0.2
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -51,9 +50,9 @@ import javax.swing.JMenuItem;
 public class PracticeMenu extends JPanel
 {
 /* -------------------------------------------------------------------------- */
-//    public static void call() { call( new String[] { "" } ); }
+    public static void call() { call( new String[] { "" } ); }
     
-    public static void main(String[] args)
+    public static void call(String[] args)
     {
         JFrame window = new JFrame("JFrame window");
         
