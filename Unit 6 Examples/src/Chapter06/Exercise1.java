@@ -131,10 +131,6 @@ public class Exercise1
         // Constants.
         
         // Instance variables.
-        /**
-         * Top-most JFrame (window) object.
-         */
-        private JFrame window;
         private Point lastShapeXY, lastMouseXY;
         private NextDraw nextDraw = NextDraw.NONE;
         private int shapeSpacing;
@@ -146,7 +142,6 @@ public class Exercise1
          */
         public ComplexStamper()
         {
-            setWindow();
             resetPanelSize();
             resetPanelContent();
             
@@ -191,13 +186,6 @@ public class Exercise1
         public void paintComponent(Graphics g)
         {
             Point pointXY = getLastMouseXY();
-            
-//            if (!this.contains(pointXY))
-//                setNextDraw(NextDraw.NONE);
-
-//            if (isMouseinWindow())
-//                setNextDraw(NextDraw.NONE);
-            
             Dimension size = getShapeSize();
             
             switch (getNextDraw())
@@ -248,13 +236,6 @@ public class Exercise1
         
         // Getters.
         /**
-         * Get the parent window container (JFrame).
-         */
-        public Container getWindow()
-        {
-            return this.window;
-        }
-        /**
          * Gets the mouse's location as of the most recent MouseEvent.
          */
         public Point getLastMouseXY()
@@ -292,14 +273,6 @@ public class Exercise1
         public int getShapeSpacing() { return this.shapeSpacing; }
         
         // Setters.
-        /**
-         * Retrieves top-most JFrame (window) object and sets it.
-         */
-        private void setWindow()
-        {
-            this.window = (JFrame)SwingUtilities.getRoot(this);
-        }
-        
         /**
          * Set the mouse's location as of the most recent MouseEvent.
          */
