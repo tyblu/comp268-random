@@ -68,7 +68,7 @@ import java.awt.event.MouseEvent;
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 15, 2017
- * Version      0.1
+ * Version      0.2
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -100,6 +100,7 @@ public class Exercise1
         ComplexStamperWindow window = new ComplexStamperWindow();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setVisible(true);
+        window.requestFocusInWindow();
     }
     
     private class ComplexStamperWindow extends JFrame
@@ -118,13 +119,10 @@ public class Exercise1
         // Methods
         private void resetLocation()
         {
-            boolean wasVisible = isVisible();
-            setVisible(true);
             setLocation(
                     (getScreenSize().width - getWidth()) / 2,
                     (getScreenSize().height - getHeight()) / 2
             );
-            setVisible(wasVisible);
         }
     }
     
@@ -162,8 +160,6 @@ public class Exercise1
             PanelMouseListener l = new PanelMouseListener();
             addMouseListener(l);
             addMouseMotionListener(l);
-            
-            requestFocusInWindow();
         }
         
         // Methods.
@@ -352,6 +348,10 @@ public class Exercise1
      */
     private class PanelMouseListener extends MouseAdapter
     {
+        private Component listenToMe;
+        private Point startPoint;
+        private boolean stopDrag;
+        
         /**
          * 
          * Make new shape if a certain distance away from others.
@@ -362,18 +362,17 @@ public class Exercise1
         @Override
         public void mousePressed(MouseEvent evt)
         {
-            if (!(evt.getComponent() instanceof JPanel))
+            listenToMe = (Component)evt.getSource();
+            startPoint = evt.getPoint();
+            stopDrag = false;
+            if (!(this.listenToMe instanceof JPanel))
                 return;
             
-            ComplexStamper panel = (ComplexStamper)evt.getComponent();
-            
+            ComplexStamper panel = (ComplexStamper)listenToMe;
+
             panel.setLastMouseXY(evt.getPoint());
-            
-            double distance = evt.getPoint().distance(panel.getLastShapeXY());
-            
-            if (distance < panel.getShapeSpacing())
-                panel.setNextDraw(NextDraw.NONE);
-            else if (evt.isShiftDown())
+
+            if (evt.isShiftDown())
                 panel.setNextDraw(NextDraw.CLEAR);
             else if (evt.isMetaDown())
                 panel.setNextDraw(NextDraw.OVAL);
@@ -381,44 +380,6 @@ public class Exercise1
                 panel.setNextDraw(NextDraw.RECT);
             
             panel.repaint();
-        }
-        
-        /**
-         * Drop and get rid of shape if dragged outside of context.
-         * @param evt MouseEvent
-         */
-        @Override
-        public void mouseExited(MouseEvent evt)
-        {
-//            if (!(evt.getComponent() instanceof JPanel))
-//                return;
-//            
-//            ComplexStamper panel = (ComplexStamper)evt.getComponent();
-//            
-//            panel.setNextDraw(NextDraw.NONE);
-//            panel.setLastMouseXY(evt.getPoint());
-//            panel.setLastShapeXY(null);
-//            
-//            panel.repaint();
-        }
-        
-        /**
-         * Drop and get rid of shape if dragged outside of context.
-         * @param evt MouseEvent
-         */
-        @Override
-        public void mouseEntered(MouseEvent evt)
-        {
-//            if (!(evt.getComponent() instanceof JPanel))
-//                return;
-//            
-//            ComplexStamper panel = (ComplexStamper)evt.getComponent();
-//            
-//            panel.setNextDraw(NextDraw.NONE);
-//            panel.setLastMouseXY(evt.getPoint());
-//            panel.setLastShapeXY(null);
-//            
-//            panel.repaint();
         }
         
         /**
@@ -429,16 +390,23 @@ public class Exercise1
         @Override
         public void mouseDragged(MouseEvent evt)
         {
-            if (!(evt.getComponent() instanceof JPanel))
-                return;
+            Point location = evt.getPoint();
             
-            ComplexStamper panel = (ComplexStamper)evt.getComponent();
+            // Debugging.
+//            System.out.println("START POS: " + startPoint + " | DRAG POSITION: " + location + " | INSIDE?: " + listenToMe.contains(location));
             
-            panel.setLastMouseXY(evt.getPoint());
+            ComplexStamper panel = (ComplexStamper)listenToMe;
             
-            double distance = evt.getPoint().distance(panel.getLastShapeXY());
+            panel.setLastMouseXY(location);
             
-            if (distance < panel.getShapeSpacing())
+            double distance = location.distance(panel.getLastShapeXY());
+            
+            if (!listenToMe.contains(location) || stopDrag)
+            {
+                panel.setNextDraw(NextDraw.NONE);
+                stopDrag = true;
+            }
+            else if (distance < panel.getShapeSpacing())
                 panel.setNextDraw(NextDraw.NONE);
             else if (evt.isShiftDown())
                 panel.setNextDraw(NextDraw.CLEAR);
@@ -448,6 +416,16 @@ public class Exercise1
                 panel.setNextDraw(NextDraw.RECT);
             
             panel.repaint();
+        }
+        
+        /**
+         * 
+         */
+        @Override
+        public void mouseReleased(MouseEvent evt)
+        {
+            startPoint = null;
+            listenToMe = null;
         }
     }
     
