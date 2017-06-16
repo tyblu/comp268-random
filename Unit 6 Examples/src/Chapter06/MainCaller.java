@@ -62,10 +62,12 @@ public class MainCaller {
     private static final boolean ENABLE_HIGHLOWGUI = false;
     private static final boolean ENABLE_PRACTICEGUI = false;
     private static final boolean ENABLE_BORDERDEMO = false;
-    private static final boolean ENABLE_PRACTICEMENU = true;
+    private static final boolean ENABLE_PRACTICEMENU = false;
     
     // Exercises
-    // private static...
+    private static final boolean ENABLE_EXERCISE_1 = true;
+    private static final boolean ENABLE_EXERCISE_2 = false;
+    private static final boolean ENABLE_EXERCISE_3 = false;
     
     public static void main(String[] args)
     {
@@ -89,6 +91,8 @@ public class MainCaller {
         if (ENABLE_PRACTICEMENU) { PracticeMenu.call(args); }
         
         // Exercises
-//        if (ENABLE...)
+        if (ENABLE_EXERCISE_1) { Exercise1.call(args); }
+        if (ENABLE_EXERCISE_2) { Exercise2.call(args); }
+        if (ENABLE_EXERCISE_3) { Exercise3.call(args); }
     }
 }
