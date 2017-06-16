@@ -30,14 +30,16 @@ import java.awt.Toolkit;
 import javax.swing.SwingUtilities;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import java.awt.geom.Path2D;
 
 /**
  * <h1>Chapter 6 - Exercise 1</h1>
@@ -137,6 +139,8 @@ public class Exercise1
         private JFrame window;
         private Point lastShapeXY, lastMouseXY;
         private NextDraw nextDraw = NextDraw.NONE;
+        private int shapeSpacing;
+        private Dimension shapeSize;
         
         // Constructors.
         /**
@@ -147,6 +151,19 @@ public class Exercise1
             setWindow();
             resetPanelSize();
             resetPanelContent();
+            
+            Dimension screenDim = getScreenSize();
+            setShapeSize( new Dimension(     // Based on 195x345mm monitor.
+                    (int)(screenDim.width * 20.0/345.0),    // 20mm wide
+                    (int)(screenDim.height * 15.0/195.0)    // 15mm high
+            ));
+            setShapeSpacing( (int)(screenDim.width * 5.0/345.0) ); // 5mm
+            
+            PanelMouseListener l = new PanelMouseListener();
+            addMouseListener(l);
+            addMouseMotionListener(l);
+            
+            requestFocusInWindow();
         }
         
         // Methods.
@@ -157,6 +174,10 @@ public class Exercise1
         private void resetPanelContent()
         {
             setBackground(Color.WHITE);
+            
+            setLastMouseXY(null);
+            setLastShapeXY(null);
+            setNextDraw(NextDraw.CLEAR);
         }
         
         /**
@@ -164,18 +185,115 @@ public class Exercise1
          */
         private void resetPanelSize()
         {
+            Dimension screenDim = getScreenSize();
             setPreferredSize( new Dimension(
-                    (int)(getScreenSize().width * 0.75),
-                    (int)(getScreenSize().height * 0.75) ));
+                    (int)(screenDim.width * 0.75),
+                    (int)(screenDim.height * 0.75) ));
         }
         
         @Override
         public void paintComponent(Graphics g)
         {
-            // TODO
+            Point pointXY = getLastMouseXY();
+            
+//            if (!this.contains(pointXY))
+//                setNextDraw(NextDraw.NONE);
+
+//            if (isMouseinWindow())
+//                setNextDraw(NextDraw.NONE);
+            
+            Dimension size = getShapeSize();
+            
+            switch (getNextDraw())
+            {
+            case OVAL:
+                g.setColor(Color.CYAN);
+                g.fillOval(
+                        pointXY.x - size.width/2,
+                        pointXY.y - size.height/2,
+                        size.width,
+                        size.height
+                );
+                g.setColor(Color.BLACK);
+                g.drawOval(
+                        pointXY.x - size.width/2,
+                        pointXY.y - size.height/2,
+                        size.width,
+                        size.height
+                );
+                setLastShapeXY(pointXY);
+                break;
+            case RECT:
+                g.setColor(Color.ORANGE);
+                g.fillRect(
+                        pointXY.x - size.width/2,
+                        pointXY.y - size.height/2,
+                        size.width,
+                        size.height
+                );
+                g.setColor(Color.BLACK);
+                g.drawRect(
+                        pointXY.x - size.width/2,
+                        pointXY.y - size.height/2,
+                        size.width,
+                        size.height
+                );
+                setLastShapeXY(pointXY);
+                break;
+            case CLEAR:
+                super.paintComponent(g);
+                setLastShapeXY(null);
+                setNextDraw(NextDraw.NONE);
+                break;
+            default: case NONE:
+                break;
+            }
         }
         
         // Getters.
+        /**
+         * Get the parent window container (JFrame).
+         */
+        public Container getWindow()
+        {
+            return this.window;
+        }
+        /**
+         * Gets the mouse's location as of the most recent MouseEvent.
+         */
+        public Point getLastMouseXY()
+        { 
+            if (this.lastMouseXY == null)
+                return new Point(0,0);
+            else
+                return this.lastMouseXY;
+        }
+        
+        /**
+         * Gets the location of the last shape drawn on the screen.
+         */
+        public Point getLastShapeXY() 
+        { 
+            if (this.lastShapeXY == null)
+                return new Point(0,0);
+            else
+                return this.lastShapeXY;
+        }
+        
+        /**
+         * Gets the next draw action to take, using NextDraw enum.
+         */
+        public NextDraw getNextDraw() { return this.nextDraw; }
+        
+        /**
+         * Gets the shape Dimensions.
+         */
+        public Dimension getShapeSize() { return this.shapeSize; }
+        
+        /**
+         * Gets the minimum pixel spacing between shape centers.
+         */
+        public int getShapeSpacing() { return this.shapeSpacing; }
         
         // Setters.
         /**
@@ -192,6 +310,30 @@ public class Exercise1
         public void setLastMouseXY(Point lastMouseXY)
         {
             this.lastMouseXY = lastMouseXY;
+        }
+        
+        /**
+         * Set the location of the last shape.
+         */
+        public void setLastShapeXY(Point lastShapeXY)
+        {
+            this.lastShapeXY = lastShapeXY;
+        }
+        
+        /**
+         * Sets the shape Dimensions.
+         */
+        private void setShapeSize(Dimension shapeSize)
+        {
+            this.shapeSize = shapeSize;
+        }
+        
+        /**
+         * Sets the minimum pixel spacing between shape centers.
+         */
+        private void setShapeSpacing(int shapeSpacing)
+        {
+            this.shapeSpacing = shapeSpacing;
         }
         
         /**
@@ -227,7 +369,11 @@ public class Exercise1
             
             panel.setLastMouseXY(evt.getPoint());
             
-            if (evt.isShiftDown())
+            double distance = evt.getPoint().distance(panel.getLastShapeXY());
+            
+            if (distance < panel.getShapeSpacing())
+                panel.setNextDraw(NextDraw.NONE);
+            else if (evt.isShiftDown())
                 panel.setNextDraw(NextDraw.CLEAR);
             else if (evt.isMetaDown())
                 panel.setNextDraw(NextDraw.OVAL);
@@ -244,7 +390,35 @@ public class Exercise1
         @Override
         public void mouseExited(MouseEvent evt)
         {
-            // TODO
+//            if (!(evt.getComponent() instanceof JPanel))
+//                return;
+//            
+//            ComplexStamper panel = (ComplexStamper)evt.getComponent();
+//            
+//            panel.setNextDraw(NextDraw.NONE);
+//            panel.setLastMouseXY(evt.getPoint());
+//            panel.setLastShapeXY(null);
+//            
+//            panel.repaint();
+        }
+        
+        /**
+         * Drop and get rid of shape if dragged outside of context.
+         * @param evt MouseEvent
+         */
+        @Override
+        public void mouseEntered(MouseEvent evt)
+        {
+//            if (!(evt.getComponent() instanceof JPanel))
+//                return;
+//            
+//            ComplexStamper panel = (ComplexStamper)evt.getComponent();
+//            
+//            panel.setNextDraw(NextDraw.NONE);
+//            panel.setLastMouseXY(evt.getPoint());
+//            panel.setLastShapeXY(null);
+//            
+//            panel.repaint();
         }
         
         /**
@@ -255,7 +429,25 @@ public class Exercise1
         @Override
         public void mouseDragged(MouseEvent evt)
         {
-            // TODO
+            if (!(evt.getComponent() instanceof JPanel))
+                return;
+            
+            ComplexStamper panel = (ComplexStamper)evt.getComponent();
+            
+            panel.setLastMouseXY(evt.getPoint());
+            
+            double distance = evt.getPoint().distance(panel.getLastShapeXY());
+            
+            if (distance < panel.getShapeSpacing())
+                panel.setNextDraw(NextDraw.NONE);
+            else if (evt.isShiftDown())
+                panel.setNextDraw(NextDraw.CLEAR);
+            else if (evt.isMetaDown())
+                panel.setNextDraw(NextDraw.OVAL);
+            else
+                panel.setNextDraw(NextDraw.RECT);
+            
+            panel.repaint();
         }
     }
     
