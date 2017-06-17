@@ -1,5 +1,4 @@
 package Chapter06;
-
 /*
  * The MIT License
  *
@@ -23,6 +22,16 @@ package Chapter06;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.Toolkit;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  * <h1>Chapter 6 - Exercise 2</h1>
@@ -57,8 +66,127 @@ public class Exercise2
     
     public static void call(String[] args)
     {
-        
+        new Exercise2();
     }
 /* -------------------------------------------------------------------------- */
     
+    /**
+     * Constructor. Just runs the program from a non-static context.
+     */
+    public Exercise2()
+    {
+        CenteredWindow window = new CenteredWindow();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setVisible(true);
+        window.requestFocusInWindow();
+    }
+    
+    // Nested classes.
+    private class CenteredWindow extends JFrame
+    {
+        /**
+         * Constructor.
+         */
+        public CenteredWindow()
+        {
+            super("Chapter 6 - Exercise #2: Dragging Squares Around");
+            setContentPane(new DraggingSquaresPanel());
+            pack();
+            resetLocation();
+        }
+        
+        // Methods
+        private void resetLocation()
+        {
+            setLocation(
+                    (getScreenSize().width - getWidth()) / 2,
+                    (getScreenSize().height - getHeight()) / 2
+            );
+        }
+    }
+    
+    private class DraggingSquaresPanel extends JPanel
+    {
+        // Instance variables.
+        Shape[] shapes;
+        
+        /**
+         * Constructor.
+         */
+        public DraggingSquaresPanel()
+        {
+            resetPanelSize();
+            
+            setBackground(Color.WHITE);
+            
+            Dimension screenDim = getScreenSize();
+            
+            this.shapes = new Shape[]{
+                    new CustomRectangle(),
+                    new CustomRectangle()
+            };
+        }
+        
+        // Methods
+        /**
+         * Sets JPanel size, which affects the total window size, to defaults.
+         */
+        private void resetPanelSize()
+        {
+            Dimension screenDim = getScreenSize();
+            setPreferredSize( new Dimension(
+                    (int)(screenDim.width * 0.75),
+                    (int)(screenDim.height * 0.75) ));
+        }
+        
+        @Override
+        public void paintComponent(Graphics g)
+        {
+            super.paintComponent(g);
+            // ToDo
+        }
+    }
+    
+    private class CustomRectangle extends Rectangle
+    {
+        // Instance variables.
+        Point center;
+        Color outlineColor, fillColor;
+        
+        /**
+         * Constructor.
+         */
+        public CustomRectangle(Point center, Dimension d)
+        {
+            this.center = center;
+            this.fillColor = fillColor;
+            this.outlineColor = outlineColor;
+            
+            setSize(d);
+            setLocation(center.x - getSize().width / 2,
+                    center.y - getSize().height / 2);
+        }
+                
+        public CustomRectangle()
+        {
+            java.util.Random r = new java.util.Random();
+            this.center = new Point(
+                    super.getLocation().x + getSize().width / 2,
+                    super.getLocation().y + getSize().height / 2
+            );
+            this.outlineColor = Color.BLACK;
+            this.fillColor = new Color(
+                    r.nextInt(255), r.nextInt(255), r.nextInt(255));
+        }
+        
+        public Point getCenter() { return this.center; }
+        public Color getOutlineColor() { return this.outlineColor; }
+        public Color getFillColor() { return this.fillColor; }
+    }
+    
+    // Static methods.
+    private static Dimension getScreenSize()
+    {
+        return Toolkit.getDefaultToolkit().getScreenSize();
+    }
 }

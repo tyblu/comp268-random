@@ -65,8 +65,8 @@ public class MainCaller {
     private static final boolean ENABLE_PRACTICEMENU = false;
     
     // Exercises
-    private static final boolean ENABLE_EXERCISE_1 = true;
-    private static final boolean ENABLE_EXERCISE_2 = false;
+    private static final boolean ENABLE_EXERCISE_1 = false;
+    private static final boolean ENABLE_EXERCISE_2 = true;
     private static final boolean ENABLE_EXERCISE_3 = false;
     
     public static void main(String[] args)
