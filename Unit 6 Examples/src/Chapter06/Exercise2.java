@@ -55,7 +55,7 @@ import javax.swing.JPanel;
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 15, 2017
- * Version      0.1
+ * Version      0.9
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
