@@ -24,12 +24,15 @@ package Chapter06;
  */
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -115,35 +118,97 @@ public class Exercise2
          */
         public DraggingSquaresPanel()
         {
-            resetPanelSize();
+            setSize(0.75, 0.75);
             
             setBackground(Color.WHITE);
             
-            Dimension screenDim = getScreenSize();
-            
+            Dimension shapeSize = new Dimension(
+                    (int)(getWidth() * 0.1),
+                    (int)(getWidth() * 0.1)
+            );
             this.shapes = new Shape[]{
-                    new CustomRectangle(),
-                    new CustomRectangle()
+                    new CustomRectangle(
+                            new Point(
+                                    (int)(getWidth() * 0.2),
+                                    (int)(getHeight() * 0.5)
+                            ),
+                            shapeSize
+                    ),
+                    new CustomRectangle(
+                            new Point(
+                                    (int)(getWidth() * 0.8),
+                                    (int)(getHeight() * 0.5)
+                            ),
+                            shapeSize
+                    )
             };
+            
+            int i = 0;
+            for (Shape s : shapes)
+            {
+                if (s instanceof CustomRectangle)
+                {
+                    if (i++ % 2 == 0)
+                        ((CustomRectangle)s).setFillColor(Color.RED);
+                    else
+                        ((CustomRectangle)s).setFillColor(Color.BLUE);
+                    ((CustomRectangle)s).setOutlineColor(Color.BLACK);
+                }
+            }
+            
+            PanelMouseListener l = new PanelMouseListener();
+            addMouseListener(l);
+            addMouseMotionListener(l);
         }
         
         // Methods
         /**
          * Sets JPanel size, which affects the total window size, to defaults.
          */
-        private void resetPanelSize()
+        private void setSize(double xRatio, double yRatio)
         {
             Dimension screenDim = getScreenSize();
             setPreferredSize( new Dimension(
-                    (int)(screenDim.width * 0.75),
-                    (int)(screenDim.height * 0.75) ));
+                    (int)(screenDim.width * xRatio),
+                    (int)(screenDim.height * yRatio) ));
+        }
+        
+        public Shape getShapeAt(Point p)
+        {
+            for (Shape s : shapes)
+            {
+                if (s.contains(p))
+                    return s;
+            }
+            return null;
         }
         
         @Override
         public void paintComponent(Graphics g)
         {
             super.paintComponent(g);
-            // ToDo
+            
+            for (Shape s : shapes)
+                if (s instanceof CustomRectangle)
+                    drawRect((CustomRectangle)s, g);
+        }
+        
+        private void drawRect(CustomRectangle r, Graphics g)
+        {
+            g.setColor(r.getFillColor());
+            g.fillRect(
+                    r.getLocation().x, 
+                    r.getLocation().y, 
+                    (int)r.getWidth(), 
+                    (int)r.getHeight()
+            );
+            g.setColor(r.getOutlineColor());
+            g.drawRect(
+                    r.getLocation().x, 
+                    r.getLocation().y, 
+                    (int)r.getWidth(), 
+                    (int)r.getHeight()
+            );
         }
     }
     
@@ -159,8 +224,8 @@ public class Exercise2
         public CustomRectangle(Point center, Dimension d)
         {
             this.center = center;
-            this.fillColor = fillColor;
-            this.outlineColor = outlineColor;
+            this.fillColor = Color.GRAY;
+            this.outlineColor = Color.BLACK;
             
             setSize(d);
             setLocation(center.x - getSize().width / 2,
@@ -170,11 +235,8 @@ public class Exercise2
         public CustomRectangle()
         {
             java.util.Random r = new java.util.Random();
-            this.center = new Point(
-                    super.getLocation().x + getSize().width / 2,
-                    super.getLocation().y + getSize().height / 2
-            );
-            this.outlineColor = Color.BLACK;
+            this.outlineColor = new Color(
+                    r.nextInt(255), r.nextInt(255), r.nextInt(255));
             this.fillColor = new Color(
                     r.nextInt(255), r.nextInt(255), r.nextInt(255));
         }
@@ -182,6 +244,96 @@ public class Exercise2
         public Point getCenter() { return this.center; }
         public Color getOutlineColor() { return this.outlineColor; }
         public Color getFillColor() { return this.fillColor; }
+        
+        public void setCenter(Point center)
+        {
+            this.center = center;
+            center.translate((int)(-getWidth() /2.0), (int)(-getHeight() /2.0));
+            setLocation(center);
+        }
+        
+        public void setFillColor(Color fillColor)
+        {
+            this.fillColor = fillColor;
+        }
+        
+        public void setOutlineColor(Color outlineColor)
+        {
+            this.outlineColor = outlineColor;
+        }
+    }
+    
+    /**
+     * Mouse action for the whole panel. Just keep track of the shapes to see
+     * if you're interacting with them.
+     */
+    private class PanelMouseListener extends MouseAdapter
+    {
+        private Component listenToMe;
+        private Point startPoint;
+        private Point currentPoint;
+        private boolean stopDrag;
+        private CustomRectangle selectedRect;
+        
+        /**
+         * 
+         * Make new shape if a certain distance away from others.
+         * Different border color (pressed in?) to show that it's active.
+         * Bring shape into focus if clicked on it.
+         * @param evt MouseEvent
+         */
+        @Override
+        public void mousePressed(MouseEvent evt)
+        {
+            listenToMe = (Component)evt.getSource();
+            startPoint = evt.getPoint();
+            currentPoint = startPoint;
+            stopDrag = false;
+            
+            if (!(listenToMe instanceof JPanel))
+            {
+                Shape shapeAtMouse = ((DraggingSquaresPanel)listenToMe)
+                        .getShapeAt(currentPoint);
+                
+                if (shapeAtMouse instanceof CustomRectangle)
+                    selectedRect = (CustomRectangle)shapeAtMouse;
+                else
+                    selectedRect = null;
+            }
+            
+            listenToMe.repaint();
+        }
+        
+        /**
+         * Draw shapes as you drag. Keep them some minimum distance away from
+         * each other.
+         * @param evt 
+         */
+        @Override
+        public void mouseDragged(MouseEvent evt)
+        {
+            currentPoint = evt.getPoint();
+            
+            // Debugging.
+            System.out.println("START POS: [" + startPoint.x + "," + startPoint.y + "] | DRAG POSITION: [" + currentPoint.x + "," + currentPoint.y + "] | INSIDE?: " + listenToMe.contains(currentPoint) + " | OBJ: " + selectedRect + " | DRAGGING?: " + (!stopDrag));
+            
+            if (!listenToMe.contains(currentPoint) || stopDrag)
+                stopDrag = true;
+            else if (selectedRect != null)
+                selectedRect.setCenter(currentPoint);
+            
+            listenToMe.repaint();
+        }
+        
+        /**
+         * 
+         */
+        @Override
+        public void mouseReleased(MouseEvent evt)
+        {
+            currentPoint = evt.getPoint();
+            stopDrag = true;
+        }
     }
     
     // Static methods.
