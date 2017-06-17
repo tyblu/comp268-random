@@ -111,7 +111,7 @@ public class Exercise2
     private class DraggingSquaresPanel extends JPanel
     {
         // Instance variables.
-        Shape[] shapes;
+        CustomRectangle[] rectangles;
         
         /**
          * Constructor.
@@ -122,38 +122,21 @@ public class Exercise2
             
             setBackground(Color.WHITE);
             
-            Dimension shapeSize = new Dimension(
-                    (int)(getWidth() * 0.1),
-                    (int)(getWidth() * 0.1)
-            );
-            this.shapes = new Shape[]{
-                    new CustomRectangle(
-                            new Point(
-                                    (int)(getWidth() * 0.2),
-                                    (int)(getHeight() * 0.5)
-                            ),
-                            shapeSize
-                    ),
-                    new CustomRectangle(
-                            new Point(
-                                    (int)(getWidth() * 0.8),
-                                    (int)(getHeight() * 0.5)
-                            ),
-                            shapeSize
-                    )
+            Dimension shapeSize = new Dimension(200,200);
+            this.rectangles = new CustomRectangle[]{
+                    new CustomRectangle(new Point(500, 500), shapeSize),
+                    new CustomRectangle(new Point(1500, 500), shapeSize)
             };
             
             int i = 0;
-            for (Shape s : shapes)
+            for (CustomRectangle r : rectangles)
             {
-                if (s instanceof CustomRectangle)
-                {
-                    if (i++ % 2 == 0)
-                        ((CustomRectangle)s).setFillColor(Color.RED);
-                    else
-                        ((CustomRectangle)s).setFillColor(Color.BLUE);
-                    ((CustomRectangle)s).setOutlineColor(Color.BLACK);
-                }
+                if (i++ % 2 == 0)
+                    r.setFillColor(Color.RED);
+                else
+                    r.setFillColor(Color.BLUE);
+
+                r.setOutlineColor(Color.BLACK);
             }
             
             PanelMouseListener l = new PanelMouseListener();
@@ -173,12 +156,12 @@ public class Exercise2
                     (int)(screenDim.height * yRatio) ));
         }
         
-        public Shape getShapeAt(Point p)
+        public CustomRectangle getShapeAt(Point p)
         {
-            for (Shape s : shapes)
+            for (CustomRectangle r : rectangles)
             {
-                if (s.contains(p))
-                    return s;
+                if (r.contains(p))
+                    return r;
             }
             return null;
         }
@@ -188,13 +171,15 @@ public class Exercise2
         {
             super.paintComponent(g);
             
-            for (Shape s : shapes)
-                if (s instanceof CustomRectangle)
-                    drawRect((CustomRectangle)s, g);
+            for (CustomRectangle r : rectangles)
+                drawRect(r, g);
         }
         
         private void drawRect(CustomRectangle r, Graphics g)
         {
+            // Debugging
+//            System.out.println("drawing " + (r.getWidth()) + "x" + (r.getWidth()) + " " + r.getFillColor() + " at [" + (r.getLocation().x) + "," + (r.getLocation().y) + "]");
+            
             g.setColor(r.getFillColor());
             g.fillRect(
                     r.getLocation().x, 
@@ -230,6 +215,9 @@ public class Exercise2
             setSize(d);
             setLocation(center.x - getSize().width / 2,
                     center.y - getSize().height / 2);
+            
+            // Debugging
+//            System.out.println("NEW RECT: [" + (center.x) + "," + (center.y) + "] | " + fillColor + " | " + outlineColor);
         }
                 
         public CustomRectangle()
@@ -250,6 +238,9 @@ public class Exercise2
             this.center = center;
             center.translate((int)(-getWidth() /2.0), (int)(-getHeight() /2.0));
             setLocation(center);
+            
+            // Debugging
+//            System.out.println("RECT MOVED to [" + (center.x) + "," + (center.y) + "] (center [" + (this.center.x) + "," + (this.center.y) + "])");
         }
         
         public void setFillColor(Color fillColor)
@@ -269,7 +260,7 @@ public class Exercise2
      */
     private class PanelMouseListener extends MouseAdapter
     {
-        private Component listenToMe;
+        private DraggingSquaresPanel listenToMe;
         private Point startPoint;
         private Point currentPoint;
         private boolean stopDrag;
@@ -285,21 +276,12 @@ public class Exercise2
         @Override
         public void mousePressed(MouseEvent evt)
         {
-            listenToMe = (Component)evt.getSource();
+            listenToMe = (DraggingSquaresPanel)evt.getSource();
             startPoint = evt.getPoint();
             currentPoint = startPoint;
             stopDrag = false;
             
-            if (!(listenToMe instanceof JPanel))
-            {
-                Shape shapeAtMouse = ((DraggingSquaresPanel)listenToMe)
-                        .getShapeAt(currentPoint);
-                
-                if (shapeAtMouse instanceof CustomRectangle)
-                    selectedRect = (CustomRectangle)shapeAtMouse;
-                else
-                    selectedRect = null;
-            }
+            selectedRect  = listenToMe.getShapeAt(currentPoint);
             
             listenToMe.repaint();
         }
@@ -315,7 +297,7 @@ public class Exercise2
             currentPoint = evt.getPoint();
             
             // Debugging.
-            System.out.println("START POS: [" + startPoint.x + "," + startPoint.y + "] | DRAG POSITION: [" + currentPoint.x + "," + currentPoint.y + "] | INSIDE?: " + listenToMe.contains(currentPoint) + " | OBJ: " + selectedRect + " | DRAGGING?: " + (!stopDrag));
+//            System.out.println("Moving " + selectedRect + " from [" + startPoint.x + "," + startPoint.y + "] | DRAG POSITION: [" + currentPoint.x + "," + currentPoint.y + "] | INSIDE?: " + listenToMe.contains(currentPoint) + " | OBJ: " + selectedRect + " | DRAGGING?: " + (!stopDrag));
             
             if (!listenToMe.contains(currentPoint) || stopDrag)
                 stopDrag = true;
