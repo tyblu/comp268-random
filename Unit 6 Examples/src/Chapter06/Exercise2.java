@@ -24,12 +24,10 @@ package Chapter06;
  */
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -55,7 +53,7 @@ import javax.swing.JPanel;
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 15, 2017
- * Version      0.9
+ * Version      1.0
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -72,6 +70,9 @@ public class Exercise2
         new Exercise2();
     }
 /* -------------------------------------------------------------------------- */
+    
+    // Constants
+    private static final boolean DEBUG_ON = false;
     
     /**
      * Constructor. Just runs the program from a non-static context.
@@ -177,8 +178,8 @@ public class Exercise2
         
         private void drawRect(CustomRectangle r, Graphics g)
         {
-            // Debugging
-//            System.out.println("drawing " + (r.getWidth()) + "x" + (r.getWidth()) + " " + r.getFillColor() + " at [" + (r.getLocation().x) + "," + (r.getLocation().y) + "]");
+            try { new Debug(this, new Object[]{ r }, DEBUG_ON); }
+            catch (NullPointerException e) { System.out.println(e); }
             
             g.setColor(r.getFillColor());
             g.fillRect(
@@ -216,8 +217,8 @@ public class Exercise2
             setLocation(center.x - getSize().width / 2,
                     center.y - getSize().height / 2);
             
-            // Debugging
-//            System.out.println("NEW RECT: [" + (center.x) + "," + (center.y) + "] | " + fillColor + " | " + outlineColor);
+            try { new Debug(this, new Object[]{ center, fillColor, outlineColor }, DEBUG_ON); }
+            catch (NullPointerException e) { System.out.println(e); }
         }
                 
         public CustomRectangle()
@@ -229,18 +230,32 @@ public class Exercise2
                     r.nextInt(255), r.nextInt(255), r.nextInt(255));
         }
         
+        // Methods
+        /**
+         * Makes rectangle invisible. Sets size to zero and color to white, the
+         * same as the background.
+         */
+        public void erase()
+        {
+            setSize(new Dimension(0,0));
+            setFillColor(Color.WHITE);
+            setOutlineColor(Color.WHITE);
+        }
+        
+        // Getters
         public Point getCenter() { return this.center; }
         public Color getOutlineColor() { return this.outlineColor; }
         public Color getFillColor() { return this.fillColor; }
         
+        // Setters
         public void setCenter(Point center)
         {
             this.center = center;
             center.translate((int)(-getWidth() /2.0), (int)(-getHeight() /2.0));
             setLocation(center);
             
-            // Debugging
-//            System.out.println("RECT MOVED to [" + (center.x) + "," + (center.y) + "] (center [" + (this.center.x) + "," + (this.center.y) + "])");
+            try { new Debug(this, new Object[]{ this.center, center }, DEBUG_ON); }
+            catch (NullPointerException e) { System.out.println(e); }
         }
         
         public void setFillColor(Color fillColor)
@@ -296,13 +311,19 @@ public class Exercise2
         {
             currentPoint = evt.getPoint();
             
-            // Debugging.
-//            System.out.println("Moving " + selectedRect + " from [" + startPoint.x + "," + startPoint.y + "] | DRAG POSITION: [" + currentPoint.x + "," + currentPoint.y + "] | INSIDE?: " + listenToMe.contains(currentPoint) + " | OBJ: " + selectedRect + " | DRAGGING?: " + (!stopDrag));
+            try { new Debug(this, new Object[]{ selectedRect, startPoint, currentPoint, listenToMe, stopDrag }, DEBUG_ON); }
+            catch (NullPointerException e) { System.out.println(e); }
             
-            if (!listenToMe.contains(currentPoint) || stopDrag)
-                stopDrag = true;
-            else if (selectedRect != null)
-                selectedRect.setCenter(currentPoint);
+            if (listenToMe != null && selectedRect != null)
+            {
+                if (!listenToMe.getBounds().intersects(selectedRect) || stopDrag)
+                {
+                    stopDrag = true;
+                    selectedRect.erase();
+                }
+                else if (selectedRect != null)
+                    selectedRect.setCenter(currentPoint);
+            }
             
             listenToMe.repaint();
         }
@@ -314,7 +335,145 @@ public class Exercise2
         public void mouseReleased(MouseEvent evt)
         {
             currentPoint = evt.getPoint();
+            selectedRect = null;
             stopDrag = true;
+        }
+    }
+    
+    private class Debug
+    {
+        /**
+         * Prints custom debugging messages to Standard Out with println().
+         * @param that Send 'this' from object with debug code.
+         * @param these array of Object[] with info to send to debug.
+         * <ul>
+         * <li>
+         * Debugging DraggingSquaresPanel#drawRect(CustomRectangle, Graphics)
+         * <ul>
+         * <li>these[0]: CustomRectangle r with WxH, Color, (x,y)</li>
+         * </ul>
+         * </li>
+         * <li>
+         * Debugging CustomRectangle#CustomRectangle(Point, Dimension)
+         * <ul>
+         * <li>these[0]: Point center</li>
+         * <li>these[1]: Color fillColor</li>
+         * <li>these[2]: Color outlineColor</li>
+         * </ul>
+         * </li>
+         * <li>
+         * Debugging CustomRectangle#setCenter(Point)
+         * <ul>
+         * <li>these[0]: Point p</li>
+         * <li>these[1]: Point center</li>
+         * </ul>
+         * </li>
+         * <li>
+         * Debugging PanelMouseListener#mouseDragged(MouseEvent)
+         * <ul>
+         * <li>these[0]: CustomRectangle selectedRect</li>
+         * <li>these[1]: Point startPoint</li>
+         * <li>these[2]: Point currentPoint</li>
+         * <li>these[3]: DraggingSquaresPanel listenToMe</li>
+         * <li>these[4]: boolean stopDrag</li>
+         * </ul>
+         * </li>
+         * </ul>
+         * @param isDebugOn Turn debugging lines on or off.
+         */
+        public Debug(Object that, Object[] these, boolean isDebugOn)
+        {
+            if (!isDebugOn)
+                return;
+
+//            System.out.println("drawing " + (r.getWidth()) + "x" + (r.getWidth()) + " " + r.getFillColor() + " at [" + (r.getLocation().x) + "," + (r.getLocation().y) + "]");
+            if (that instanceof DraggingSquaresPanel && these.length == 1)
+            {
+                CustomRectangle r = (CustomRectangle)these[0];
+                StringBuilder sb = new StringBuilder();
+                sb.append("drawing ");
+                sb.append(r.getWidth());
+                sb.append("x");
+                sb.append(r.getHeight());
+                sb.append(" ");
+                sb.append(r.getFillColor().toString().substring(9));
+                sb.append(" at (");
+                sb.append(r.getLocation().x);
+                sb.append(",");
+                sb.append(r.getLocation().y);
+                sb.append(")");
+
+                System.out.println(sb);
+            }
+
+//            System.out.println("NEW RECT: [" + (center.x) + "," + (center.y) + "] | " + fillColor + " | " + outlineColor);
+            if (that instanceof CustomRectangle && these.length == 3)
+            {
+                Point center = (Point)these[0];
+                Color fillColor = (Color)these[1];
+                Color outlineColor = (Color)these[2];
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("NEW RECT: (");
+                sb.append(center.x);
+                sb.append(",");
+                sb.append(center.y);
+                sb.append(") | ");
+                sb.append(fillColor.toString().substring(9));
+                sb.append(" | ");
+                sb.append(outlineColor.toString().substring(9));
+
+                System.out.println(sb);
+            }
+
+                    // Debugging public void setCenter(Point center)
+//            System.out.println("RECT MOVED to [" + (center.x) + "," + (center.y) + "] (center [" + (this.center.x) + "," + (this.center.y) + "])");
+            if (that instanceof CustomRectangle && these.length == 2)
+            {
+                Point p = (Point)these[0];
+                Point center = (Point)these[1];
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("RECT MOVED to (");
+                sb.append(p.x);
+                sb.append(",");
+                sb.append(p.y);
+                sb.append(") | center (");
+                sb.append(center.x);
+                sb.append(",");
+                sb.append(")");
+
+                System.out.println(sb);
+            }
+
+                    // Debugging public void mouseDragged(MouseEvent evt)
+//            System.out.println("Moving " + selectedRect + " from [" + startPoint.x + "," + startPoint.y + "] | DRAG POSITION: [" + currentPoint.x + "," + currentPoint.y + "] | INSIDE?: " + listenToMe.contains(currentPoint) + " | OBJ: " + selectedRect + " | DRAGGING?: " + (!stopDrag));
+            if (that instanceof PanelMouseListener && these.length == 5)
+            {
+                CustomRectangle selectedRect = (CustomRectangle)these[0];
+                Point startPoint = (Point)these[1];
+                Point currentPoint = (Point)these[2];
+                DraggingSquaresPanel listenToMe = (DraggingSquaresPanel)these[3];
+                boolean stopDrag = (boolean)these[4];
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("Moving ");
+                sb.append(selectedRect);
+                sb.append(" from (");
+                sb.append(startPoint.x);
+                sb.append(",");
+                sb.append(startPoint.y);
+                sb.append(") | DRAG POSITION: (");
+                sb.append(currentPoint.x);
+                sb.append(",");
+                sb.append(currentPoint.y);
+                sb.append(") | INSIDE?: ");
+                sb.append(listenToMe.contains(currentPoint));
+                sb.append(" | DRAGGING?: ");
+                sb.append(!stopDrag);
+
+                System.out.println(sb);
+            }
         }
     }
     
