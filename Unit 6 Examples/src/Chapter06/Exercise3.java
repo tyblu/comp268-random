@@ -25,10 +25,11 @@ package Chapter06;
  */
 
 import java.awt.Color;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -74,6 +75,9 @@ public class Exercise3
     }
 /* -------------------------------------------------------------------------- */
 
+    // Constants.
+    private static final boolean PRINT_TO_STD_OUT = false;
+    
     /**
      * Constructor - Non-static context so I can run the program with objects.
      */
@@ -124,10 +128,15 @@ public class Exercise3
 
             setBackground(Color.WHITE);
             
-            setLayout( new GridLayout(1, 0) );
-            add(dice1);
-            add(dice2);
+            setLayout( new GridBagLayout() );
+            GridBagConstraints c = new GridBagConstraints();
+            c.insets = new Insets(256/4, 256/4, 256/4, 256/4);
+            add(dice1, c);
+            add(dice2, c);
             
+            dice1.resetRollCount();
+            dice2.resetRollCount();
+            roll();
             
             addMouseListener( new MouseAdapter() {
                     @Override
@@ -142,8 +151,16 @@ public class Exercise3
          */
         private void roll()
         {
-            System.out.println("DICE 1: " + dice1.roll());
-            System.out.println("DICE 2: " + dice2.roll());
+            dice1.roll();
+            dice2.roll();
+            
+            if (PRINT_TO_STD_OUT)
+                System.out.printf("%nRoll #%d: %d & %d gives %d%n",
+                        dice1.getRollCount(),
+                        dice1.getValue(),
+                        dice2.getValue(),
+                        (dice1.getValue() + dice2.getValue())
+                );
         }
         
         /**
@@ -171,6 +188,8 @@ public class Exercise3
             this.r = new Random();
             this.value = r.nextInt(6) + 1;
             this.rollCount = 1;
+            
+            setPreferredSize(new Dimension(256, 256));
         }
         
         // Methods.
