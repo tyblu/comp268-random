@@ -27,9 +27,13 @@ package Chapter06;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -109,7 +113,93 @@ public class Exercise3
         }
     }
     
-    
+    private class RollingDicePanel extends JPanel
+    {
+        // Instance variables.
+        private DiceAnimated dice1, dice2;
+        
+        // Constructor.
+        public RollingDicePanel()
+        {
+            this.dice1 = new DiceAnimated();
+            this.dice2 = new DiceAnimated();
+            
+            setSize(0.5, 0.5);
+
+            setBackground(Color.WHITE);
+            
+            setLayout( new GridLayout(1, 0) );
+            add(dice1);
+            add(dice2);
+            
+
+            addMouseListener( new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent evt) { roll(); }
+            });
+            
+        }
+        
+        // Methods
+        /**
+         * Do a new dice roll.
+         */
+        private void roll()
+        {
+            // 
+        }
+        
+        /**
+         * Sets JPanel size, which affects the total window size, to defaults.
+         */
+        private void setSize(double xRatio, double yRatio)
+        {
+            Dimension screenDim = getScreenSize();
+            setPreferredSize( new Dimension(
+                    (int)(screenDim.width * xRatio),
+                    (int)(screenDim.height * yRatio) ));
+        }
+        
+        @Override
+        public void paintComponent(Graphics g)
+        {
+            super.paintComponent(g);
+            
+            drawDice(g, new DiceAnimated[]{ dice1, dice2 });
+        }
+        
+        private void drawDice(Graphics g, DiceAnimated[] diceArray)
+        {
+            // split up panel -- leave to LayoutManager?
+            
+            // draw dice
+            for (DiceAnimated dice : diceArray)
+            {
+                
+            }
+        }
+        
+        private void drawRect(CustomRectangle r, Graphics g)
+        {
+            try { new Debug(this, new Object[]{ r }, DEBUG_ON); }
+            catch (NullPointerException e) { System.out.println(e); }
+            
+            g.setColor(r.getFillColor());
+            g.fillRect(
+                    r.getLocation().x, 
+                    r.getLocation().y, 
+                    (int)r.getWidth(), 
+                    (int)r.getHeight()
+            );
+            g.setColor(r.getOutlineColor());
+            g.drawRect(
+                    r.getLocation().x, 
+                    r.getLocation().y, 
+                    (int)r.getWidth(), 
+                    (int)r.getHeight()
+            );
+        }
+    }
     
     private class DiceAnimated extends Dice
     {
@@ -148,6 +238,8 @@ public class Exercise3
         }
         
         public void resetRollCount() { setRollCount(0); };
+        public void incrementRollCount() { setRollCount(getRollCount() + 1); }
+        public void decrementRollCount() { setRollCount(getRollCount() - 1); }
         
         // Getters.
         public int getValue() { return this.value; }
@@ -156,6 +248,11 @@ public class Exercise3
         // Setters.
         private void setValue(int value) { this.value = value; }
         private void setRollCount(int rollCount) { this.rollCount = rollCount; }
+    }
+    
+    private class DiceFace extends JPanel
+    {
+        
     }
     
     private class DiceFaces extends RoundRectangle2D.Double
