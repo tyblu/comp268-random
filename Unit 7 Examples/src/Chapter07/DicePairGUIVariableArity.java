@@ -226,32 +226,22 @@ public class DicePairGUIVariableArity
                 drawSpot(g, 4);
                 break;
             case 2:
-                drawSpot(g, 0);
-                drawSpot(g, 8);
+                drawSpot(g, 0, 8);
                 break;
             case 3:
-                drawSpots(g, 2);
-                drawSpot(g, 4);
+                drawSpot(g, 0, 4, 8);
                 break;
             case 4:
-                drawSpots(g, 2);
-                drawSpot(g, 2);
-                drawSpot(g, 6);
+                drawSpot(g, 0, 2, 6, 8);
                 break;
             case 5:
-                drawSpots(g, 4);
-                drawSpot(g, 4);
+                drawSpot(g, 0, 2, 4, 6, 8);
                 break;
             case 6:
-                drawSpots(g, 4);
-                drawSpot(g, 3);
-                drawSpot(g, 5);
+                drawSpot(g, 0, 2, 3, 5, 6, 8);
                 break;
             default:    // All spots. Never happens for actual dice values 1-6.
-                drawSpots(g, 6);
-                drawSpot(g, 1);
-                drawSpot(g, 4);
-                drawSpot(g, 7);
+                drawSpot(g, 0, 1, 2, 3, 4, 5, 6, 7, 8);
                 break;
             }
         }
@@ -264,7 +254,7 @@ public class DicePairGUIVariableArity
          * 
          * dice width 256, border 8, edge gap 16, spot diameter 32, gap computed
          */
-        private void drawSpot(Graphics g, int spotNumber)
+        private void drawSpot(Graphics g, int... spots)
         {
             int gap = (256 - 2*8 - 2*16 - 3*32)/2;  // = 56
             int[] col = new int[] {
@@ -275,37 +265,41 @@ public class DicePairGUIVariableArity
             int[] row = col;
             
             g.setColor(Color.BLACK);
-            switch (spotNumber)
+            
+            for (int spot : spots)
             {
-            case 0:
-                g.fillOval(col[0], row[0], 32, 32);
-                break;
-            case 1:
-                g.fillOval(col[1], row[0], 32, 32);
-                break;
-            case 2:
-                g.fillOval(col[2], row[0], 32, 32);
-                break;
-            case 3:
-                g.fillOval(col[0], row[1], 32, 32);
-                break;
-            case 4:
-                g.fillOval(col[1], row[1], 32, 32);
-                break;
-            case 5:
-                g.fillOval(col[2], row[1], 32, 32);
-                break;
-            case 6:
-                g.fillOval(col[0], row[2], 32, 32);
-                break;
-            case 7:
-                g.fillOval(col[1], row[2], 32, 32);
-                break;
-            case 8:
-                g.fillOval(col[2], row[2], 32, 32);
-                break;
-            default:
-                break;
+                switch (spot)
+                {
+                case 0:
+                    g.fillOval(col[0], row[0], 32, 32);
+                    break;
+                case 1:
+                    g.fillOval(col[1], row[0], 32, 32);
+                    break;
+                case 2:
+                    g.fillOval(col[2], row[0], 32, 32);
+                    break;
+                case 3:
+                    g.fillOval(col[0], row[1], 32, 32);
+                    break;
+                case 4:
+                    g.fillOval(col[1], row[1], 32, 32);
+                    break;
+                case 5:
+                    g.fillOval(col[2], row[1], 32, 32);
+                    break;
+                case 6:
+                    g.fillOval(col[0], row[2], 32, 32);
+                    break;
+                case 7:
+                    g.fillOval(col[1], row[2], 32, 32);
+                    break;
+                case 8:
+                    g.fillOval(col[2], row[2], 32, 32);
+                    break;
+                default:
+                    break;
+                }
             }
         }
         
