@@ -24,6 +24,18 @@ package Chapter06;
  * THE SOFTWARE.
  */
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.Random;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 /**
  * <h1>Chapter 6 - Exercise 3</h1>
  * 
@@ -58,8 +70,187 @@ public class Exercise3
     
     public static void call(String[] args)
     {
-        //
+        new Exercise3();
     }
 /* -------------------------------------------------------------------------- */
 
+    /**
+     * Constructor - Non-static context so I can run the program with objects.
+     */
+    public Exercise3()
+    {
+        CenteredWindow window = new CenteredWindow();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setVisible(true);
+        window.requestFocusInWindow();
+    }
+    
+    // Nested classes
+    private class CenteredWindow extends JFrame
+    {
+        /**
+         * Constructor.
+         */
+        public CenteredWindow()
+        {
+            super("Chapter 6 - Exercise #3: Rolling A Pair Of Dice");
+            setContentPane(new RollingDicePanel());
+            pack();
+            resetLocation();
+        }
+        
+        // Methods
+        private void resetLocation()
+        {
+            setLocation(
+                    (getScreenSize().width - getWidth()) / 2,
+                    (getScreenSize().height - getHeight()) / 2
+            );
+        }
+    }
+    
+    
+    
+    private class DiceAnimated extends Dice
+    {
+        // Instance variables.
+        private DiceImage[] faces;
+        private int sequenceIndex;
+        private DiceFace currentFace;
+        
+    }
+    
+    private class Dice
+    {
+        // Instance variables.
+        private int sides;
+        private int value;
+        private int rollCount;
+        private Random r;
+        
+        // Constructors.
+        public Dice(int sides)
+        {
+            this.sides = sides;
+            this.r = new Random();
+            this.value = r.nextInt(this.sides) + 1;
+            this.rollCount = 1;
+        }
+        
+        public Dice() { this(6); }
+        
+        // Methods.
+        public int roll()
+        {
+            setValue(r.nextInt(sides) + 1);
+            rollCount++;
+            return getValue();
+        }
+        
+        public void resetRollCount() { setRollCount(0); };
+        
+        // Getters.
+        public int getValue() { return this.value; }
+        public int getRollCount() { return this.rollCount; }
+        
+        // Setters.
+        private void setValue(int value) { this.value = value; }
+        private void setRollCount(int rollCount) { this.rollCount = rollCount; }
+    }
+    
+    private class DiceFaces extends RoundRectangle2D.Double
+    {
+        // Instance variables.
+        private final int faceSize;
+        private final int spotSize;
+        private final int border;
+        private final Point[] spotSpots;
+        private Image[] faces;
+        
+        public DiceFaces()
+        {
+            this.faceSize = 256;
+            this.spotSize = faceSize / 8;
+            this.border = faceSize / 32;
+            this.spotSpots = getSpotSpots();
+            
+            for (int i=0; i<6; i++)
+                faces[i] = new BufferedImage(faceSize, faceSize,
+                        BufferedImage.TYPE_INT_RGB);
+        }
+        
+        // Methods.
+        public Image drawFaces(int count)
+        {
+            Graphics g = faces[count-1].getGraphics();
+            
+            drawBorder(g);
+            drawBackground(g);
+            drawSpots(g);
+            
+            g.dispose();
+            return faces[count-1];
+        }
+        
+        private void drawBorder(Graphics g)
+        {
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, w, h);
+        }
+        
+        private void drawBackground(Graphics g)
+        {
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, w - border, h - border);
+        }
+        
+        private void drawSpots(Graphics g)
+        {
+            switch (count)
+            {
+            case 1:
+                drawSpot(g, "3");
+                break;
+            case 2:
+                drawSpot
+            }
+        }
+        
+        // Getters.
+        /**
+         * Computes spot locations based on face and spot sizes.     _________
+         * @return array of Point[] for spot locations in order      | 0 1 2 |
+         *      shown in the diagram (0-6).                          |   3   |
+         *                                                           |_4_5_6_|
+         */
+        private Point[] getSpotSpots()
+        {
+            Point[] locs = new Point[6];
+            
+            // Point 3 is in the very center
+            locs[3] = new Point(faceSize / 2, faceSize / 2);
+            
+            // Compute ideal gap between spots and edge
+            int gap = (int)((faceSize - 2* border - 2* spotSize) / (double)4);
+            
+            // Points 1 and 5
+            locs[1] = new Point(locs[3].x, locs[3].y + gap + spotSize / 2);
+            locs[5] = new Point(locs[3].x, locs[3].y - gap - spotSize / 2);
+            
+            // Points 0, 2, 4, and 6
+            locs[0] = new Point(locs[1].x - gap - spotSize / 2, locs[1].y);
+            locs[2] = new Point(locs[1].x + gap + spotSize / 2, locs[1].y);
+            locs[4] = new Point(locs[5].x - gap - spotSize / 2, locs[5].y);
+            locs[6] = new Point(locs[5].x + gap + spotSize / 2, locs[5].y);
+            
+            return locs;
+        }
+        
+    }
+    
+    // Methods
+    private static Dimension getScreenSize()
+    {
+        return Toolkit.getDefaultToolkit().getScreenSize();
+    }
 }
