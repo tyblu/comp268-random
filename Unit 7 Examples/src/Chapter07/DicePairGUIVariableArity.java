@@ -27,15 +27,22 @@ package Chapter07;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 /**
@@ -58,7 +65,7 @@ import javax.swing.JPanel;
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 15, 2017
- * Version      2.0
+ * Version      2.1
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -102,8 +109,10 @@ public class DicePairGUIVariableArity
          */
         public CenteredWindow()
         {
-            super("Chapter 6 - Exercise #3: Rolling A Bunch Of Dice");
+            super("Rolling A Bunch Of Dice");
             setContentPane(new RollingDicePanel());
+            setJMenuBar(new RollingDiceMenuBar());
+            setMinimumSize(new Dimension(256 + 256/8, 256 + 256/8 + getTaskbarHeight()));
             pack();
             resetLocation();
         }
@@ -122,22 +131,20 @@ public class DicePairGUIVariableArity
     {
         // Instance variables.
         private Dice[] dice;
+        private int diceCount;
         
         // Constructor.
         public RollingDicePanel()
         {
-            this.dice = new Dice[DICE_COUNT];
-            for (int i=0; i<DICE_COUNT; i++)
+            this.diceCount = 2;
+            this.dice = new Dice[diceCount];
+            for (int i=0; i<diceCount; i++)
                 this.dice[i] = new Dice();
-            
-//            setSize(0.5, 0.5);
 
             setBackground(Color.WHITE);
             
-            setLayout( new GridBagLayout() );
-            GridBagConstraints c = new GridBagConstraints();
-            c.insets = new Insets(256/16, 256/16, 256/16, 256/16);
-            add(c);
+            setLayout( new FlowLayout(FlowLayout.CENTER, 256/16, 256/16) );
+            add(dice);
             
             resetRollCounts();
             roll();
@@ -171,7 +178,11 @@ public class DicePairGUIVariableArity
                     if (i+2<this.dice.length)
                         System.out.print(", ");
                     else if (i+1<this.dice.length)
-                        System.out.print(", & ");
+                    {
+                        if (this.dice.length > 2)
+                            System.out.print(",");
+                        System.out.print(" and ");
+                    }
                     else
                         System.out.printf(" gives %d%n", getDiceSum());
                 }
@@ -181,32 +192,15 @@ public class DicePairGUIVariableArity
         private int getDiceSum()
         {
             int sum = 0;
-            
             for (Dice d : dice)
                 sum += d.getValue();
-            
             return sum;
         }
         
-        /**
-         * Sets JPanel size, which affects the total window size, to defaults.
-         */
-        private void setSize(double xRatio, double yRatio)
+        private void add(Dice... dice)
         {
-            Dimension screenDim = getScreenSize();
-            setPreferredSize( new Dimension(
-                    (int)(screenDim.width * xRatio),
-                    (int)(screenDim.height * yRatio) ));
-        }
-        
-        private void add(GridBagConstraints... constraints)
-        {
-            if (constraints.length != this.dice.length)
-                for (Dice d : this.dice)
-                    add(d, constraints[0]);
-            else
-                for (int i=0; i<constraints.length; i++)
-                    add(this.dice[i], constraints[i]);
+            for (Dice d : dice)
+                add(d);
         }
         
         private void resetRollCounts()
@@ -214,6 +208,39 @@ public class DicePairGUIVariableArity
             for (Dice d : this.dice)
                 d.resetRollCount();
         }
+        
+        public void addDice() 
+        {
+            System.out.println("Adding dice...");
+            
+            setDiceCount(getDiceCount() + 1);
+            Dice[] temp = this.dice;
+            this.dice = new Dice[getDiceCount()];
+            System.arraycopy(temp, 0, this.dice, 0, temp.length);
+            dice[dice.length-1] = new Dice();
+            add(dice[dice.length-1]);
+            
+            revalidate();
+//            repaint();
+        }
+        
+        public void removeDice() 
+        {
+            System.out.println("Removing dice...");
+            
+            setDiceCount(getDiceCount() - 1);
+            Dice[] temp = this.dice;
+            remove(dice[dice.length-1]);
+            this.dice = new Dice[getDiceCount()];
+            System.arraycopy(temp, 0, dice, 0, dice.length);
+            
+            revalidate();
+            repaint();
+        }
+        
+        public int getDiceCount() { return this.diceCount; }
+        
+        private void setDiceCount(int diceCount){ this.diceCount = diceCount; }
     }
     
     private class Dice extends JPanel
@@ -354,9 +381,48 @@ public class DicePairGUIVariableArity
         private void setRollCount(int rollCount) { this.rollCount = rollCount; }
     }
     
+    private class RollingDiceMenuBar extends JMenuBar
+    {
+        public RollingDiceMenuBar()
+        {
+            JButton addDiceButton = new JButton("Add Dice");
+            addDiceButton.addActionListener( new ActionListener()
+                    {
+                        @Override
+                        public void actionPerformed(ActionEvent evt)
+                        {
+                            ((RollingDicePanel)getParent().getComponent(0))
+                                    .addDice();
+                        }
+                    });
+            add(addDiceButton);
+
+            JButton removeDiceButton = new JButton("Remove Dice");
+            removeDiceButton.addActionListener( new ActionListener()
+                    {
+                        @Override
+                        public void actionPerformed(ActionEvent evt)
+                        {
+                            ((RollingDicePanel)getParent().getComponent(0))
+                                    .removeDice();
+                        }
+                    });
+            add(removeDiceButton);
+        }
+    }
+    
     // Methods
     private static Dimension getScreenSize()
     {
         return Toolkit.getDefaultToolkit().getScreenSize();
+    }
+    
+    private static int getTaskbarHeight()
+    {
+        return getScreenSize().height - 
+                (GraphicsEnvironment
+                        .getLocalGraphicsEnvironment()
+                        .getMaximumWindowBounds()
+                ).height;
     }
 }
