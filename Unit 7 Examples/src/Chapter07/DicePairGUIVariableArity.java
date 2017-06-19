@@ -25,6 +25,7 @@ package Chapter07;
  */
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -79,7 +80,7 @@ public class DicePairGUIVariableArity
 /* -------------------------------------------------------------------------- */
 
     // Constants.
-    private static final boolean PRINT_TO_STD_OUT = false;
+    private static final boolean PRINT_TO_STD_OUT = true;
     
     /**
      * Constructor - Non-static context so I can run the program with objects.
@@ -119,13 +120,16 @@ public class DicePairGUIVariableArity
     private class RollingDicePanel extends JPanel
     {
         // Instance variables.
-        private Dice dice1, dice2;
+        private Dice dice1, dice2, dice3, dice4;
+        private Dice[] diceList;
         
         // Constructor.
         public RollingDicePanel()
         {
             this.dice1 = new Dice();
             this.dice2 = new Dice();
+            this.dice3 = new Dice();
+            this.dice4 = new Dice();
             
             setSize(0.5, 0.5);
 
@@ -133,19 +137,21 @@ public class DicePairGUIVariableArity
             
             setLayout( new GridBagLayout() );
             GridBagConstraints c = new GridBagConstraints();
-            c.insets = new Insets(256/4, 256/4, 256/4, 256/4);
-            add(dice1, c);
-            add(dice2, c);
+            c.insets = new Insets(256/16, 256/16, 256/16, 256/16);
+            add(c, dice1, dice2, dice3, dice4);
             
-            dice1.resetRollCount();
-            dice2.resetRollCount();
+            resetRollCounts();
             roll();
             
             addMouseListener( new MouseAdapter() {
                     @Override
-                    public void mousePressed(MouseEvent evt) { roll(); }
+                    public void mousePressed(MouseEvent evt) 
+                    { 
+                        if (evt.isMetaDown())   // Right-click.
+                            resetRollCounts();
+                        roll(); 
+                    }
             });
-            
         }
         
         // Methods
@@ -154,16 +160,33 @@ public class DicePairGUIVariableArity
          */
         private void roll()
         {
-            dice1.roll();
-            dice2.roll();
+            for (Dice d : this.diceList)
+                d.roll();
             
             if (PRINT_TO_STD_OUT)
-                System.out.printf("%nRoll #%d: %d & %d gives %d%n",
-                        dice1.getRollCount(),
-                        dice1.getValue(),
-                        dice2.getValue(),
-                        (dice1.getValue() + dice2.getValue())
-                );
+            {
+                System.out.printf("%nRoll #%d: ", dice1.getRollCount());
+                for (int i=0; i<this.diceList.length; i++)
+                {
+                    System.out.print(this.diceList[i].getValue());
+                    if (i+2<this.diceList.length)
+                        System.out.print(", ");
+                    else if (i+1<this.diceList.length)
+                        System.out.print(", & ");
+                    else
+                        System.out.printf(" gives %d", getDiceSum());
+                }
+            }
+        }
+        
+        private int getDiceSum()
+        {
+            int sum = 0;
+            
+            for (Dice d : diceList)
+                sum += d.getValue();
+            
+            return sum;
         }
         
         /**
@@ -175,6 +198,24 @@ public class DicePairGUIVariableArity
             setPreferredSize( new Dimension(
                     (int)(screenDim.width * xRatio),
                     (int)(screenDim.height * yRatio) ));
+        }
+        
+        private void add(GridBagConstraints c, Dice... dice)
+        {
+            this.diceList = new Dice[dice.length];
+            int index = 0;
+            
+            for (Dice d : dice)
+            {
+                add(d, c);
+                this.diceList[index++] = d;
+            }
+        }
+        
+        private void resetRollCounts()
+        {
+            for (Dice d : this.diceList)
+                d.resetRollCount();
         }
     }
     
