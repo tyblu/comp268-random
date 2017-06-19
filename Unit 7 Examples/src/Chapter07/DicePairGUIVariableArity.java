@@ -58,7 +58,7 @@ import javax.swing.JPanel;
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 15, 2017
- * Version      1.0
+ * Version      2.0
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -81,6 +81,7 @@ public class DicePairGUIVariableArity
 
     // Constants.
     private static final boolean PRINT_TO_STD_OUT = true;
+    private static final int DICE_COUNT = 7;
     
     /**
      * Constructor - Non-static context so I can run the program with objects.
@@ -101,7 +102,7 @@ public class DicePairGUIVariableArity
          */
         public CenteredWindow()
         {
-            super("Chapter 6 - Exercise #3: Rolling A Pair Of Dice");
+            super("Chapter 6 - Exercise #3: Rolling A Bunch Of Dice");
             setContentPane(new RollingDicePanel());
             pack();
             resetLocation();
@@ -120,25 +121,23 @@ public class DicePairGUIVariableArity
     private class RollingDicePanel extends JPanel
     {
         // Instance variables.
-        private Dice dice1, dice2, dice3, dice4;
-        private Dice[] diceList;
+        private Dice[] dice;
         
         // Constructor.
         public RollingDicePanel()
         {
-            this.dice1 = new Dice();
-            this.dice2 = new Dice();
-            this.dice3 = new Dice();
-            this.dice4 = new Dice();
+            this.dice = new Dice[DICE_COUNT];
+            for (int i=0; i<DICE_COUNT; i++)
+                this.dice[i] = new Dice();
             
-            setSize(0.5, 0.5);
+//            setSize(0.5, 0.5);
 
             setBackground(Color.WHITE);
             
             setLayout( new GridBagLayout() );
             GridBagConstraints c = new GridBagConstraints();
             c.insets = new Insets(256/16, 256/16, 256/16, 256/16);
-            add(c, dice1, dice2, dice3, dice4);
+            add(c);
             
             resetRollCounts();
             roll();
@@ -160,21 +159,21 @@ public class DicePairGUIVariableArity
          */
         private void roll()
         {
-            for (Dice d : this.diceList)
+            for (Dice d : this.dice)
                 d.roll();
             
             if (PRINT_TO_STD_OUT)
             {
-                System.out.printf("%nRoll #%d: ", dice1.getRollCount());
-                for (int i=0; i<this.diceList.length; i++)
+                System.out.printf("Roll #%d: ", dice[0].getRollCount());
+                for (int i=0; i<this.dice.length; i++)
                 {
-                    System.out.print(this.diceList[i].getValue());
-                    if (i+2<this.diceList.length)
+                    System.out.print(this.dice[i].getValue());
+                    if (i+2<this.dice.length)
                         System.out.print(", ");
-                    else if (i+1<this.diceList.length)
+                    else if (i+1<this.dice.length)
                         System.out.print(", & ");
                     else
-                        System.out.printf(" gives %d", getDiceSum());
+                        System.out.printf(" gives %d%n", getDiceSum());
                 }
             }
         }
@@ -183,7 +182,7 @@ public class DicePairGUIVariableArity
         {
             int sum = 0;
             
-            for (Dice d : diceList)
+            for (Dice d : dice)
                 sum += d.getValue();
             
             return sum;
@@ -200,21 +199,19 @@ public class DicePairGUIVariableArity
                     (int)(screenDim.height * yRatio) ));
         }
         
-        private void add(GridBagConstraints c, Dice... dice)
+        private void add(GridBagConstraints... constraints)
         {
-            this.diceList = new Dice[dice.length];
-            int index = 0;
-            
-            for (Dice d : dice)
-            {
-                add(d, c);
-                this.diceList[index++] = d;
-            }
+            if (constraints.length != this.dice.length)
+                for (Dice d : this.dice)
+                    add(d, constraints[0]);
+            else
+                for (int i=0; i<constraints.length; i++)
+                    add(this.dice[i], constraints[i]);
         }
         
         private void resetRollCounts()
         {
-            for (Dice d : this.diceList)
+            for (Dice d : this.dice)
                 d.resetRollCount();
         }
     }
