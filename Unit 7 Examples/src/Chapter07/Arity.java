@@ -41,7 +41,7 @@ package Chapter07;
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
  *      <cite>Introduction to Programming Using Java, Seventh Edition</cite>,
- *      by Eck, David J., 2014: Chapter 7: Introduction to GUI Programming</a>
+ *      by Eck, David J., 2014: Chapter 7: Arrays and ArrayLists</a>
  * 
  */
 public class Arity
@@ -49,6 +49,47 @@ public class Arity
     public static void call(String[] args) { call(); }
     public static void call()
     {
-        //
+        double[][] aBunchOfNumbers = new double[][]
+                {
+                    {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+                    {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100},
+                    {7, 7, 7, 7},
+                    {-25151345, 12312332, 2513212.983213, 324141},
+                    { 1 },
+                    { }
+                };
+        
+        System.out.println("Variable Arity Method Example:");
+        
+        for (double[] numberSet : aBunchOfNumbers )
+        {
+            System.out.print("Inputs:");
+            printNumbers(numberSet);
+            System.out.println();
+            
+            System.out.printf("Computed Average: %f%n%n", average(numberSet));
+        }
+        
+    }
+    
+    public static double average(double... numbers)
+    {
+        if (numbers.length == 0)
+            return Double.NaN;
+        
+        long sum = 0;
+        
+        for (double number : numbers)
+            sum += number;
+        
+        return (double)(sum / numbers.length);
+    }
+    
+    public static void printNumbers(double... numbers)
+    {
+        System.out.print(" (" + numbers.length + " elements) ");
+        
+        for (double number : numbers)
+            System.out.print(" " + number);
     }
 }

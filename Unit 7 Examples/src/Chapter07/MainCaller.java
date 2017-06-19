@@ -40,13 +40,14 @@ package Chapter07;
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
  *      <cite>Introduction to Programming Using Java, Seventh Edition</cite>,
- *      by Eck, David J., 2014: Chapter 7: Introduction to GUI Programming</a>
+ *      by Eck, David J., 2014: Chapter 7: Arrays and ArrayLists</a>
  * 
  */
 public class MainCaller
 {
     // Examples
     private static final boolean ENABLE_ARITY = false;
+    private static final boolean ENABLE_DICEARITY = true;
     
     // Exercises
     
@@ -54,6 +55,7 @@ public class MainCaller
     {
         // Examples
         if (ENABLE_ARITY) { Arity.call(args); }
+        if (ENABLE_DICEARITY) { DicePairGUIVariableArity.call(args); }
         
         // Exercises
     }
