@@ -47,7 +47,8 @@ public class MainCaller
 {
     // Examples
     private static final boolean ENABLE_ARITY = false;
-    private static final boolean ENABLE_DICEARITY = true;
+    private static final boolean ENABLE_DICEARITY = false;
+    private static final boolean ENABLE_RANDOMSTRINGS = true;
     
     // Exercises
     
@@ -56,6 +57,7 @@ public class MainCaller
         // Examples
         if (ENABLE_ARITY) { Arity.call(args); }
         if (ENABLE_DICEARITY) { DicePairGUIVariableArity.call(args); }
+        if (ENABLE_RANDOMSTRINGS) { RandomStringsParallelArrays.call(args); }
         
         // Exercises
     }
