@@ -25,10 +25,15 @@ package Chapter07;
  */
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,9 +41,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
@@ -85,7 +88,7 @@ public class DicePairGUIVariableArity
 
     // Constants.
     private static final boolean PRINT_TO_STD_OUT = true;
-    private final DiceSizes initialSizes = new DiceSizes(8, 16, 48, 32);
+    private static final int DICE_SIZE = 256;
     
     /**
      * Constructor - Non-static context so I can run the program with objects.
@@ -131,24 +134,18 @@ public class DicePairGUIVariableArity
         private Dice[] dice;
         private int diceCount;
         private CenteredWindow window;
-        private DiceSizes currentSizes;
         
         // Constructor.
         public RollingDicePanel()
         {
             this.diceCount = 2;
-            this.currentSizes = initialSizes;
-            
             this.dice = new Dice[diceCount];
             for (int i=0; i<diceCount; i++)
-            {
                 this.dice[i] = new Dice();
-                this.dice[i].setDiceSizes(currentSizes);
-            }
 
             setBackground(Color.WHITE);
             
-            setLayout(new FlowLayout(FlowLayout.CENTER, 16, 16));
+            setLayout( new FlowLayout(FlowLayout.CENTER, 256/16, 256/16) );
             add(dice);
             
             resetRollCounts();
@@ -260,14 +257,9 @@ public class DicePairGUIVariableArity
         
         private void resizeMinimumWindow()
         {
-            int rows = (int)Math.min(Math.floor(
-                    Math.sqrt((double)this.diceCount)),1);
-            int diceW = dice[0].getWidth();
-            int border = Math.max(DiceSize.Min.BORDER, diceW / )
-            
             window.setMinimumSize(new Dimension(
-                    getDiceCount() * diceW * 17/16 + diceW * 2/16,
-                    rows * diceW * 17/16 + diceW * 2/16 + getTaskbarHeight()
+                    getDiceCount() * (DICE_SIZE * 17/16) + DICE_SIZE * 2/16,
+                    DICE_SIZE * 19/16 + getTaskbarHeight()
             ));
         }
         
@@ -282,14 +274,6 @@ public class DicePairGUIVariableArity
         }
         
         public void setWindow(CenteredWindow window) { this.window = window; }
-
-        private void toggleCrazyColors() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        private void resetWindowSize() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
     }
     
     private class Dice extends JPanel
@@ -298,22 +282,18 @@ public class DicePairGUIVariableArity
         private int value;
         private int rollCount;
         private Random r;
-        private DiceSizes diceSizes;
         
         // Constructors.
         public Dice()
         {
             super();
             
-            this.diceSizes = initialSizes;
-            
             this.r = new Random();
             this.value = r.nextInt(6) + 1;
             this.rollCount = 1;
             
             setOpaque(false);
-            setPreferredSize(diceSizes.getDim());
-            setMinimumSize(new DiceSizes(0));
+            setPreferredSize(new Dimension(256, 256));
         }
         
         // Methods.
@@ -332,7 +312,7 @@ public class DicePairGUIVariableArity
         {
             super.paintComponent(g);
             
-            int size1 = getWidth();
+            int size1 = DICE_SIZE;
             int size2 = DICE_SIZE - 2*16;
             
             g.setColor(Color.BLACK);
@@ -449,10 +429,6 @@ public class DicePairGUIVariableArity
         // Setters.
         private void setValue(int value) { this.value = value; }
         private void setRollCount(int rollCount) { this.rollCount = rollCount; }
-
-        private void setDiceSizes(DiceSizes currentSizes) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
     }
     
     private class RollingDiceMenuBar extends JMenuBar
@@ -482,107 +458,7 @@ public class DicePairGUIVariableArity
                         }
                     });
             add(removeDiceButton);
-            
-            JMenu dropDownMenu = new JMenu("OPTIONS");
-            add(dropDownMenu);
-            
-            JCheckBoxMenuItem crazyCheckbox = 
-                    new JCheckBoxMenuItem("cR@zeE", false);
-            crazyCheckbox.addActionListener( new ActionListener()
-                    {
-                        @Override
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            ((RollingDicePanel)getParent().getComponent(0))
-                                    .toggleCrazyColors();
-                        }
-                    });
-            dropDownMenu.add(crazyCheckbox);
-            
-            JButton resetSizeButton = new JButton("Resize");
-            resetSizeButton.addActionListener( new ActionListener()
-                    {
-                        @Override
-                        public void actionPerformed(ActionEvent evt)
-                        {
-                            ((RollingDicePanel)getParent().getComponent(0))
-                                    .resetWindowSize();
-                        }
-                    });
-            dropDownMenu.add(resetSizeButton);
-            
-            
         }
-    }
-    
-    private class DiceSizes
-    {
-        // Constants.
-        private static final int MIN_BORDER = 4;
-        private static final int MIN_EDGEGAP = 4;
-        private static final int MIN_SPOTDIAM = 8;
-        private static final int MIN_SPOTGAP = 4;
-        
-        // Instance variables.
-        private int border;
-        private int edgeGap;
-        private int spotDiam;
-        private int spotGap;
-        private int size;
-        private Dimension dim;
-        
-        // Constructor.
-        public DiceSizes(int border, int edgeGap, int spotDiam, int spotGap)
-        {
-            this.border = Math.min(border, MIN_BORDER);
-            this.edgeGap = Math.min(edgeGap, MIN_EDGEGAP);
-            this.spotDiam = Math.min(spotDiam, MIN_SPOTDIAM);
-            this.spotGap = Math.min(spotGap, MIN_SPOTGAP);
-            
-            recalculate();
-        }
-        
-        public DiceSizes(int minCode) { this(0,0,0,0); }
-        
-        // Methods.
-        private void recalculate()
-        {
-            this.size = 3 * spotDiam + 2 * (border + edgeGap + spotGap);
-            this.dim = new Dimension(size, size);
-        }
-        
-        // Setters
-        public void setBorder(int border)
-        {
-            this.border = Math.min(border, 4);
-            recalculate();
-        }
-        
-        public void setEdgeGap(int edgeGap)
-        {
-            this.edgeGap = Math.min(edgeGap, 4);
-            recalculate();
-        }
-        
-        public void setSpotDiam(int spotDiam)
-        {
-            this.spotDiam = Math.min(spotDiam, 8);
-            recalculate();
-        }
-        
-        public void setSpotGap(int spotGap)
-        {
-            this.spotGap = Math.min(spotGap, 4);
-            recalculate();
-        }
-        
-        // Getters.
-        public int getBorder() { return this.border; }
-        public int getEdgeGap() { return this.edgeGap; }
-        public int getSpotDiam() { return this.spotDiam; }
-        public int getSpotGap() { return this.spotGap; }
-        public int getSize() { return this.size; }
-        public Dimension getDim() { return this.dim; }
     }
     
     // Methods
