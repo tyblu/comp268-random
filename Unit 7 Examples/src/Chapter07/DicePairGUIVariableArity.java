@@ -88,7 +88,7 @@ public class DicePairGUIVariableArity
 
     // Constants.
     private static final boolean PRINT_TO_STD_OUT = true;
-    private static final int DICE_COUNT = 7;
+    private static final int DICE_SIZE = 256;
     
     /**
      * Constructor - Non-static context so I can run the program with objects.
@@ -110,9 +110,10 @@ public class DicePairGUIVariableArity
         public CenteredWindow()
         {
             super("Rolling A Bunch Of Dice");
-            setContentPane(new RollingDicePanel());
+            RollingDicePanel content = new RollingDicePanel();
+            setContentPane(content);
+            content.setWindow(this);
             setJMenuBar(new RollingDiceMenuBar());
-            setMinimumSize(new Dimension(256 + 256/8, 256 + 256/8 + getTaskbarHeight()));
             pack();
             resetLocation();
         }
@@ -132,6 +133,7 @@ public class DicePairGUIVariableArity
         // Instance variables.
         private Dice[] dice;
         private int diceCount;
+        private CenteredWindow window;
         
         // Constructor.
         public RollingDicePanel()
@@ -220,8 +222,10 @@ public class DicePairGUIVariableArity
             dice[dice.length-1] = new Dice();
             add(dice[dice.length-1]);
             
+            resizeMinimumWindow();
+            
             revalidate();
-//            repaint();
+            
         }
         
         public void removeDice() 
@@ -234,13 +238,25 @@ public class DicePairGUIVariableArity
             this.dice = new Dice[getDiceCount()];
             System.arraycopy(temp, 0, dice, 0, dice.length);
             
+            resizeMinimumWindow();
+            
             revalidate();
             repaint();
+        }
+        
+        private void resizeMinimumWindow()
+        {
+            window.setMinimumSize(new Dimension(
+                    getDiceCount() * (DICE_SIZE * 17/16) + DICE_SIZE * 2/16,
+                    DICE_SIZE * 18/16 + getTaskbarHeight()
+            ));
         }
         
         public int getDiceCount() { return this.diceCount; }
         
         private void setDiceCount(int diceCount){ this.diceCount = diceCount; }
+        
+        public void setWindow(CenteredWindow window) { this.window = window; }
     }
     
     private class Dice extends JPanel
@@ -321,11 +337,14 @@ public class DicePairGUIVariableArity
          */
         private void drawSpot(Graphics g, int... spots)
         {
-            int gap = (256 - 2*8 - 2*16 - 3*32)/2;  // = 56
+            int spotDiam = DICE_SIZE/4;
+            int border = 8;
+            int gapEdge = 16;
+            int spotSpacing = (DICE_SIZE - spotDiam) /2 - border - gapEdge;
             int[] col = new int[] {
-                        256/2 - gap - 32/2,
-                        256/2 - 32/2,
-                        256/2 + gap - 32/2
+                        DICE_SIZE/2 - spotSpacing - spotDiam /2,
+                        DICE_SIZE/2 - spotDiam /2,
+                        DICE_SIZE/2 + spotSpacing - spotDiam /2
                     };
             int[] row = col;
             
@@ -336,31 +355,31 @@ public class DicePairGUIVariableArity
                 switch (spot)
                 {
                 case 0:
-                    g.fillOval(col[0], row[0], 32, 32);
+                    g.fillOval(col[0], row[0], spotDiam, spotDiam);
                     break;
                 case 1:
-                    g.fillOval(col[1], row[0], 32, 32);
+                    g.fillOval(col[1], row[0], spotDiam, spotDiam);
                     break;
                 case 2:
-                    g.fillOval(col[2], row[0], 32, 32);
+                    g.fillOval(col[2], row[0], spotDiam, spotDiam);
                     break;
                 case 3:
-                    g.fillOval(col[0], row[1], 32, 32);
+                    g.fillOval(col[0], row[1], spotDiam, spotDiam);
                     break;
                 case 4:
-                    g.fillOval(col[1], row[1], 32, 32);
+                    g.fillOval(col[1], row[1], spotDiam, spotDiam);
                     break;
                 case 5:
-                    g.fillOval(col[2], row[1], 32, 32);
+                    g.fillOval(col[2], row[1], spotDiam, spotDiam);
                     break;
                 case 6:
-                    g.fillOval(col[0], row[2], 32, 32);
+                    g.fillOval(col[0], row[2], spotDiam, spotDiam);
                     break;
                 case 7:
-                    g.fillOval(col[1], row[2], 32, 32);
+                    g.fillOval(col[1], row[2], spotDiam, spotDiam);
                     break;
                 case 8:
-                    g.fillOval(col[2], row[2], 32, 32);
+                    g.fillOval(col[2], row[2], spotDiam, spotDiam);
                     break;
                 default:
                     break;
