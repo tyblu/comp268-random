@@ -40,7 +40,11 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * <h1>Chapter 6 - Exercise 3</h1>
@@ -85,7 +89,6 @@ public class DicePairGUIVariableArity
 
     // Constants.
     private static final boolean PRINT_TO_STD_OUT = true;
-    private final DiceSizes initialSizes = new DiceSizes(8, 16, 48, 32);
     
     /**
      * Constructor - Non-static context so I can run the program with objects.
@@ -131,20 +134,15 @@ public class DicePairGUIVariableArity
         private Dice[] dice;
         private int diceCount;
         private CenteredWindow window;
-        private DiceSizes currentSizes;
         
         // Constructor.
         public RollingDicePanel()
         {
             this.diceCount = 2;
-            this.currentSizes = initialSizes;
             
             this.dice = new Dice[diceCount];
             for (int i=0; i<diceCount; i++)
-            {
                 this.dice[i] = new Dice();
-                this.dice[i].setDiceSizes(currentSizes);
-            }
 
             setBackground(Color.WHITE);
             
@@ -258,17 +256,17 @@ public class DicePairGUIVariableArity
             }
         }
         
-        private void resizeMinimumWindow()
+//        private void resizeWindow()
+//        {
+//            window.setMinimumSize(new Dimension(
+//                    getDiceCount() * diceW * 17/16 + diceW * 2/16,
+//                    rows * diceW * 17/16 + diceW * 2/16 + getTaskbarHeight()
+//            ));
+//        }
+        
+        private void toggleCrazyColors()
         {
-            int rows = (int)Math.min(Math.floor(
-                    Math.sqrt((double)this.diceCount)),1);
-            int diceW = dice[0].getWidth();
-            int border = Math.max(DiceSize.Min.BORDER, diceW / )
-            
-            window.setMinimumSize(new Dimension(
-                    getDiceCount() * diceW * 17/16 + diceW * 2/16,
-                    rows * diceW * 17/16 + diceW * 2/16 + getTaskbarHeight()
-            ));
+            //
         }
         
         public int getDiceCount() { return this.diceCount; }
@@ -283,12 +281,10 @@ public class DicePairGUIVariableArity
         
         public void setWindow(CenteredWindow window) { this.window = window; }
 
-        private void toggleCrazyColors() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        private void resetWindowSize() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        private void setDiceAttributes(String attribute, Object value)
+        {
+            for (Dice d : dice)
+                d.setDiceAttributes(attribute, value);
         }
     }
     
@@ -305,7 +301,7 @@ public class DicePairGUIVariableArity
         {
             super();
             
-            this.diceSizes = initialSizes;
+            this.diceSizes = new DiceSizes(256);
             
             this.r = new Random();
             this.value = r.nextInt(6) + 1;
@@ -313,7 +309,7 @@ public class DicePairGUIVariableArity
             
             setOpaque(false);
             setPreferredSize(diceSizes.getDim());
-            setMinimumSize(new DiceSizes(0));
+            setMinimumSize((new DiceSizes(0)).getDim());
         }
         
         // Methods.
@@ -333,7 +329,7 @@ public class DicePairGUIVariableArity
             super.paintComponent(g);
             
             int size1 = getWidth();
-            int size2 = DICE_SIZE - 2*16;
+            int size2 = size1 - 2*16;
             
             g.setColor(Color.BLACK);
             g.fillRoundRect(0, 0, size1, size1, size1/4, size1/4);
@@ -380,14 +376,16 @@ public class DicePairGUIVariableArity
          */
         private void drawSpot(Graphics g, int... spots)
         {
-            int spotDiam = DICE_SIZE/4;
-            int border = 8;
-            int gapEdge = 16;
-            int spotSpacing = (DICE_SIZE - spotDiam) /2 - border - gapEdge;
+            int spotDiam = diceSizes.getSpotDiam();
+            int border = diceSizes.getBorder();
+            int edgeGap = diceSizes.getEdgeGap();
+            int spotGap = diceSizes.getSpotGap();
+            int diceSize = diceSizes.getSize();
+            int spotSpacing = (diceSize - spotDiam) /2 - border - edgeGap;
             int[] col = new int[] {
-                        DICE_SIZE/2 - spotSpacing - spotDiam /2,
-                        DICE_SIZE/2 - spotDiam /2,
-                        DICE_SIZE/2 + spotSpacing - spotDiam /2
+                        diceSize/2 - spotSpacing - spotDiam /2,
+                        diceSize/2 - spotDiam /2,
+                        diceSize/2 + spotSpacing - spotDiam /2
                     };
             int[] row = col;
             
@@ -450,8 +448,28 @@ public class DicePairGUIVariableArity
         private void setValue(int value) { this.value = value; }
         private void setRollCount(int rollCount) { this.rollCount = rollCount; }
 
-        private void setDiceSizes(DiceSizes currentSizes) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        public void setDiceAttributes(String attribute, Object value)
+        {
+            switch (attribute)
+            {
+            case "border":
+                diceSizes.setBorder((int)value);
+                break;
+            case "edgeGap":
+                diceSizes.setEdgeGap((int)value);
+                break;
+            case "spotDiam":
+                diceSizes.setSpotDiam((int)value);
+                break;
+            case "spotGap":
+                diceSizes.setSpotGap((int)value);
+                break;
+            case "size":
+                diceSizes.setSize((int)value);
+                break;
+            default:
+                break;
+            }
         }
     }
     
@@ -459,14 +477,16 @@ public class DicePairGUIVariableArity
     {
         public RollingDiceMenuBar()
         {
+            RollingDicePanel panel = 
+                    (RollingDicePanel)getParent().getComponent(0);
+            
             JButton addDiceButton = new JButton("Add Dice");
             addDiceButton.addActionListener( new ActionListener()
                     {
                         @Override
                         public void actionPerformed(ActionEvent evt)
                         {
-                            ((RollingDicePanel)getParent().getComponent(0))
-                                    .addDice();
+                            panel.addDice();
                         }
                     });
             add(addDiceButton);
@@ -477,11 +497,14 @@ public class DicePairGUIVariableArity
                         @Override
                         public void actionPerformed(ActionEvent evt)
                         {
-                            ((RollingDicePanel)getParent().getComponent(0))
-                                    .removeDice();
+                            panel.removeDice();
                         }
                     });
             add(removeDiceButton);
+            
+            /* Just a test for Eck p336. */
+            add(createMenu("test", "1", null, "2 after separator", "3"));
+            /* End test. Remove the above as well as createMenu(...), later. */
             
             JMenu dropDownMenu = new JMenu("OPTIONS");
             add(dropDownMenu);
@@ -493,25 +516,53 @@ public class DicePairGUIVariableArity
                         @Override
                         public void actionPerformed(ActionEvent evt)
                         {
-                            ((RollingDicePanel)getParent().getComponent(0))
-                                    .toggleCrazyColors();
+                            panel.toggleCrazyColors();
                         }
                     });
             dropDownMenu.add(crazyCheckbox);
             
-            JButton resetSizeButton = new JButton("Resize");
-            resetSizeButton.addActionListener( new ActionListener()
+            JSlider diceSizeSlider = 
+                    new JSlider(0, getScreenSize().height /2, 256);
+            diceSizeSlider.addChangeListener( new ChangeListener()
                     {
                         @Override
-                        public void actionPerformed(ActionEvent evt)
+                        public void stateChanged(ChangeEvent e)
                         {
-                            ((RollingDicePanel)getParent().getComponent(0))
-                                    .resetWindowSize();
+                            panel.setDiceAttributes("size",
+                                    ((JSlider)e.getSource()).getValue()
+                            );
                         }
                     });
-            dropDownMenu.add(resetSizeButton);
+            dropDownMenu.add(diceSizeSlider);
             
             
+        }
+        
+        /**
+         * Creates a JMenu. The names for the JMenuItems in the menu are given
+         * as an array of strings.
+         * @param menuName the name for the JMenu that is to be created.
+         * @param itemNames an array holding the text that appears in each
+         *      JMenuItem. If a null value appears in the array, the
+         *      corresponding JMenuItem will be a separator.
+         * @return the menu that has been created and filled with items.
+         */
+        public JMenu createMenu(String menuName, String... itemNames)
+        {
+            JMenu menu = new JMenu(menuName);
+            
+            for (String itemName : itemNames)
+            {
+                if (itemName == null)
+                    menu.addSeparator();
+                else
+                {
+                    JMenuItem item = new JMenuItem(itemName);
+                    menu.add(item);
+                }
+            }
+            
+            return menu;
         }
     }
     
@@ -528,21 +579,21 @@ public class DicePairGUIVariableArity
         private int edgeGap;
         private int spotDiam;
         private int spotGap;
-        private int size;
-        private Dimension dim;
+        private int size;       // = 2*(border+edgeGap+spotGap)+3*spotDiam
+        private Dimension dim;  // = size x size
         
         // Constructor.
         public DiceSizes(int border, int edgeGap, int spotDiam, int spotGap)
         {
-            this.border = Math.min(border, MIN_BORDER);
-            this.edgeGap = Math.min(edgeGap, MIN_EDGEGAP);
-            this.spotDiam = Math.min(spotDiam, MIN_SPOTDIAM);
-            this.spotGap = Math.min(spotGap, MIN_SPOTGAP);
+            this.border = Math.max(border, MIN_BORDER);
+            this.edgeGap = Math.max(edgeGap, MIN_EDGEGAP);
+            this.spotDiam = Math.max(spotDiam, MIN_SPOTDIAM);
+            this.spotGap = Math.max(spotGap, MIN_SPOTGAP);
             
             recalculate();
         }
         
-        public DiceSizes(int minCode) { this(0,0,0,0); }
+        public DiceSizes(int size) { setSize(size); }
         
         // Methods.
         private void recalculate()
@@ -573,6 +624,18 @@ public class DicePairGUIVariableArity
         public void setSpotGap(int spotGap)
         {
             this.spotGap = Math.min(spotGap, 4);
+            recalculate();
+        }
+        
+        public void setSize(int size)
+        {
+            this.border = (int)((size * 8) / (double)256);
+            this.edgeGap = (int)((size * 16) / (double)256);
+            this.spotDiam = (int)((size * 48) / (double)256);
+            this.spotGap = size 
+                    - (int)((size * 8) / (double)256)
+                    - (int)((size * 16) / (double)256)
+                    - (int)((size * 48) / (double)256);
             recalculate();
         }
         
