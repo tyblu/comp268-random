@@ -222,9 +222,10 @@ public class DicePairGUIVariableArity
             dice[dice.length-1] = new Dice();
             add(dice[dice.length-1]);
             
-            resizeMinimumWindow();
+//            resizeMinimumWindow();
             
             revalidate();
+            window.pack();
             
         }
         
@@ -232,29 +233,45 @@ public class DicePairGUIVariableArity
         {
             System.out.println("Removing dice...");
             
-            setDiceCount(getDiceCount() - 1);
-            Dice[] temp = this.dice;
-            remove(dice[dice.length-1]);
-            this.dice = new Dice[getDiceCount()];
-            System.arraycopy(temp, 0, dice, 0, dice.length);
-            
-            resizeMinimumWindow();
-            
-            revalidate();
-            repaint();
+            if (getDiceCount() > 1)
+            {
+                setDiceCount(getDiceCount() - 1);
+                Dice[] temp = this.dice;
+                remove(dice[dice.length-1]);
+                this.dice = new Dice[getDiceCount()];
+                System.arraycopy(temp, 0, dice, 0, dice.length);
+
+//                resizeMinimumWindow();
+
+                revalidate();
+                window.pack();
+                repaint();
+            }
+            else    // Spaz out.
+            {
+                Graphics g = dice[0].getGraphics();
+                dice[0].drawSpots(g, 7);
+                g.dispose();
+            }
         }
         
         private void resizeMinimumWindow()
         {
             window.setMinimumSize(new Dimension(
                     getDiceCount() * (DICE_SIZE * 17/16) + DICE_SIZE * 2/16,
-                    DICE_SIZE * 18/16 + getTaskbarHeight()
+                    DICE_SIZE * 19/16 + getTaskbarHeight()
             ));
         }
         
         public int getDiceCount() { return this.diceCount; }
         
-        private void setDiceCount(int diceCount){ this.diceCount = diceCount; }
+        private void setDiceCount(int diceCount)
+        {
+            if (diceCount > 1)
+                this.diceCount = diceCount;
+            else
+                this.diceCount = 1;
+        }
         
         public void setWindow(CenteredWindow window) { this.window = window; }
     }
@@ -269,10 +286,13 @@ public class DicePairGUIVariableArity
         // Constructors.
         public Dice()
         {
+            super();
+            
             this.r = new Random();
             this.value = r.nextInt(6) + 1;
             this.rollCount = 1;
             
+            setOpaque(false);
             setPreferredSize(new Dimension(256, 256));
         }
         
@@ -292,10 +312,13 @@ public class DicePairGUIVariableArity
         {
             super.paintComponent(g);
             
+            int size1 = DICE_SIZE;
+            int size2 = DICE_SIZE - 2*16;
+            
             g.setColor(Color.BLACK);
-            g.fill3DRect(0, 0, 256, 256, true);
+            g.fillRoundRect(0, 0, size1, size1, size1/4, size1/4);
             g.setColor(Color.WHITE);
-            g.fill3DRect(16, 16, 256-2*16, 256-2*16, false);
+            g.fillRoundRect(16, 16, size2, size2, size2/4, size2/4);
             drawSpots(g, value);
         }
         
@@ -352,6 +375,8 @@ public class DicePairGUIVariableArity
             
             for (int spot : spots)
             {
+                if (spots.length > 6) { g.setColor(getRandomColor()); }
+                
                 switch (spot)
                 {
                 case 0:
@@ -394,6 +419,12 @@ public class DicePairGUIVariableArity
         // Getters.
         public int getValue() { return this.value; }
         public int getRollCount() { return this.rollCount; }
+        private Color getRandomColor()
+        {
+            return new Color(
+                    r.nextFloat(), r.nextFloat(), r.nextFloat()
+            );
+        }
         
         // Setters.
         private void setValue(int value) { this.value = value; }
