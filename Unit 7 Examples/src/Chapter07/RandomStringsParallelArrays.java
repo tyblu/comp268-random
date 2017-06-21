@@ -24,6 +24,8 @@
 package Chapter07;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -40,6 +42,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -77,61 +81,61 @@ public class RandomStringsParallelArrays
     private final String[] quotes = new String[]
     {
         "The average, healthy, well-adjusted adult gets up at seven-thirty"
-            + "\n in the morning feeling just plain terrible.\n - Jean Kerr",
+            + " in the morning feeling just plain terrible. - Jean Kerr",
         "The thing that impresses me the most about America is the way"
-            + "\n parents obey their children.\n - King Edward VIII (1894 -"
+            + " parents obey their children. - King Edward VIII (1894 -"
             + " 1972)",
         "The only man who is really free is the one who can turn down an"
-            + "\n invitation to dinner without giving an excuse.\n - Jules"
+            + " invitation to dinner without giving an excuse. - Jules"
             + " Renard (1864 - 1910)",
         "Any war that requires the suspension of reason as a necessity for"
-            + "\n support is a bad war.\n - Norman Mailer (1923 - 2007),"
+            + " support is a bad war. - Norman Mailer (1923 - 2007),"
             + " Armies Of The Night",
         "To believe is to know you believe, and to know you believe is not"
-            + "\n to believe.\n - Jean-Paul Sartre (1905 - 1980)",
+            + " to believe. - Jean-Paul Sartre (1905 - 1980)",
         "I would visualize things coming to me. It would just make me feel"
-            + "\n better. Visualization works if you work hard. That's the"
-            + "\n thing. You can't just visualize and go eat a sandwich.\n -"
+            + " better. Visualization works if you work hard. That's the"
+            + " thing. You can't just visualize and go eat a sandwich. -"
             + " Jim Carrey, Oprah Winfrey Show, 1997",
         "Those who can laugh without cause have either found the true"
-            + "\n meaning of happiness or have gone stark raving mad.\n -"
+            + " meaning of happiness or have gone stark raving mad. -"
             + " Norm Papernick",
         "The end of the human race will be that it will eventually die of"
-            + "\n civilization.\n - Ralph Waldo Emerson (1803 - 1882)",
+            + " civilization. - Ralph Waldo Emerson (1803 - 1882)",
         "We must never forget that art is not a form of propaganda; it is"
-            + "\n a form of truth.\n - John F. Kennedy (1917 - 1963), October"
+            + " a form of truth. - John F. Kennedy (1917 - 1963), October"
             + " 26, 1963",
         "I have noticed that the people who are late are often so much"
-            + "\n jollier than the people who have to wait for them.\n - E. V."
+            + " jollier than the people who have to wait for them. - E. V."
             + " Lucas",
         "I love quotations because it is a joy to find thoughts one might"
-            + "\n have, beautifully expressed with much authority by someone"
-            + "\n recognized wiser than oneself.\n - Marlene Dietrich (1901 -"
+            + " have, beautifully expressed with much authority by someone"
+            + " recognized wiser than oneself. - Marlene Dietrich (1901 -"
             + " 1992)",
         "When I meet a man I ask myself, \'Is this the man I want my"
-            + "\n children to spend their weekends with?\'\n - Rita Rudner",
+            + " children to spend their weekends with?\' - Rita Rudner",
         "The only time to buy these is on a day with no \'y\' in it."
-            + "\n - Warren Buffett (1930 - )",
+            + " - Warren Buffett (1930 - )",
         "Thought is only a flash between two long nights, but this flash"
-            + "\n is everything.\n - Henri Poincare (1854 - 1912)",
+            + " is everything. - Henri Poincare (1854 - 1912)",
         "Fish is the only food that is considered spoiled once it smells"
-            + "\n like what it is.\n - P. J. O\'Rourke (1947 - )",
+            + " like what it is. - P. J. O\'Rourke (1947 - )",
         "Insanity in individuals is something rare - but in groups,"
-            + "\n parties, nations and epochs, it is the rule.\n - Friedrich"
+            + " parties, nations and epochs, it is the rule. - Friedrich"
             + " Nietzsche (1844 - 1900)",
         "The follies which a man regrets most, in his life, are those"
-            + "\n which he didn't commit when he had the opportunity."
-            + "\n - Helen Rowland (1876 - 1950), A Guide to Men, 1922",
+            + " which he didn't commit when he had the opportunity."
+            + " - Helen Rowland (1876 - 1950), A Guide to Men, 1922",
         "Have the courage to be ignorant of a great number of things, in"
-            + "\n order to avoid the calamity of being ignorant of"
-            + "\n everything.\n - Sydney Smith (1771 - 1845)",
+            + " order to avoid the calamity of being ignorant of"
+            + " everything. - Sydney Smith (1771 - 1845)",
         "We\'re here for a reason. I believe a bit of the reason is to"
-            + "\n throw little torches out to lead people through the dark."
-            + "\n - Whoopi Goldberg",
+            + " throw little torches out to lead people through the dark."
+            + " - Whoopi Goldberg",
         "You find yourself refreshed by the presence of cheerful people."
-            + "\n Why not make an honest effort to confer that pleasure on"
-            + "\n others? Half the battle is gained if you never allow"
-            + "\n yourself to say anything gloomy.\n - Lydia M. Child"
+            + " Why not make an honest effort to confer that pleasure on"
+            + " others? Half the battle is gained if you never allow"
+            + " yourself to say anything gloomy. - Lydia M. Child"
     };
     
     // Constructor.
@@ -159,11 +163,65 @@ public class RandomStringsParallelArrays
         }
         
         // Methods.
-        public void paint(Graphics g)
+        public void paint(Graphics g, Container container)
         {
             g.setColor(color);
             g.setFont(font);
-            g.drawString(s, p.x, p.y);
+            
+            float[] sizeRatioSteps = new float[]{ 1.0f, 0.8f, 0.6f, 0.4f, 0.2f };
+            float minFontSize = (float)12;
+            int maxWrapLength = 100;
+            double maxX = container.getBounds().getWidth();
+            
+            Font newFont = null;
+            
+            String[] lines = new String[]{ s };
+            
+            for (float ratio : sizeRatioSteps)
+            {
+                newFont = font.deriveFont(font.getSize2D() * ratio);
+                
+                if (fitsInContainer(g, newFont, p, container, lines))
+                    break;
+                
+                int wrapLength = (int)(maxWrapLength * ratio);
+                String wrappedString = wrap(s, wrapLength);
+                lines = wrappedString.split("\n");
+                
+                if (fitsInContainer(g, newFont, p, container, lines))
+                    break;
+            }
+            
+            if (newFont == null)
+                newFont = font;
+            
+            g.setFont(newFont);
+            
+            int yNext = p.y;
+            for (String line : lines)
+            {
+                g.drawString(line, p.x, yNext);
+                yNext += g.getFontMetrics().getHeight();
+            }
+        }
+        
+        private boolean fitsInContainer(
+                Graphics g, Font f, Point p, Container cont, String... lines)
+        {
+            double maxWidth = getMaxWidth(g, f, lines);
+            return p.getX() + maxWidth < cont.getBounds().getWidth();
+        }
+        
+        private double getMaxWidth(Graphics g, Font f, String... lines)
+        {
+            double maxWidth = (double)0;
+            for (String line : lines)
+            {
+                double width = g.getFontMetrics(f).getStringBounds(line, g)
+                        .getWidth();
+                if (width > maxWidth) { maxWidth = width; }
+            }
+            return maxWidth;
         }
         
         @Override
@@ -218,7 +276,7 @@ public class RandomStringsParallelArrays
         // Constructor.
         public RandomStringsPanel()
         {
-            this.maximumDisplayedStringsCount = 8;
+            this.maximumDisplayedStringsCount = 4;
             
             this.r = new Random();
             
@@ -320,7 +378,7 @@ public class RandomStringsParallelArrays
             return new Font(
                     getRandomFontFamilyName(),
                     getRandomFontStyle(),
-                    20 + r.nextInt(150)
+                    12 + r.nextInt(100)
             );
         }
         
@@ -331,14 +389,14 @@ public class RandomStringsParallelArrays
 
             if (displayedStrings != null && displayedStrings.length > 0)
                 for (StringData dat : displayedStrings)
-                    dat.paint(g);
+                    dat.paint(g, this);
         }
         
         // Getters.
         private String getRandomFontFamilyName()
         {
             String[] names =  GraphicsEnvironment.getLocalGraphicsEnvironment()
-                    .getAvailableFontFamilyNames(Locale.CANADA);
+                    .getAvailableFontFamilyNames(Locale.getDefault());
             return names[r.nextInt(names.length)];
         }
         
@@ -448,5 +506,84 @@ public class RandomStringsParallelArrays
             double xRatio, double yRatio)
     {
         return new Dimension((int)(d.width * xRatio), (int)(d.height * yRatio));
+    }
+    
+    /**
+     * @see https://commons.apache.org/proper/commons-text/javadocs/api-release/org/apache/commons/text/WordUtils.html
+     */
+    private static String wrap(final String str, int wrapLength)
+    {
+        if (str == null) { return null; }
+        if (wrapLength < 1) { wrapLength = 1; }
+
+        String newLineStr = System.lineSeparator();
+        String wrapOn = " ";
+        final Pattern patternToWrapOn = Pattern.compile(wrapOn);
+
+        final int inputLineLength = str.length();
+        int offset = 0;
+        final StringBuilder wrappedLine = 
+                new StringBuilder(inputLineLength + 32);
+
+        while (offset < inputLineLength)
+        {
+            int spaceToWrapAt = -1;
+            Matcher matcher = patternToWrapOn.matcher(str.substring(offset, 
+                    Math.min(offset + wrapLength + 1, inputLineLength)));
+
+            if (matcher.find())
+            {
+                if (matcher.start() == 0)
+                {
+                    offset += matcher.end();
+                    continue;
+                }
+                spaceToWrapAt = matcher.start() + offset;
+            }
+
+            // only last line without leading spaces is left
+            if(inputLineLength - offset <= wrapLength) { break; }
+
+            while(matcher.find()) { spaceToWrapAt = matcher.start() + offset; }
+
+            if (spaceToWrapAt >= offset)
+            {
+                // normal case
+                wrappedLine.append(str.substring(offset, spaceToWrapAt));
+                wrappedLine.append(newLineStr);
+                offset = spaceToWrapAt + 1;
+            }
+            else
+            {
+                // wrap really long word one line at a time
+                wrappedLine.append(str.substring(offset, wrapLength + offset));
+                wrappedLine.append(newLineStr);
+                offset += wrapLength;
+            }
+        }
+
+        // Whatever is left in line is short enough to just pass through
+        wrappedLine.append(str.substring(offset));
+
+        return wrappedLine.toString();
+    }
+    
+    private static Font scaleFont(Graphics g, Rectangle rect, String... lines)
+    {
+        float fontSize = 20.0f;
+        int maxWidth = 0;
+        
+        Font font = g.getFont().deriveFont(fontSize);
+        
+        for (String line : lines)
+        {
+            int width = g.getFontMetrics(font).stringWidth(line);
+            if (width > maxWidth)
+                maxWidth = width;
+        }
+        
+        fontSize = 0.99F * fontSize * (rect.width / (float)maxWidth);
+        
+        return g.getFont().deriveFont(fontSize);
     }
 }
