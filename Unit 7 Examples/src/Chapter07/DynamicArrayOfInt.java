@@ -33,14 +33,16 @@ import java.util.ArrayList;
  * Represents a list of int values that can grow and shrink.
  * Example on pp345-346.
  *
- *  <ul>    <li>v1.1 - Implemented using ArrayList. Reduced run time.</li>
+ *  <ul>    <li>v1.2 - Removed final uses of DynamicArrayOfInt(). Now it's all
+ *                      ArrayList.</li>
+ *          <li>v1.1 - Implemented using ArrayList. Reduced run time.</li>
  *          <li>v1.0 - Initial commit. (Forgot to set version and date.)</li>
  *  </ul>
  *
  * @author:     Tyler Lucas
  * Student ID:  3305203
  * Date:        June 21, 2017
- * Version      1.1
+ * Version      1.2
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -254,7 +256,7 @@ public class DynamicArrayOfInt
         
         System.out.println();
         System.out.println("LARGE ARRAYS");
-        int maxArraySize = (int)Math.pow(2,20) + 1;
+        int maxArraySize = (int)Math.pow(2,22) + 1;
         long timestampA, timestampB;
         for (int i=16; i < maxArraySize; i *= 2)
         {   
@@ -278,7 +280,8 @@ public class DynamicArrayOfInt
             System.out.println(" filled in " + (timestampB - timestampA) + "ms");
             
             // change items
-            DynamicArrayOfInt iArr = new DynamicArrayOfInt();
+//            DynamicArrayOfInt iArr = new DynamicArrayOfInt();
+            ArrayList<Integer> iArr = new ArrayList<>();
             for (int k=0; k<arr.size(); k++) { iArr.add(k); }
             
             timestampA = System.currentTimeMillis();
@@ -286,7 +289,9 @@ public class DynamicArrayOfInt
             {
                 if (j % (i / 16) == 0) { System.out.print("."); }   // ........
                 
-                arr.set(iArr.pull(r.nextInt(iArr.size())), r.nextInt());
+                int aRandomIntAppears = r.nextInt(iArr.size());
+                arr.set(iArr.get(aRandomIntAppears), r.nextInt());
+                iArr.remove(aRandomIntAppears);
             }
             timestampB = System.currentTimeMillis();
             System.out.println(" changed in " + (timestampB - timestampA) + "ms");
