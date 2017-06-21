@@ -27,15 +27,20 @@ import java.util.Arrays;
 import java.lang.ArrayIndexOutOfBoundsException;
 import java.util.Random;
 import java.lang.Integer;
+import java.util.ArrayList;
 
 /**
  * Represents a list of int values that can grow and shrink.
  * Example on pp345-346.
- * 
+ *
+ *  <ul>    <li>v1.1 - Implemented using ArrayList. Reduced run time.</li>
+ *          <li>v1.0 - Initial commit. (Forgot to set version and date.)</li>
+ *  </ul>
+ *
  * @author:     Tyler Lucas
  * Student ID:  3305203
- * Date:        June 15, 2017
- * Version      2.1
+ * Date:        June 21, 2017
+ * Version      1.1
  * 
  * Based on and References:
  * @see <a href="http://math.hws.edu/javanotes/">
@@ -197,7 +202,8 @@ public class DynamicArrayOfInt
     {
         System.out.println("Testing DynamicArrayOfInt");
         
-        DynamicArrayOfInt arr = new DynamicArrayOfInt();
+//        DynamicArrayOfInt arr = new DynamicArrayOfInt();
+        ArrayList<Integer> arr = new ArrayList<>();
         
         System.out.println();
         System.out.println("ADDING");
@@ -225,7 +231,8 @@ public class DynamicArrayOfInt
         
         /* Next test. Reset array. */
         
-        arr = new DynamicArrayOfInt();
+//        arr = new DynamicArrayOfInt();
+        arr = new ArrayList<>();
         for (int i=0; i<10; i++) { arr.add(1); }    // fill with 1's
         
         System.out.println();
@@ -247,15 +254,17 @@ public class DynamicArrayOfInt
         
         System.out.println();
         System.out.println("LARGE ARRAYS");
+        int maxArraySize = (int)Math.pow(2,20) + 1;
         long timestampA, timestampB;
-        for (int i=16; i < Integer.MAX_VALUE; i *= 2)
+        for (int i=16; i < maxArraySize; i *= 2)
         {   
             Random r = new Random();
             
             System.out.printf(" testing max size [%11d]", i);
             System.out.println();
             
-            arr = new DynamicArrayOfInt();          // reset array
+//            arr = new DynamicArrayOfInt();          // reset array
+            arr = new ArrayList<>();
             
             // fill with randoms
             timestampA = System.currentTimeMillis();
