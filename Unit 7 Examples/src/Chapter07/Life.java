@@ -273,7 +273,7 @@ public class Life
         private final Edge edge;
         private final JPanel panel;
         private final String ID;
-        private Timer tNotify, tRegular, tAnimate, tBlack, tWhite;
+        private Timer tNotify, tBlack, tWhite;
         private ArrayList<Cell> neighbours;
         
         // Constructor.
@@ -284,14 +284,14 @@ public class Life
             this.edge = Edge.NONE;
             this.isObservable = false;
             this.ID = Integer.toHexString(nextCellIDNumber++);
-            this.tNotify = new Timer(250, e -> notifyObservers());
-            this.tAnimate = new Timer(20, e -> animate(0));
-            this.tBlack = new Timer(150, e -> panel.setBackground(Color.BLACK));
-            tBlack.setRepeats(false);
-            this.tWhite = new Timer(150, e -> panel.setBackground(Color.WHITE));
-            tWhite.setRepeats(false);
-            this.tRegular = new Timer(1000, e -> update(null,null));
+            final int rate = 500;
+            this.tNotify = new Timer(rate, e -> notifyObservers());
+            this.tBlack = new Timer(rate/2, e -> panel.setBackground(Color.BLACK));
+            this.tWhite = new Timer(rate/2, e -> panel.setBackground(Color.WHITE));
             this.neighbours = new ArrayList<>();
+            
+            for (Timer t : new Timer[]{ tNotify, tBlack, tWhite })
+                t.setRepeats(false);
             
             panel.setOpaque(true);
             panel.setPreferredSize(new Dimension(40,40));
@@ -391,29 +391,6 @@ public class Life
         {
             this.neighbours.add(neighbour);
             addObserver(neighbour);
-        }
-        
-        private void animate(int step)
-        {
-            tAnimate.stop();
-            
-            final Color[] colours = new Color[]{ Color.RED, Color.ORANGE,
-                    Color.YELLOW, Color.GREEN, Color.BLUE/*, Color.MAGENTA*/ };
-
-            if (step >= 0 && step < colours.length)
-            {
-                panel.setBackground(colours[step]);
-                tAnimate = new Timer(10, e -> animate(step + 1));
-                tAnimate.start();
-            }
-            else if (isAlive())
-                panel.setBackground(Color.WHITE);
-            else
-                panel.setBackground(Color.BLACK);
-            
-            tAnimate = new Timer(50, e -> animate(0));
-            
-            panel.repaint();
         }
         
         @Override
