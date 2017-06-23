@@ -31,24 +31,29 @@ import java.awt.GridBagConstraints;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JMenuBar;
-import javax.swing.JLabel;
+import javax.swing.JCheckBoxMenuItem;
+                          
 import java.awt.Color;
 import java.util.Random;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridLayout;
+                           
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
+                                  
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.Timer;
-import javax.swing.border.BevelBorder;
+                                      
 
 
 /**
@@ -71,9 +76,9 @@ import javax.swing.border.BevelBorder;
  */
 public class Life
 {
-    // Nearly-global instance variables, and constants.
-    private int nextCellIDNumber = 0x1000;
-    private static final boolean ENABLE_DEBUG = true;
+    // Nearly-global instance variables, constants, and Observers.
+    private static final Rectangle GRID_RECT = new Rectangle(25,25);
+    final Seer enki = new Seer(GRID_RECT);
     
     // Constructor.
     public Life()
@@ -92,7 +97,7 @@ public class Life
         // Constructor.
         public CenteredWindow()
         {
-            super("Conways Game of Life...");
+            super("Conways Game of Life... now with more life!");
             
             GameMenuBar menuBar = new GameMenuBar();
             setJMenuBar(menuBar);
@@ -126,7 +131,7 @@ public class Life
         // Constructor.
         public GameGrid()
         {
-            this.bounds = new Rectangle(25, 25);    // 30x30, top-left (0,0)
+            this.bounds = GRID_RECT;    // 30x30, top-left (0,0)
             this.cellMap = new HashMap<>(bounds.x * bounds.y);
             
             initialize();
@@ -167,7 +172,7 @@ public class Life
                 for (Cell neighbour : neighbours)
                     cell.addNeighbour(neighbour);
                 
-//                cell.addObserver((Observer)(((JFrame)getParent()).getJMenuBar()));
+                cell.addObserver(enki);
             }
             
             // Add Cell Observables to JMenuBar Observer.
@@ -179,9 +184,11 @@ public class Life
         
         public void reset()
         {
+            cellMap.values().forEach(cell -> cell.killTimers());
             removeAll();
             revalidate();
             this.cellMap = new HashMap<>(bounds.x * bounds.y);
+            enki.reset();
             initialize();
         }
         
@@ -227,42 +234,71 @@ public class Life
         }
     }
     
-    private class GameMenuBar extends JMenuBar //implements Observer
+    private class GameMenuBar extends JMenuBar implements Observer
     {
         // Instance variables.
         int alive, total;
         JButton resetButton;
+        private double fAlive;
         
         // Constructor.
         public GameMenuBar()
         {
+            this.alive = 0;
+            this.total = 0;
+            this.fAlive = (double)0;
+            
+            JMenu menu1 = new JMenu("menu1");
+            JMenuItem reset = new JMenuItem("reset");
+            JMenuItem pause = new JMenuItem("pause");
+            JCheckBoxMenuItem jitter = new JCheckBoxMenuItem("extra life");
+            
+            JPanel statusbar = new JPanel()
+            {
+                @Override
+                public void paintComponent(Graphics g)
+                {
+                    super.paintComponent(g);
+                    
+                    Dimension dim = this.getSize();
+                    
+                    g.setColor(Color.WHITE);
+                    g.fillRect(2, 2, dim.width-4, dim.height-4);
+                    
+                    g.setColor(Color.BLACK);
+                    g.fillRect(4, 4, dim.width-8, dim.height-8);
+                    
+                    g.setColor(Color.WHITE.darker().darker());
+                    g.fillRect(6, 6, dim.width-12, dim.height-12);
+                    
+                    g.setColor(Color.WHITE.darker());
+                    g.fillRect(6, 6, (int)(fAlive * (dim.width-12)), dim.height-12);
+                }
+            };
+            statusbar.setPreferredSize(new Dimension(
+                    (int)(0.5 * this.getWidth()),
+                    (int)(0.5 * getTaskbarHeight())
+            ));
+            add(statusbar);
+            
             this.resetButton = new JButton("reset");
             resetButton.addActionListener(evt ->
                     ((GameGrid)getParent().getComponent(1)).reset());
             add(resetButton);
+            
+            enki.addObserver(this);
         }
         
-//        // Methods.
-//        @Override
-//        public void update(Observable o, Object neighbourState)
-//        {
-//            if ((boolean)neighbourState)
-//                alive++;
-//            else
-//                alive--;
-//            
-//            update();
-//        }
-//
-//        private void update()
-//        {
-//            aliveLabel.setText("Alive: " + alive);
-//            deadLabel.setText("Dead: " + (total - alive));
-//        }
-//        
-//        // Setters.
-//        public void setAlive(int alive) { this.alive = alive; }
-//        public void setTotal(int total) { this.total = total; }
+        // Methods.
+        @Override
+        public void update(Observable o, Object arg)
+        {
+            if (o instanceof Seer)
+            {
+                this.fAlive = (double)arg;
+                repaint();
+            }
+        }
     }
     
     private class Cell extends Observable implements Observer
@@ -272,9 +308,10 @@ public class Life
         private boolean isObservable;
         private final Edge edge;
         private final JPanel panel;
-        private final String ID;
-        private Timer tNotify, tBlack, tWhite;
+        private Timer tNotify, tNotifyWithJitter, tAnimate;
+        private Timer[] timers;
         private ArrayList<Cell> neighbours;
+        private Integer ID;
         
         // Constructor.
         public Cell(Edge edge, boolean isAlive)
@@ -283,14 +320,18 @@ public class Life
             this.panel = new JPanel();
             this.edge = Edge.NONE;
             this.isObservable = false;
-            this.ID = Integer.toHexString(nextCellIDNumber++);
             final int rate = 500;
             this.tNotify = new Timer(rate, e -> notifyObservers());
-            this.tBlack = new Timer(rate/2, e -> panel.setBackground(Color.BLACK));
-            this.tWhite = new Timer(rate/2, e -> panel.setBackground(Color.WHITE));
+            this.tNotifyWithJitter = new Timer(
+                    rate/2 + (new Random()).nextInt(rate/2),
+                    e -> notifyObservers()
+            );
+            this.tAnimate = new Timer(rate/2, e -> animate());
             this.neighbours = new ArrayList<>();
+            this.ID = hashCode();
             
-            for (Timer t : new Timer[]{ tNotify, tBlack, tWhite })
+            this.timers = new Timer[] { tNotify, tNotifyWithJitter, tAnimate };
+            for (Timer t : timers)
                 t.setRepeats(false);
             
             panel.setOpaque(true);
@@ -303,11 +344,21 @@ public class Life
                 panel.setBackground(Color.BLACK);
             
             panel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
-            
-//            tRegular.start();
         }
         
         // Methods.
+        /**
+         * Shows transitions between alive and dead Cells.
+         */
+        private void animate()
+        {
+            // TODO.
+            if (isAlive)
+                panel.setBackground(Color.WHITE);
+            else
+                panel.setBackground(Color.BLACK);
+        }
+        
         /* Observable */
         public void kill()
         { 
@@ -315,9 +366,7 @@ public class Life
                 return;
             
             isAlive = false;
-            panel.setBackground(Color.RED);
-            tBlack.start();
-
+            tAnimate.start();
             setChanged();
             
             if (isObservable)
@@ -332,9 +381,7 @@ public class Life
                 return;
             
             isAlive = true;
-            panel.setBackground(Color.GREEN);
-            tWhite.start();
-            
+            tAnimate.start();
             setChanged();
             
             if (isObservable)
@@ -343,37 +390,31 @@ public class Life
             getPanel().repaint();
         }
         
-        @Override
+        @Override       // To neighbour Cells.
         public void notifyObservers()
         {
             tNotify.stop();
-            super.notifyObservers();
+            super.notifyObservers(ID);
         }
         /* end Observable */
         
         /* Observer */
         @Override
-        public void update(Observable o, Object neighbourState)
+        public void update(Observable o, Object arg)
         {
-            countLivingNeighbours();
-            life();
+            if (arg != null)
+            {
+                countLivingNeighbours();
+                
+                if (!isAlive() && aliveCount == 3)
+                    revive();
+                else if (isAlive() && aliveCount != 2 && aliveCount != 3)
+                    kill();
+            }
         }
         /* end Observer */
         
         public boolean isAlive() { return isAlive; }
-        
-        /**
-         * The main rules. If a cell is alive and has less than 2 or more than
-         * 3 living neighbours, it dies; if it's dead and has exactly 3 living
-         * neighbours, it comes back to life.
-         */
-        private void life()
-        {
-            if (!isAlive() && aliveCount == 3)
-                revive();
-            else if (isAlive() && aliveCount != 2 && aliveCount != 3)
-                kill();
-        }
         
         private void countLivingNeighbours()
         {
@@ -399,7 +440,7 @@ public class Life
             StringBuilder sb = new StringBuilder();
             
             sb.append("{ 0x");
-            sb.append(ID);
+            sb.append(Integer.toHexString(hashCode()));
             
             if (isAlive())
                 sb.append(" } [ alive | ");
@@ -432,6 +473,15 @@ public class Life
             return sb.toString();
         }
         
+        public void killTimers()
+        {
+            for (Timer t : timers)
+            {
+                t.stop();
+                t = null;
+            }
+        }
+        
         // Getters.
         public JPanel getPanel() { return panel; }
         
@@ -449,6 +499,59 @@ public class Life
             if (isObservable)
                 notifyObservers();
         }
+    }
+    
+    private class Seer extends Observable implements Observer
+    {
+        // Instance variables.
+        private final Timer tRefresh;
+        private final double total;
+        private Map<Integer,Boolean> states;
+        
+        // Constructor.
+        public Seer(Rectangle grid)
+        {
+            this.total = (double)(grid.width * grid.height);
+            this.states = new HashMap<>((int)total);
+            
+            this.tRefresh = 
+                    new Timer(250, e -> notifyObservers(getLiving()));
+            tRefresh.setInitialDelay(1000);
+            tRefresh.start();
+        }
+        
+        // Methods.
+        /* Observer */
+        @Override
+        public void update(Observable cell, Object ID) 
+        {
+            if (cell instanceof Cell)
+                states.put((Integer)ID, ((Cell)cell).isAlive());
+            else
+                System.out.println("[Seer] WHO ARE YOU?: " + cell + " " + ID);
+        }
+        /* end Observer */
+        
+        /* Observable */
+        @Override
+        public void notifyObservers(Object arg)
+        {
+            setChanged();
+            super.notifyObservers(arg);
+        }
+        /* end Observable */
+        
+        private double getLiving()
+        {
+            final int[] count = {0};    // reference is final, not value
+            states.values().forEach(isAlive -> { if (isAlive) count[0]++; });
+            return count[0] / total;
+            
+//            states.values().removeIf(isAlive -> isAlive == false);
+//            return states.size()/total;
+        }
+        
+        public void reset() { this.states = new HashMap<>((int)total); }
     }
     
     enum Edge
@@ -495,9 +598,9 @@ public class Life
         return shuff;
     }
     
-    private static boolean isPointOnRect(Rectangle r, Point p)
-    {
-        return p.x >= r.x && p.x <= r.x + r.width - 1
-                && p.y >= r.y && p.y <= r.y + r.height -1;
-    }
+    
+     
+                                                     
+                                                          
+     
 }
