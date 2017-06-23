@@ -126,7 +126,7 @@ public class Life
         // Constructor.
         public GameGrid()
         {
-            this.bounds = new Rectangle(4, 4);    // 30x30, top-left (0,0)
+            this.bounds = new Rectangle(25, 25);    // 30x30, top-left (0,0)
             this.cellMap = new HashMap<>(bounds.x * bounds.y);
             
             initialize();
@@ -162,25 +162,11 @@ public class Life
             for (Point p : getIteratorOver(bounds))
             {
                 Cell cell = cellMap.get(p);
-                
-                System.out.println(p.toString().substring(14) + " A p1");
-                System.out.println(cell);
-                
                 ArrayList<Cell> neighbours = getNeighboursOf(p);
                 
-                System.out.println("NEIGHBOURS " + neighbours);
-                
-                int livingNeighbours = 0;
                 for (Cell neighbour : neighbours)
-                {
-                    if (neighbour.isAlive())
-                        livingNeighbours++;
-                    
-                    cell.addObserver(neighbour);
-                    System.out.println(p.toString().substring(14) + " B p1 neighbour: " + neighbour);
-                }
-                    System.out.println(p.toString().substring(14) + " C p1");
-                cell.setAliveCount(livingNeighbours);
+                    cell.addNeighbour(neighbour);
+                
 //                cell.addObserver((Observer)(((JFrame)getParent()).getJMenuBar()));
             }
             
@@ -188,10 +174,7 @@ public class Life
             
             // Make Cells Observable in random order.
             for (Point p : getShuffledIteratorOver(bounds))
-            {
                 cellMap.get(p).toggleIsObservable();
-                System.out.println(p + "is now observable");
-            }
         }
         
         public void reset()
@@ -204,47 +187,15 @@ public class Life
         
         private ArrayList<Cell> getNeighboursOf(Point p)
         {
-            System.out.println("IN getNeighboursOf(Point p)");
             ArrayList<Cell> neighbours = new ArrayList<>();
             Rectangle r = new Rectangle(p.x - 1, p.y -1, 3, 3);
             
-            for (Point rP : getIteratorOver(r))
-            {
-                System.out.println("rP: " + rP);
-                if (bounds.contains(rP))
-                {
-                    Cell cell = cellMap.get(rP);
-                    System.out.println("INSIDE, adding Cell: " + cell);
-                    neighbours.add(cellMap.get(rP));
-                }
-                else
-                    System.out.println("OUTSIDE");
-            }
+            ArrayList<Point> points = getIteratorOver(r);
+            points.remove(p);
+            for (Point point : points)
+                if (bounds.contains(point))
+                    neighbours.add(cellMap.get(point));
             
-            return neighbours;
-        }
-        
-        
-        private ArrayList<Cell> getNeighdboursOf(Point p)
-        {
-            ArrayList<Cell> neighbours = new ArrayList<>();
-            for (int i = -1; i < 1; i++)
-            {
-                for (int j = -1; j < 1; j++)
-                {
-                    Point neighbourPoint = new Point(p.x + i, p.y + j);
-                    System.out.println("neighbourPoint: " + neighbourPoint);
-                    if (bounds.contains(neighbourPoint) && !(i == 0 && j == 0)) // ...&& (i != 0 || j != 0))
-//                    if (isPointOnRect(bounds, neighbourPoint) && !(i == 0 && j == 0))
-                    {
-                        System.out.println("TRUE  " + bounds + neighbourPoint);
-                        neighbours.add(cellMap.get(neighbourPoint));
-                    }
-                    else
-                        System.out.println("FALSE " + bounds + neighbourPoint);
-                }
-            }
-            System.out.println("NEIGHBOURS: " + neighbours);
             return neighbours;
         }
         
@@ -322,7 +273,8 @@ public class Life
         private final Edge edge;
         private final JPanel panel;
         private final String ID;
-        private Timer tNotify, tRegular;
+        private Timer tNotify, tRegular, tAnimate, tBlack, tWhite;
+        private ArrayList<Cell> neighbours;
         
         // Constructor.
         public Cell(Edge edge, boolean isAlive)
@@ -332,8 +284,14 @@ public class Life
             this.edge = Edge.NONE;
             this.isObservable = false;
             this.ID = Integer.toHexString(nextCellIDNumber++);
-            this.tNotify = new Timer(500, e -> notifyObservers(isAlive));
-            this.tRegular = new Timer(2000, e -> life());
+            this.tNotify = new Timer(250, e -> notifyObservers());
+            this.tAnimate = new Timer(20, e -> animate(0));
+            this.tBlack = new Timer(150, e -> panel.setBackground(Color.BLACK));
+            tBlack.setRepeats(false);
+            this.tWhite = new Timer(150, e -> panel.setBackground(Color.WHITE));
+            tWhite.setRepeats(false);
+            this.tRegular = new Timer(1000, e -> update(null,null));
+            this.neighbours = new ArrayList<>();
             
             panel.setOpaque(true);
             panel.setPreferredSize(new Dimension(40,40));
@@ -346,7 +304,7 @@ public class Life
             
             panel.setBorder(BorderFactory.createRaisedSoftBevelBorder());
             
-            tRegular.start();
+//            tRegular.start();
         }
         
         // Methods.
@@ -357,8 +315,9 @@ public class Life
                 return;
             
             isAlive = false;
-            panel.setBackground(Color.BLACK);
-            
+            panel.setBackground(Color.RED);
+            tBlack.start();
+
             setChanged();
             
             if (isObservable)
@@ -373,7 +332,8 @@ public class Life
                 return;
             
             isAlive = true;
-            panel.setBackground(Color.WHITE);
+            panel.setBackground(Color.GREEN);
+            tWhite.start();
             
             setChanged();
             
@@ -384,11 +344,10 @@ public class Life
         }
         
         @Override
-        public void notifyObservers(Object arg)
+        public void notifyObservers()
         {
             tNotify.stop();
-            System.out.println(" OBSERVABLE: " + this);
-            super.notifyObservers(arg);
+            super.notifyObservers();
         }
         /* end Observable */
         
@@ -396,25 +355,7 @@ public class Life
         @Override
         public void update(Observable o, Object neighbourState)
         {
-            if (ENABLE_DEBUG)
-            {
-                if ((boolean)neighbourState)
-                    System.out.print(" <REVIVED> : ");
-                else
-                    System.out.print("    <DIED> : ");
-                System.out.println((Cell)o);
-                System.out.print("-> OBSERVER: ");
-                System.out.println(this);
-                System.out.println();
-            }
-            
-            if ((boolean)neighbourState)
-                aliveCount++;
-            else
-                aliveCount--;
-            
-            if (aliveCount < 0) { aliveCount = 0; } // must be a mistake.
-            
+            countLivingNeighbours();
             life();
         }
         /* end Observer */
@@ -432,6 +373,47 @@ public class Life
                 revive();
             else if (isAlive() && aliveCount != 2 && aliveCount != 3)
                 kill();
+        }
+        
+        private void countLivingNeighbours()
+        {
+            int count = 0;
+            for (Cell neighbour : neighbours)
+                if (neighbour.isAlive)
+                    count++;
+            this.aliveCount = count;
+        }
+        
+        /**
+         * Also adds Observer.
+         */
+        public void addNeighbour(Cell neighbour)
+        {
+            this.neighbours.add(neighbour);
+            addObserver(neighbour);
+        }
+        
+        private void animate(int step)
+        {
+            tAnimate.stop();
+            
+            final Color[] colours = new Color[]{ Color.RED, Color.ORANGE,
+                    Color.YELLOW, Color.GREEN, Color.BLUE/*, Color.MAGENTA*/ };
+
+            if (step >= 0 && step < colours.length)
+            {
+                panel.setBackground(colours[step]);
+                tAnimate = new Timer(10, e -> animate(step + 1));
+                tAnimate.start();
+            }
+            else if (isAlive())
+                panel.setBackground(Color.WHITE);
+            else
+                panel.setBackground(Color.BLACK);
+            
+            tAnimate = new Timer(50, e -> animate(0));
+            
+            panel.repaint();
         }
         
         @Override
@@ -475,7 +457,6 @@ public class Life
         
         // Getters.
         public JPanel getPanel() { return panel; }
-        public Edge getEdge() { return edge; }
         
         // Setters.
         /**
@@ -486,13 +467,10 @@ public class Life
         {
             this.isObservable ^= true;
             
-            if (hasChanged() && isObservable)
-                notifyObservers(isAlive());
-        }
-        
-        public void setAliveCount(int aliveCount)
-        {
-            this.aliveCount = aliveCount;
+            setChanged();
+            
+            if (isObservable)
+                notifyObservers();
         }
     }
     
@@ -526,18 +504,11 @@ public class Life
     
     private static ArrayList<Point> getIteratorOver(Rectangle r)
     {
-        System.out.println("getIteratorOver(Rectangle r)");
-        System.out.println("RECTANGLE: " + r);
-        ArrayList<Point> pts = new ArrayList<>(r.width * r.height);
+        ArrayList<Point> points = new ArrayList<>(r.width * r.height);
         for (int i = r.x; i < r.width + r.x; i++)
             for (int j = r.y; j < r.height + r.y; j++)
-            {
-                System.out.print("["+i+","+j+"] --> ");
-                pts.add(new Point(i,j));
-                System.out.println(new Point(i,j));
-            }
-        System.out.println("EXCEPTION");
-        return pts;
+                points.add(new Point(i,j));
+        return points;
     }
     
     private static ArrayList<Point> getShuffledIteratorOver(Rectangle r)
