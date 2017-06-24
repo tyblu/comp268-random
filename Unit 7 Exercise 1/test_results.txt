@@ -1,0 +1,245 @@
+run:
+Testing RandomPlus#nextUniqueIntSet(int,int).
+
+
+======================================
+
+Checking 10 short lists for contract correctness.
+Test #01 - nextUniqueIntSet(bound=7, size=5)
+LIST:   1  2  3  4  5
+Maximum: 5            Minimum: 1            Size: 5            Unique? YES
+Test #02 - nextUniqueIntSet(bound=13, size=9)
+LIST:    1   2   3   4   5   6   8   9  10
+Maximum: 10           Minimum: 1            Size: 9            Unique? YES
+Test #03 - nextUniqueIntSet(bound=14, size=9)
+LIST:    3   4   5   6   8   9  10  11  12
+Maximum: 12           Minimum: 3            Size: 9            Unique? YES
+Test #04 - nextUniqueIntSet(bound=11, size=5)
+LIST:   2  3  6  7  9
+Maximum: 9            Minimum: 2            Size: 5            Unique? YES
+Test #05 - nextUniqueIntSet(bound=15, size=9)
+LIST:    2   3   4   6   7   8   9  12  13
+Maximum: 13           Minimum: 2            Size: 9            Unique? YES
+Test #06 - nextUniqueIntSet(bound=7, size=5)
+LIST:   1  2  3  4  5
+Maximum: 5            Minimum: 1            Size: 5            Unique? YES
+Test #07 - nextUniqueIntSet(bound=12, size=6)
+LIST:    2   3   5   6   9  10
+Maximum: 10           Minimum: 2            Size: 6            Unique? YES
+Test #08 - nextUniqueIntSet(bound=9, size=5)
+LIST:   2  3  4  6  7
+Maximum: 7            Minimum: 2            Size: 5            Unique? YES
+Test #09 - nextUniqueIntSet(bound=11, size=5)
+LIST:   1  2  6  7  9
+Maximum: 9            Minimum: 1            Size: 5            Unique? YES
+Test #10 - nextUniqueIntSet(bound=14, size=8)
+LIST:    1   2   4   5   6   9  11  12
+Maximum: 12           Minimum: 1            Size: 8            Unique? YES
+
+======================================
+
+Checking 10 large lists for contract correctness.
+Test #11 - nextUniqueIntSet(bound=105005, size=95779)
+Maximum: 105003       Minimum: 1            Size: 95779        Unique? YES
+Test #12 - nextUniqueIntSet(bound=94724, size=83436)
+Maximum: 94722        Minimum: 1            Size: 83436        Unique? YES
+Test #13 - nextUniqueIntSet(bound=110863, size=96639)
+Maximum: 110861       Minimum: 1            Size: 96639        Unique? YES
+Test #14 - nextUniqueIntSet(bound=91202, size=88527)
+Maximum: 91200        Minimum: 1            Size: 88527        Unique? YES
+Test #15 - nextUniqueIntSet(bound=85205, size=64274)
+Maximum: 85203        Minimum: 1            Size: 64274        Unique? YES
+Test #16 - nextUniqueIntSet(bound=69541, size=58084)
+Maximum: 69539        Minimum: 1            Size: 58084        Unique? YES
+Test #17 - nextUniqueIntSet(bound=82509, size=62816)
+Maximum: 82507        Minimum: 1            Size: 62816        Unique? YES
+Test #18 - nextUniqueIntSet(bound=132623, size=91766)
+Maximum: 132621       Minimum: 1            Size: 91766        Unique? YES
+Test #19 - nextUniqueIntSet(bound=92555, size=53934)
+Maximum: 92553        Minimum: 3            Size: 53934        Unique? YES
+Test #20 - nextUniqueIntSet(bound=114603, size=98523)
+Maximum: 114601       Minimum: 1            Size: 98523        Unique? YES
+
+======================================
+
+Testing randomly sized lists...
+Test #21 - nextUniqueIntSet(bound=8969669, size=8138541)
+Maximum: 8969667      Minimum: 1            Size: 8138541      Unique? YES
+Test #22 - nextUniqueIntSet(bound=4196455, size=2849470)
+Maximum: 4196453      Minimum: 1            Size: 2849470      Unique? YES
+Test #23 - nextUniqueIntSet(bound=241263, size=211973)
+Maximum: 241260       Minimum: 3            Size: 211973       Unique? YES
+Test #24 - nextUniqueIntSet(bound=13983445, size=9772353)
+Maximum: 13983443     Minimum: 1            Size: 9772353      Unique? YES
+Test #25 - nextUniqueIntSet(bound=8736527, size=8363297)
+Maximum: 8736525      Minimum: 1            Size: 8363297      Unique? YES
+Test #26 - nextUniqueIntSet(bound=11388885, size=9760869)
+Maximum: 11388883     Minimum: 1            Size: 9760869      Unique? YES
+Test #27 - nextUniqueIntSet(bound=466887, size=359309)
+Maximum: 466885       Minimum: 3            Size: 359309       Unique? YES
+Test #28 - nextUniqueIntSet(bound=3663429, size=2822852)
+Maximum: 3663427      Minimum: 1            Size: 2822852      Unique? YES
+Test #29 - nextUniqueIntSet(bound=8242554, size=5595819)
+Maximum: 8242552      Minimum: 1            Size: 5595819      Unique? YES
+Test #30 - nextUniqueIntSet(bound=3866186, size=2877404)
+Maximum: 3866184      Minimum: 1            Size: 2877404      Unique? YES
+
+======================================
+
+Testing IllegalArgumentException throwing.
+Test #31 - nextUniqueIntSet(bound=-2, size=-5)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #32 - nextUniqueIntSet(bound=-1, size=-5)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #33 - nextUniqueIntSet(bound=0, size=-5)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #34 - nextUniqueIntSet(bound=1, size=-5)
+Exception not thrown.
+Test #35 - nextUniqueIntSet(bound=2, size=-5)
+Exception not thrown.
+Test #36 - nextUniqueIntSet(bound=3, size=-5)
+Exception not thrown.
+Test #37 - nextUniqueIntSet(bound=4, size=-5)
+Exception not thrown.
+Test #38 - nextUniqueIntSet(bound=-2, size=-4)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #39 - nextUniqueIntSet(bound=-1, size=-4)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #40 - nextUniqueIntSet(bound=0, size=-4)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #41 - nextUniqueIntSet(bound=1, size=-4)
+Exception not thrown.
+Test #42 - nextUniqueIntSet(bound=2, size=-4)
+Exception not thrown.
+Test #43 - nextUniqueIntSet(bound=3, size=-4)
+Exception not thrown.
+Test #44 - nextUniqueIntSet(bound=4, size=-4)
+Exception not thrown.
+Test #45 - nextUniqueIntSet(bound=-2, size=-3)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #46 - nextUniqueIntSet(bound=-1, size=-3)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #47 - nextUniqueIntSet(bound=0, size=-3)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #48 - nextUniqueIntSet(bound=1, size=-3)
+Exception not thrown.
+Test #49 - nextUniqueIntSet(bound=2, size=-3)
+Exception not thrown.
+Test #50 - nextUniqueIntSet(bound=3, size=-3)
+Exception not thrown.
+Test #51 - nextUniqueIntSet(bound=4, size=-3)
+Exception not thrown.
+Test #52 - nextUniqueIntSet(bound=-2, size=-2)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #53 - nextUniqueIntSet(bound=-1, size=-2)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #54 - nextUniqueIntSet(bound=0, size=-2)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #55 - nextUniqueIntSet(bound=1, size=-2)
+Exception not thrown.
+Test #56 - nextUniqueIntSet(bound=2, size=-2)
+Exception not thrown.
+Test #57 - nextUniqueIntSet(bound=3, size=-2)
+Exception not thrown.
+Test #58 - nextUniqueIntSet(bound=4, size=-2)
+Exception not thrown.
+Test #59 - nextUniqueIntSet(bound=-2, size=-1)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #60 - nextUniqueIntSet(bound=-1, size=-1)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #61 - nextUniqueIntSet(bound=0, size=-1)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #62 - nextUniqueIntSet(bound=1, size=-1)
+Exception not thrown.
+Test #63 - nextUniqueIntSet(bound=2, size=-1)
+Exception not thrown.
+Test #64 - nextUniqueIntSet(bound=3, size=-1)
+Exception not thrown.
+Test #65 - nextUniqueIntSet(bound=4, size=-1)
+Exception not thrown.
+Test #66 - nextUniqueIntSet(bound=-2, size=0)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #67 - nextUniqueIntSet(bound=-1, size=0)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #68 - nextUniqueIntSet(bound=0, size=0)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #69 - nextUniqueIntSet(bound=1, size=0)
+Exception thrown: java.lang.IllegalArgumentException: only -1 possible unique integers, size is
+ too large (0) or bound is too small (1)
+Test #70 - nextUniqueIntSet(bound=2, size=0)
+Exception not thrown.
+Test #71 - nextUniqueIntSet(bound=3, size=0)
+Exception not thrown.
+Test #72 - nextUniqueIntSet(bound=4, size=0)
+Exception not thrown.
+Test #73 - nextUniqueIntSet(bound=-2, size=1)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #74 - nextUniqueIntSet(bound=-1, size=1)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #75 - nextUniqueIntSet(bound=0, size=1)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #76 - nextUniqueIntSet(bound=1, size=1)
+Exception thrown: java.lang.IllegalArgumentException: only -1 possible unique integers, size is
+ too large (1) or bound is too small (1)
+Test #77 - nextUniqueIntSet(bound=2, size=1)
+Exception thrown: java.lang.IllegalArgumentException: only 0 possible unique integers, size is
+ too large (1) or bound is too small (2)
+Test #78 - nextUniqueIntSet(bound=3, size=1)
+Exception not thrown.
+Test #79 - nextUniqueIntSet(bound=4, size=1)
+Exception not thrown.
+Test #80 - nextUniqueIntSet(bound=-2, size=2)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #81 - nextUniqueIntSet(bound=-1, size=2)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #82 - nextUniqueIntSet(bound=0, size=2)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #83 - nextUniqueIntSet(bound=1, size=2)
+Exception thrown: java.lang.IllegalArgumentException: only -1 possible unique integers, size is
+ too large (2) or bound is too small (1)
+Test #84 - nextUniqueIntSet(bound=2, size=2)
+Exception thrown: java.lang.IllegalArgumentException: only 0 possible unique integers, size is
+ too large (2) or bound is too small (2)
+Test #85 - nextUniqueIntSet(bound=3, size=2)
+Exception thrown: java.lang.IllegalArgumentException: only 1 possible unique integers, size is
+ too large (2) or bound is too small (3)
+Test #86 - nextUniqueIntSet(bound=4, size=2)
+Exception not thrown.
+Test #87 - nextUniqueIntSet(bound=-2, size=3)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #88 - nextUniqueIntSet(bound=-1, size=3)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #89 - nextUniqueIntSet(bound=0, size=3)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #90 - nextUniqueIntSet(bound=1, size=3)
+Exception thrown: java.lang.IllegalArgumentException: only -1 possible unique integers, size is
+ too large (3) or bound is too small (1)
+Test #91 - nextUniqueIntSet(bound=2, size=3)
+Exception thrown: java.lang.IllegalArgumentException: only 0 possible unique integers, size is
+ too large (3) or bound is too small (2)
+Test #92 - nextUniqueIntSet(bound=3, size=3)
+Exception thrown: java.lang.IllegalArgumentException: only 1 possible unique integers, size is
+ too large (3) or bound is too small (3)
+Test #93 - nextUniqueIntSet(bound=4, size=3)
+Exception thrown: java.lang.IllegalArgumentException: only 2 possible unique integers, size is
+ too large (3) or bound is too small (4)
+Test #94 - nextUniqueIntSet(bound=-2, size=4)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #95 - nextUniqueIntSet(bound=-1, size=4)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #96 - nextUniqueIntSet(bound=0, size=4)
+Exception thrown: java.lang.IllegalArgumentException: bound must be greater than 1
+Test #97 - nextUniqueIntSet(bound=1, size=4)
+Exception thrown: java.lang.IllegalArgumentException: only -1 possible unique integers, size is
+ too large (4) or bound is too small (1)
+Test #98 - nextUniqueIntSet(bound=2, size=4)
+Exception thrown: java.lang.IllegalArgumentException: only 0 possible unique integers, size is
+ too large (4) or bound is too small (2)
+Test #99 - nextUniqueIntSet(bound=3, size=4)
+Exception thrown: java.lang.IllegalArgumentException: only 1 possible unique integers, size is
+ too large (4) or bound is too small (3)
+Test #100 - nextUniqueIntSet(bound=4, size=4)
+Exception thrown: java.lang.IllegalArgumentException: only 2 possible unique integers, size is
+ too large (4) or bound is too small (4)
+========= ALL TESTS COMPLETED ==========
+BUILD SUCCESSFUL (total time: 51 seconds)
