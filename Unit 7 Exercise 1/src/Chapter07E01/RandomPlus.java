@@ -38,7 +38,11 @@ import java.util.Set;
  *
  * @author:     Tyler Lucas
  * Student ID:  3305203
+<<<<<<< HEAD
  * Date:        June 21, 2017
+=======
+ * Date:        June 23, 2017
+>>>>>>> feature/Chapter_7_Exercise_2
  * Version      1.0
  * 
  * Based on and References:
