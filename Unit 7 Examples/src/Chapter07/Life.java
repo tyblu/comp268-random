@@ -47,7 +47,6 @@ import java.awt.Toolkit;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JMenu;
@@ -597,10 +596,4 @@ public class Life
         Collections.shuffle(shuff);
         return shuff;
     }
-    
-    
-     
-                                                     
-                                                          
-     
 }

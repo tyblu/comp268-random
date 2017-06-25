@@ -45,24 +45,18 @@ package Chapter07;
  */
 public class MainCaller
 {
-    // Examples
     private static final boolean ENABLE_ARITY = false;
     private static final boolean ENABLE_DICEARITY = false;
     private static final boolean ENABLE_RANDOMSTRINGS = false;
     private static final boolean ENABLE_DYNAMICARRAYINT = false;
     private static final boolean ENABLE_LIFE = true;
     
-    // Exercises
-    
     public static void main(String[] args)
     {
-        // Examples
         if (ENABLE_ARITY) { Arity.call(args); }
         if (ENABLE_DICEARITY) { DicePairGUIVariableArity.call(args); }
         if (ENABLE_RANDOMSTRINGS) { RandomStringsParallelArrays.call(args); }
         if (ENABLE_DYNAMICARRAYINT) { DynamicArrayOfInt.call(args); }
         if (ENABLE_LIFE) { Life.call(args); }
-        
-        // Exercises
     }
 }
