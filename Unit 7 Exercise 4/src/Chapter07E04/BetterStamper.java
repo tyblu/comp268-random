@@ -64,6 +64,10 @@ import javax.swing.JPanel;
  */
 public class BetterStamper
 {
+/* -------------------------------------------------------------------------- */
+    public static void main(String[] args) { new BetterStamper(); }
+/* -------------------------------------------------------------------------- */
+    
     // Instance variables.
     private final JFrame window;
     private final JPanel content;
@@ -235,8 +239,4 @@ public class BetterStamper
            items.forEach(item -> jMenuBar.add(item));
        }
     }
-    
-/* -------------------------------------------------------------------------- */
-    public static void main(String[] args) { new RunBetterStamper(); }
-/* -------------------------------------------------------------------------- */
 }
