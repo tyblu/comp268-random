@@ -157,6 +157,16 @@ public class BetterStamper
         content.repaint();
     }
     
+    public void undo()
+    {
+        if (shapes.size() > 1)
+            shapes.remove(shapes.size()-1);
+        else
+            shapes.clear();
+        
+        content.repaint();
+    }
+    
     // Nested classes.
     /**
      * Custom MouseListener, an extension of MouseAdapter.
@@ -222,7 +232,7 @@ public class BetterStamper
            JMenu edit = new JMenu("edit");
            
            JMenuItem undo = new JMenuItem("undo");
-//           undo.addActionListener(evt -> undo()); // undo() not implemented
+           undo.addActionListener(evt -> undo()); // undo() not implemented
            edit.add(undo);
            
            items.add(edit);
