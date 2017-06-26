@@ -156,7 +156,6 @@ public class RandomArt
         // Constructor.
         public RandomLines()
         {
-            System.out.printf("%31s [%d] %s%n", "RandomLines:", (System.currentTimeMillis()-time)/1000, this.getPreferredSize());
             RandomPlus r = new RandomPlus();
 
             Rectangle rect1, rect2;
@@ -188,19 +187,23 @@ public class RandomArt
         @Override
         public void draw(Graphics g)
         {
+            double scaleFactor = GUITools.getMinScaleFactorBetween(
+                    g.getClipBounds(), this.getPreferredSize());
+            
             for (Line line : lines)
             {
-                ((Graphics2D)g).setStroke(new BasicStroke(line.thickness));
-                g.setColor(line.color);
-                g.drawLine(line.p1.x, line.p1.y, line.p2.x, line.p2.y);
+                Line scaled = line.scale(scaleFactor);
+                ((Graphics2D)g).setStroke(new BasicStroke(scaled.thickness));
+                g.setColor(scaled.color);
+                g.drawLine(scaled.p1.x, scaled.p1.y, scaled.p2.x, scaled.p2.y);
             }
         }
     }
         
-    private class Line
+    class Line
     {
         // Instance variables.
-        public final Point p1, p2;
+        public Point p1, p2;
         public final Color color;
         public final int thickness;
 
@@ -210,6 +213,17 @@ public class RandomArt
             this.p2 = p2;
             this.color = color;
             this.thickness = thickness;
+        }
+        
+        public Line scale(double factor)
+        {
+            return new Line(p1,
+                    new Point(
+                            p1.x + (int)(factor * (p2.x - p1.x)),
+                            p1.y + (int)(factor * (p2.y - p1.y))
+                    ),
+                    color, thickness
+            );
         }
     }
     
@@ -221,7 +235,6 @@ public class RandomArt
         // Constructor.
         public RandomCircles()
         {
-            System.out.printf("%31s [%d] %s%n", "RandomCircles:", (System.currentTimeMillis()-time)/1000, this.getPreferredSize());
             RandomPlus r = new RandomPlus();
 
             int count = 20 + r.nextInt(80);
@@ -249,23 +262,27 @@ public class RandomArt
         @Override
         public void draw(Graphics g)
         {
+            double scaleFactor = GUITools.getMinScaleFactorBetween(
+                    g.getClipBounds(), getPreferredSize());
+            
             for (Circle circle : circles)
             {
-                ((Graphics2D)g).setStroke(new BasicStroke(circle.thickness));
-                g.setColor(circle.color);
-                g.drawArc(circle.p.x, circle.p.y, 
-                        circle.diameter, circle.diameter, 0, 360);
+                Circle scaled = circle.scale(scaleFactor);
+                ((Graphics2D)g).setStroke(new BasicStroke(scaled.thickness));
+                g.setColor(scaled.color);
+                g.drawArc(scaled.p.x, scaled.p.y, 
+                        scaled.diameter, scaled.diameter, 0, 360);
             }
         }
     }
     
-    private class Circle
+    class Circle
     {
         // Instance variables.
         public Point p;
         public int diameter;
-        public Color color;
-        public int thickness;
+        public final Color color;
+        public final int thickness;
 
         // Constructor.
         public Circle(Point p, int diameter, Color color, int thickness)
@@ -274,6 +291,20 @@ public class RandomArt
             this.diameter = diameter;
             this.color = color;
             this.thickness = thickness;
+        }
+        
+        public Circle scale(double factor)
+        {
+            int x0 = p.x - diameter / 2;
+            int y0 = p.y - diameter / 2;
+            
+            return new Circle(
+                    new Point(x0 + (int)(factor * (p.x - x0)),
+                            y0 + (int)(factor * (p.y - y0))
+                    ),
+                    (int)(factor * diameter),
+                    color, thickness
+            );
         }
     }
     
@@ -285,7 +316,6 @@ public class RandomArt
         // Constructor.
         public RandomRectangles()
         {
-            System.out.printf("%31s [%d] %s%n", "RandomRectangles:", (System.currentTimeMillis()-time)/1000, this.getPreferredSize());
             RandomPlus r = new RandomPlus();
 
             int count = 10 + r.nextInt(40);
@@ -312,23 +342,27 @@ public class RandomArt
         @Override
         public void draw(Graphics g)
         {
+            double scaleFactor = GUITools.getMinScaleFactorBetween(
+                    g.getClipBounds(), getPreferredSize());
+            
             for (RectangleWithFlair rect : rectangles)
             {
-                ((Graphics2D)g).setStroke(new BasicStroke(rect.thickness));
-                g.setColor(rect.color);
-                g.drawRect(rect.p.x, rect.p.y, rect.width, rect.height);
+                RectangleWithFlair scaled = rect.scale(scaleFactor);
+                ((Graphics2D)g).setStroke(new BasicStroke(scaled.thickness));
+                g.setColor(scaled.color);
+                g.drawRect(scaled.p.x, scaled.p.y, scaled.width, scaled.height);
             }
         }
     }
     
-    private class RectangleWithFlair
+    class RectangleWithFlair
     {
         // Instance variables.
-        public Point p;
+        public final Point p;
         public int width;
         public int height;
-        public Color color;
-        public int thickness;
+        public final Color color;
+        public final int thickness;
 
         // Constructor.
         public RectangleWithFlair(Rectangle bounds, Color color, int thickness)
@@ -338,6 +372,17 @@ public class RandomArt
             this.height = bounds.height;
             this.color = color;
             this.thickness = thickness;
+        }
+        
+        public RectangleWithFlair scale(double factor)
+        {
+            return new RectangleWithFlair(
+                    new Rectangle(p.x, p.y,
+                            (int)(factor * width), 
+                            (int)(factor * height)
+                    ),
+                    color, thickness
+            );
         }
     }
 }

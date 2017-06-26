@@ -39,8 +39,11 @@
 
 package Chapter07E06;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 
 /**
@@ -63,4 +66,37 @@ public class GUITools
                         .getMaximumWindowBounds()
                 ).height;
     }
+    
+    public static Point getCenterBetween(Point p1, Point p2)
+    {
+        return new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+    }
+    
+    public static double getMinScaleFactorBetween(Rectangle rect1, Rectangle rect2)
+    {
+        System.out.println("getMinScaleFactorBetween(" + rect1 + ", " + rect2 + ") = " + Math.min(rect1.getWidth() / rect2.getWidth(),rect1.getHeight() / rect2.getHeight()));
+        return Math.min(
+                    rect1.getWidth() / rect2.getWidth(),
+                    rect1.getHeight() / rect2.getHeight()
+        );
+    }
+    
+    public static double getMinScaleFactorBetween(Dimension dim1, Dimension dim2)
+    {
+        return getMinScaleFactorBetween(
+                new Rectangle(dim1),
+                new Rectangle(dim2)
+        );
+    }
+            
+    public static double getMinScaleFactorBetween(Rectangle rect1, Dimension dim2)
+    {
+        return getMinScaleFactorBetween(rect1.getSize(), new Rectangle(dim2));
+    }
+            
+    public static double getMinScaleFactorBetween(Dimension dim1, Rectangle rect2)
+    {
+        return getMinScaleFactorBetween(new Rectangle(dim1), rect2);
+    }
+            
 }
