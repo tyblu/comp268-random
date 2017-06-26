@@ -39,7 +39,6 @@
 
 package Chapter07E06;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
@@ -74,7 +73,6 @@ public class GUITools
     
     public static double getMinScaleFactorBetween(Rectangle rect1, Rectangle rect2)
     {
-        System.out.println("getMinScaleFactorBetween(" + rect1 + ", " + rect2 + ") = " + Math.min(rect1.getWidth() / rect2.getWidth(),rect1.getHeight() / rect2.getHeight()));
         return Math.min(
                     rect1.getWidth() / rect2.getWidth(),
                     rect1.getHeight() / rect2.getHeight()

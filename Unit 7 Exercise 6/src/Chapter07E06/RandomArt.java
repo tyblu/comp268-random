@@ -158,22 +158,27 @@ public class RandomArt
         {
             RandomPlus r = new RandomPlus();
 
-            Rectangle rect1, rect2;
-            rect1 = r.nextRectWithin(this.getPreferredSize());
-            rect2 = r.nextRectWithin(this.getPreferredSize());
+            Rectangle rectA;
+            ArrayList<Rectangle> rectBs = new ArrayList<>();
+            rectA = r.nextRectWithin(this.getPreferredSize());
+            for (int i = 0; i < 1 + r.nextInt(4); i++)
+                rectBs.add(r.nextRectWithin(this.getPreferredSize()));
 
             int count = 20 + r.nextInt(80);
             
             this.lines = new ArrayList<>(count);
 
-            for (int i = 0; i < count; i++)
+            for (Rectangle rectB : rectBs)
             {
-                lines.add(new Line(
-                        r.nextPointWithin(rect1),
-                        r.nextPointWithin(rect2),
-                        r.nextColor(),
-                        1 + r.nextInt(7)
-                ));
+                for (int i = 0; i < count; i++)
+                {
+                    lines.add(new Line(
+                            r.nextPointWithin(rectA),
+                            r.nextPointWithin(rectB),
+                            r.nextColor(),
+                            1 + r.nextInt(20)
+                    ));
+                }
             }
         }
         
@@ -237,7 +242,7 @@ public class RandomArt
         {
             RandomPlus r = new RandomPlus();
 
-            int count = 20 + r.nextInt(80);
+            int count = 40 + r.nextInt(160);
             
             this.circles = new ArrayList<>(count);
 
@@ -245,9 +250,9 @@ public class RandomArt
             {
                 circles.add(new Circle(
                         r.nextPointWithin(this.getPreferredSize()),
-                        20 + r.nextInt(this.getPreferredSize().height / 5),
+                        20 + r.nextInt(this.getPreferredSize().height / 2),
                         r.nextColor(),
-                        1 + r.nextInt(7)
+                        1 + r.nextInt(20)
                 ));
             }
         }
@@ -327,7 +332,7 @@ public class RandomArt
                 rectangles.add(new RectangleWithFlair(
                         r.nextRectWithin(this.getPreferredSize()),
                         r.nextColor(),
-                        1 + r.nextInt(7)
+                        1 + r.nextInt(20)
                 ));
             }
         }
