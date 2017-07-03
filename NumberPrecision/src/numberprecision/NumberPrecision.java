@@ -7,8 +7,8 @@ package NumberPrecision;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -17,7 +17,12 @@ import java.util.Random;
  */
 public class NumberPrecision 
 {
-    public static void main(String[] args) 
+    public static void main(String[] args)
+    {
+        new NumberPrecision();
+    }
+    
+    public NumberPrecision()
     {
         /* Non-Exact Number Representations. */
         String[] numbers = new String[]
@@ -49,75 +54,103 @@ public class NumberPrecision
         }
         
         /* Error Propagation. */
-        String r = "0.011";                     // interest per annum.
-        int periodsPerYear = 365;               // periods per year
-        int numPeriods = 50 * periodsPerYear;   // total number periods
-        int numDailyCredits = 1000;
-        
-        BigDecimal amountBigDecimal = BigDecimal.ZERO;
-        BigDecimal rBigDecimal = new BigDecimal(r);
-        BigDecimal ppyBigDecimal = new BigDecimal(Integer.toString(periodsPerYear));
-        MathContext d128 = new MathContext(100, RoundingMode.HALF_EVEN);
-        
-        double amountDouble = (double)0;
-        double rDouble = Double.parseDouble(r);
-        double ppyDouble = (double)periodsPerYear;
-        
-        float amountFloat = (float)0;
-        float rFloat = Float.parseFloat(r);
-        float ppyFloat = (float)periodsPerYear;
-        
+        BigDecimal rAcct = new BigDecimal("0.009");     // account interest
+        BigDecimal rBank = new BigDecimal("0.005");     // bank interest
+        BigDecimal ppy = new BigDecimal("365");         // periods per year
+        BigDecimal yrs = new BigDecimal("50");          // years
+        BigDecimal numberAccounts = new BigDecimal("100"); // number of accts.
+        MathContext mc = MathContext.DECIMAL128;
         Random random = new Random();
+        ArrayList<Account> accounts = new ArrayList<>(numberAccounts.intValue());
+        for (int i = 0; i < numberAccounts.intValue(); i++)
+            accounts.add(new Account());
+        Account bank = new Account();
         
-        for (int n = 0; n < numPeriods; n++)
+        for (int period = 0; period < yrs.multiply(ppy).longValue(); period++)
         {
-            String monthly = String.format("%.40f", 
-                    (double)20 + random.nextFloat() * (double)300);
-            BigDecimal monthlyBigDecimal = new BigDecimal(monthly);
-            double monthlyDouble = Double.parseDouble(monthly);
-            float monthlyFloat = Float.parseFloat(monthly);
-            
-            for (int i = 0; i < numDailyCredits; i++)
+            for (Account account : accounts)
             {
-                monthly = String.format("%.40f", 
-                        (double)20 + random.nextFloat() * (double)300);
-                monthlyBigDecimal = monthlyBigDecimal
-                        .add(new BigDecimal(monthly))
-                        .add(new BigDecimal(monthly)
-                                .multiply(rBigDecimal
-                                        .divide(ppyBigDecimal, d128)
-                                        .add(BigDecimal.ONE), d128), d128);
-                monthlyDouble += Double.parseDouble(monthly)
-                        + Double.parseDouble(monthly) * ((double)1 + rDouble / ppyDouble);
-                monthlyFloat += Float.parseFloat(monthly)
-                        + Float.parseFloat(monthly) *((float)1 + rFloat / ppyFloat);
+                if (random.nextFloat() < 0.2)
+                {
+                    BigDecimal amount = new BigDecimal(String.format("%.2f", 
+                            (random.nextDouble() * 72.81 - 72.81 / 2.0001)));
+
+                    if (amount.compareTo(BigDecimal.ZERO) > 0)
+                    {
+                        account.credit(amount);
+                        bank.credit(amount);
+                    }
+                    else
+                    {
+                        account.debit(amount.negate());
+                        bank.debit(amount.negate());
+                    }
+                }
+                
+                account.applyInterest(rAcct.divide(ppy, mc));
+                account.addBankInterest(bank, rBank.divide(ppy, mc)
+                        .divide(numberAccounts, mc)
+                        .multiply(new BigDecimal("0.001"), mc));
+                bank.applyInterest(rBank.divide(ppy, mc)
+                        .multiply(new BigDecimal("0.999"), mc));
+                
             }
-            
-            amountBigDecimal = monthlyBigDecimal
-                    .add(amountBigDecimal
-                    .multiply(rBigDecimal
-                            .divide(ppyBigDecimal, d128)
-                            .add(BigDecimal.ONE), d128), d128);
-            
-            amountDouble = monthlyDouble 
-                    + amountDouble * ((double)1 + rDouble / ppyDouble);
-            
-            amountFloat = monthlyFloat
-                    + amountFloat * ((float)1 + rFloat / ppyFloat);
         }
-        
-        BigDecimal errFloat = amountBigDecimal
-                .subtract(new BigDecimal(String.format("%.40f", amountFloat)), d128);
-        BigDecimal errDouble = amountBigDecimal
-                .subtract(new BigDecimal(String.format("%.40f", amountDouble)), d128);
+                
+        BigDecimal errF = bank.amtBD.subtract(new BigDecimal(bank.amtF), mc);
+        BigDecimal errD = bank.amtBD.subtract(new BigDecimal(bank.amtD), mc);
         
         NumberFormat f = NumberFormat.getCurrencyInstance();
+        System.out.println("     Total bank value: " 
+                + f.format(bank.amtBD.doubleValue()));
+        System.out.println("Average account value: " 
+                + f.format(bank.amtBD.divide(numberAccounts, mc).doubleValue()));
+        System.out.println();
+        System.out.printf("Difference using doubles: %s%n", f.format(errD));
+        System.out.printf("Difference using floats:  %s%n", f.format(errF));
+    }
+    
+    private class Account
+    {
+        MathContext mc;
+        BigDecimal amtBD;
+        double amtD;
+        float amtF;
         
-        System.out.println("Money lost due to error accumulation.");        
-        System.out.println("Showing effects on " + numDailyCredits + " daily "
-                + "credits with " + rBigDecimal.multiply(new BigDecimal("100"))
-                + "%/annum. interest, compounded daily for 50 years.");
-        System.out.printf("Difference using doubles: %s%n", f.format(errDouble));
-        System.out.printf("Difference using floats:  %s%n", f.format(errFloat));
+        public Account()
+        {
+            this.amtBD = BigDecimal.ZERO;
+            this.amtD = 0;
+            this.amtF = 0;
+            this.mc = MathContext.DECIMAL128;
+        }
+        
+        void credit(BigDecimal amount)
+        {
+            amtBD = amtBD.add(amount, mc);
+            amtD += amount.doubleValue();
+            amtF += amount.floatValue();
+        }
+        
+        void debit(BigDecimal amount)
+        {
+            amtBD = amtBD.subtract(amount, mc);
+            amtD -= amount.doubleValue();
+            amtF -= amount.floatValue();
+        }
+        
+        void applyInterest(BigDecimal interest)
+        {
+            amtBD = amtBD.add(amtBD.multiply(interest, mc), mc);
+            amtD = amtD + amtD * interest.doubleValue();
+            amtF = amtF + amtF * interest.floatValue();
+        }
+        
+        void addBankInterest(Account bank, BigDecimal interest)
+        {
+            amtBD = amtBD.add(bank.amtBD.multiply(interest, mc), mc);
+            amtD = amtD + bank.amtD * interest.doubleValue();
+            amtF = amtF + bank.amtF * interest.floatValue();
+        }
     }
 }
