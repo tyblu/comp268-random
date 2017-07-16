@@ -310,7 +310,7 @@ public class Life
         private Timer tNotify, tNotifyWithJitter, tAnimate;
         private Timer[] timers;
         private ArrayList<Cell> neighbours;
-        private Integer ID;
+        private final Integer ID;
         
         // Constructor.
         public Cell(Edge edge, boolean isAlive)
@@ -369,7 +369,10 @@ public class Life
             setChanged();
             
             if (isObservable)
-                tNotify.start();
+            {
+//                tNotify.start();
+                tNotifyWithJitter.start();
+            }
             
             getPanel().repaint();
         }
@@ -384,7 +387,10 @@ public class Life
             setChanged();
             
             if (isObservable)
-                tNotify.start();
+            {
+//                tNotify.start();
+                tNotifyWithJitter.start();
+            }
             
             getPanel().repaint();
         }
@@ -393,6 +399,7 @@ public class Life
         public void notifyObservers()
         {
             tNotify.stop();
+            tNotifyWithJitter.stop();
             super.notifyObservers(ID);
         }
         /* end Observable */
